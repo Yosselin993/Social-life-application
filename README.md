@@ -3,11 +3,10 @@ Creating a social life application for our Fall 2025 Software Engineering class
 
 The name of our website application is called "___blank____"
 
-"___blank____" is a web application designed to help university students discover, join, and engage with student clubs and organizations. 
+"___blank____" is a web application designed to help UTRGV students discover, join, and engage with student clubs and organizations. 
 
 We believe every student should have an easy way to find their community. This website application will help students discover clubs that inspire them. Whether tied to career goals or just personal interests. The website will also provide tools to 
 help students create new clubs and make it simple to promote and grow their organizations within the university community.
-
 
 
 #Environment and Programming languages our team will be using 
@@ -16,8 +15,17 @@ We decided that our team will be working in Visual Studio as our main developmen
 virtual machine, a second file will be created for writing individual code contributions. The second file will then be pushed to our shared GitHub repository using separate branches, allowing us to review each other’s work, collaborate effectively, 
 and continuously build upon or enhance existing features.
 
+The languages we decided to work in are Python, CSS, and HTML. Python will serve as the backend language, handling the logic, data processing, and communication to our database. HTML is the backbone of our website, which defines the text, images, 
+links, buttons, and other elements. While CSS will help us style the way our website looks, like the colors, layout, font, and other features. 
 
 #The work method our team will be using 
+
+
+
+
+
+
+#The different features that will be displayed in our website application 
 
 
 
