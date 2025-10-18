@@ -18,12 +18,14 @@ links, buttons, and other elements. While CSS will help us style the way our web
 
 #The work method our team will be using 
 
-Our team will follow an agile methodology, working in 7-day sprints. At the end of each sprint, we’ll meet via Zoom to review our accomplishments and set objectives for the next sprint.
+Our team will follow an agile methodology, working in 7-day sprints. At the end of each sprint, we’ll meet via Zoom to review our accomplishments and set objectives for the next sprint. We will work  smaller parts instead of building the website all at once. It allows us to have flexibility and strong team collaboration, ending with overall quality improvement. We will begin by adding, testing to gather feedback, and improving each feature in these sprints. The agile approach will help us to stay on track and improve the website by moving towards users' needs based on the feedback of each sprint. 
 
 
 #The different features that will be displayed in our website application 
+
 There will be two modes to view the website. One will be the creator mode where the clubs will manage their club content. They can edit their club's information, upload images, post announcements, and assign interest tags. Their displayed features can be a club logo/banner, a section over what the club is about, meeting times and location, announcements, and photos of past events. 
 The other mode will be for students who want to explore and join clubs that match their interests. They create an account, so they can save their favorite clubs and notificates from followed clubs. 
+
 Specific features will include a search bar, upcoming events calendar, recent announcements, filter to view certain clubs, and a "take the quiz" section. The interactive quiz will help students who are unsure about what additional clubs to join. After answering a few questions, the system will show them the top three clubs that fits the answers. 
 The administrator, which will be us, will be able to oversee the clubs, content, and verify the club registrations. We should be able to remove anything that seems inappropriate for the website.
 
