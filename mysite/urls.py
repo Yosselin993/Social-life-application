@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from . import views # the "." means current directory, so we are importing views.py from the current directory
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.home, name='home'), # When someone visits the home page ('/'), call the home view and name this URL 'home'
 ]
