@@ -17,8 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views # the "." means current directory, so we are importing views.py from the current directory
+from django.urls import path
+from . import views
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'), # When someone visits the home page ('/'), call the home view and name this URL 'home'
+    path('search/', views.search_view, name='search'),
+    path('index/', views.index_view, name='index'),
+    path('home/', views.home_view, name='home'),
+    path('about/', views.about_view, name='about'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
 ]
