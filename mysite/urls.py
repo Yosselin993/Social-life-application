@@ -30,4 +30,6 @@ urlpatterns = [
     path('about/', views.about_view, name='about'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
+    path('signup/', views.signup_role, name = 'signup_role'), #added the url for the first signup page where the user chooses their role
+    path('signup/<str:role>/', views.signup_user, name='signup_user'), #added url for the actual signup form (dynamically changes depending on the selected role)
 ]

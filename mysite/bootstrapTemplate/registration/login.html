@@ -95,7 +95,8 @@
     <!-- I wrote this division outside the main division so I can places this freely around the box-->
     <div style="text-align: center; margin-top: 10px;"> 
     <p style="font-size: small; margin: 0;">Don't have an account yet?</p> <!-- a message for users that dont have an account -->
-    <a href="#" style="font-size: small; color: blue; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 4px;">Sign up</a> <!-- This is a clickable link called sign up  for users to create a account-->
+    <a href="{% url 'signup_role' %}" style="font-size: small; color: blue; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 4px;">Sign up</a> <!-- This is a clickable link called sign up  for users to create a account-->
+    <!-- changed to signup url->
     </div>
 </div>
 
