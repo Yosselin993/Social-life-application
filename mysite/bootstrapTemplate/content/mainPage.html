@@ -1,0 +1,38 @@
+<!-- this loads Bootstrap 5 -->
+{% load bootstrap5 %}
+<!-- Declaring the document type as HTML5--->
+<!DOCTYPE html>
+<!-- sets the HTML document language to English -->
+<html lang="en">
+<!-- This is the head section -->
+<head>
+    <!-- This sets the character encoding for the document this even includes emojis-->
+    <meta charset="UTF-8">
+    <!-- title is the text that will appear in the browser tab -->
+     <!-- let child templates override the title if needed-->
+    <title>{% block title %}My Site{% endblock %}</title>
+    {% bootstrap_css %} <!-- loads Bootstrap CSS -->
+</head>
+<body> <!-- Starts the main visible part of the page -->
+    <div class="container mt-4"> <!-- This is a Bootstrap container -->
+        {% block content %}
+        <h1>Main Page</h1> <!-- Header text inside the block. This is the default content if not overridden -->
+        {% endblock %}
+    </div>
+    {% bootstrap_javascript %} <!-- loads Bootstrap JS -->
+    <!-- include login.html -->
+    <form class="your-form-class" method="GET">
+    <input type="search" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
+    <button type="submit">Search</button>
+</form> <!--This matches the content block in base.html. Anything inside here will replace the content block in base.html -->
+{% if results %}
+    <ul>
+        {% for item in results %}
+            <li>{{ item.title }} - {{ item.description }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+</body> <!-- Ends the main visible part of the page -->
+</html>

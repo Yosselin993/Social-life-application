@@ -39,7 +39,7 @@ def about_view(request):
 def user_login(request):
     # Redirect authenticated users to a home page
     if request.user.is_authenticated:
-        return redirect('main_page')  # Replace 'main_page' with your desired redirect URL name
+        return redirect('content/mainPage')  # Replace 'main_page' with your desired redirect URL name
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -53,7 +53,9 @@ def user_login(request):
         else:
             messages.error(request, 'Invalid username or password')
 
-    return render(request, 'login.html')
+    return render(request, 'registration/login.html')
+def main_page(request):
+    return render(request, 'content/mainPage.html')
 @login_required
 def user_logout(request):
     logout(request)
