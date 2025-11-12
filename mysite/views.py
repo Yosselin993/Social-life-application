@@ -54,8 +54,12 @@ def user_login(request):
             messages.error(request, 'Invalid username or password')
 
     return render(request, 'registration/login.html')
+
+
 def main_page(request):
     return render(request, 'content/mainPage.html')
+
+
 @login_required
 def user_logout(request):
     logout(request)
