@@ -1,21 +1,104 @@
-<!-- templates/registration/login.html -->
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-    </div>
-    <button type="submit">Log in</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- will adjust to any screen size-->
+<title>Login</title>  <!-- just the title of the website link -->
+<style>
+    /* I define my classes here */
+    .box { /* this is my container for the inside of the login box*/
+        width: 400px;
+        height: 500px;
+        background-color: lightgray;
+        margin: 50px auto;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+    /* the position placement for my header inside the box*/
+    .header-of-box {
+        position: absolute;
+        top: 70px;
+        left: 60px;
+    }
+    /* This push the input boxes with lables lower within the login box*/
+    .pushing-information-boxes-lower {
+        margin-top: 160px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    /* the style for each form group and buttom*/
+    /*what does "form group" mean? Its a common term in web development that basically a container for a signal lable and an input box */
+    .form-group, .btn {
+        width: 80%;
+        margin-bottom: 15px;
+    }
+    /*the boxes style for each form group */
+    .form-group input {
+        width: 100%;
+        padding: 3px;
+        font-size: 12px;
+        box-sizing: border-box;
+    }
+    /*Error or information message */
+    .messages {
+        list-style-type: none;
+        color: red;
+        text-align: center;
+        padding: 0;
+    }
+</style>
+</head>
+<body>
+
+<!-- this is my first header in my page-->
+<h1 style="font-size: 160%; margin-left: 70px;">UTRGVconnect</h1>
+<!-- My main division calling my box class. So every division inside my main division will be displayed within the login box-->
+<div class="box">
+
+    <div class="header-of-box"> <!--calling header-of-box class-->
+    <p style="margin: 0; font-size: small;">Please enter your information</p> <!-- asking user to input there information-->
+    <h2 style="font-size: 30px; margin-top: 5px;">Welcome back!</h2> <!--Greeting the users back-->
+    </div>
+
+    <!-- This is the login form where users enter their username and password -->
+    <form method="post" action="{% url 'login' %}" class="pushing-information-boxes-lower">
+        {% csrf_token %}
+        <div class="form-group"> <!--calling my form group class-->
+        <label for="id_username" style="font-size: small;">Username or Email:</label> <!-- creating my first lable for username or email-->
+        <input type="text" id="id_username" name="username" placeholder="Enter email or username" required> <!--creating my first input box to be displayed next to my lable-->
+        </div>
+
+        <div class="form-group"> <!--calling form-group for the second time-->
+        <label for="id_password" style="font-size: small;">Password:</label> <!-- creating my second lable for Password-->
+        <input type="password" id="id_password" name="password" placeholder="Enter password" required> <!--creating my second input box. will be displayed next to my lable -->
+        </div>
+
+        <div class="form-group"> <!--calling form-group for the thrid time-->
+        <a href="#" style="font-size: small; color: blue; text-decoration: underline; cursor: pointer;">Forgot password?</a> <!-- This is a clickable link for users to reset their password -->
+        <button type="submit" style="width: 100%; padding: 8px;">Login</button> <!--creating my submit button for the login-->
+        </div>
+    </form>
+
+    <!--Display any messages (like errors or notifications) to the user-->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <!-- I wrote this division outside the main division so I can places this freely around the box-->
+    <div style="text-align: center; margin-top: 10px;"> 
+    <p style="font-size: small; margin: 0;">Don't have an account yet?</p> <!-- a message for users that dont have an account -->
+    <a href="{% url 'signup_role' %}" style="font-size: small; color: blue; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 4px;">Sign up</a> <!-- This is a clickable link called sign up  for users to create a account-->
+    <!-- changed to signup url->
+    </div>
+</div>
+
+</body>
+</html>
