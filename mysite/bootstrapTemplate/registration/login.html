@@ -6,15 +6,21 @@
 <style>
     /* I define my classes here */
     .box { /* this is my container for the inside of the login box*/
-        width: 400px;
+        width: 500px;
         height: 500px;
-        background-color: lightgray;
-        margin: 50px auto;
+        background-color: #ffffffcc;
+        margin: 100px auto;
         position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        padding: 15px;
+        border-radius: 30px; 
+    }
+
+    body{
+        margin: 0;
+        background: linear-gradient(to right, #fff3e0, #ff9800);
     }
 
     /* the position placement for my header inside the box*/
@@ -40,9 +46,10 @@
     /*the boxes style for each form group */
     .form-group input {
         width: 100%;
-        padding: 3px;
+        padding: 10px;
         font-size: 12px;
         box-sizing: border-box;
+        font-size: 12px;
     }
     /*Error or information message */
     .messages {
@@ -56,13 +63,13 @@
 <body>
 
 <!-- this is my first header in my page-->
-<h1 style="font-size: 160%; margin-left: 70px;">UTRGVconnect</h1>
+<h1 style="font-size: 160%; margin-left: 70px; color: #0d47a1;">UTRGVconnect</h1>
 <!-- My main division calling my box class. So every division inside my main division will be displayed within the login box-->
 <div class="box">
 
     <div class="header-of-box"> <!--calling header-of-box class-->
     <p style="margin: 0; font-size: small;">Please enter your information</p> <!-- asking user to input there information-->
-    <h2 style="font-size: 30px; margin-top: 5px;">Welcome back!</h2> <!--Greeting the users back-->
+    <h2 style="font-size: 30px; margin-top: 5px; color: #0d47a1;">Welcome back!</h2> <!--Greeting the users back-->
     </div>
 
     <!-- This is the login form where users enter their username and password -->
@@ -80,7 +87,7 @@
 
         <div class="form-group"> <!--calling form-group for the thrid time-->
         <a href="#" style="font-size: small; color: blue; text-decoration: underline; cursor: pointer;">Forgot password?</a> <!-- This is a clickable link for users to reset their password -->
-        <button type="submit" style="width: 100%; padding: 8px;">Login</button> <!--creating my submit button for the login-->
+        <button type="submit" style="width: 100%; padding: 8px; background-color: #0d47a1;color:#fff3e0;">Login</button> <!--creating my submit button for the login-->
         </div>
     </form>
 
@@ -96,7 +103,7 @@
     <div style="text-align: center; margin-top: 10px;"> 
     <p style="font-size: small; margin: 0;">Don't have an account yet?</p> <!-- a message for users that dont have an account -->
     <a href="{% url 'signup_role' %}" style="font-size: small; color: blue; text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 4px;">Sign up</a> <!-- This is a clickable link called sign up  for users to create a account-->
-    <!-- changed to signup url->
+    <!-- changed to signup url-->
     </div>
 </div>
 
