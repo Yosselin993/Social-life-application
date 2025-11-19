@@ -10,23 +10,95 @@
     <meta charset="UTF-8">
     <!-- title is the text that will appear in the browser tab -->
      <!-- let child templates override the title if needed-->
-    <title>{% block title %}My Site{% endblock %}</title>
+    <title>{% block title %}Home{% endblock %}</title>
     {% bootstrap_css %} <!-- loads Bootstrap CSS -->
+    <style>
+    /* I define my classes here */
+    .box { /* this is my container for the inside of the login box*/
+        width: 500px;
+        height: 500px;
+        background-color: #ffffffcc;
+        margin: 100px auto;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        border-radius: 30px; 
+    }
+
+    body{
+        margin: 0;
+        background: linear-gradient(to right, #fff3e0, #ff9800);
+    }
+
+    /* the position placement for my header inside the box*/
+    .header-of-box {
+        position: absolute;
+        top: 70px;
+        left: 60px;
+    }
+    /* This push the input boxes with lables lower within the login box*/
+    .pushing-information-boxes-lower {
+        margin-top: 160px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    /* the style for each form group and buttom*/
+    /*what does "form group" mean? Its a common term in web development that basically a container for a signal lable and an input box */
+    .form-group, .btn {
+        width: 80%;
+        margin-bottom: 15px;
+    }
+    /*the boxes style for each form group */
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 12px;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+    /*Error or information message */
+    .messages {
+        list-style-type: none;
+        color: red;
+        text-align: center;
+        padding: 0;
+    }
+    .search-container {
+        float: right; /* Floats the search form to the right */
+        margin-left: 20px; /* Optional: Add some spacing */
+    }
+
+    .search-results-container {
+        /* If you want results to also be on the right, you can float them too,
+           or clear the float if they should appear below the search bar */
+        float: right;
+        clear: both; /* Clear the float to prevent wrapping issues */
+    }
+</style>
 </head>
 <body> <!-- Starts the main visible part of the page -->
     <style>
         
     </style>
-    <div class="container mt-4"> <!-- This is a Bootstrap container -->
-        {% block content %}
-        <h1>Main Page</h1> <!-- Header text inside the block. This is the default content if not overridden -->
+     <div class = "container mt-4">
+    <form class="your-form-class" method="GET">
+        {% block content %} <!--This matches the content block in base.html. Anything inside here will replace the content block in base.html -->
+        
+        <h1 style="font-size: 250%; color: #4b565a;">Home</h1>
         {% endblock %}
-    </div>
-    {% bootstrap_javascript %} <!-- loads Bootstrap JS -->
-    <!-- include login.html -->
+        {% bootstrap_javascript %} <!-- loads Bootstrap JS -->
+    </div> 
+  
+    <div class ="search-container">
     <form class="your-form-class" method="GET">
     <input type="search" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
     <button type="submit">Search</button>
+    </div>
+<div class="search-results-container">
 </form> <!--This matches the content block in base.html. Anything inside here will replace the content block in base.html -->
 {% if results %}
     <ul>
@@ -37,5 +109,6 @@
 {% else %}
     <p>No results found.</p>
 {% endif %}
+</div>
 </body> <!-- Ends the main visible part of the page -->
 </html>
