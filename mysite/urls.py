@@ -16,9 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from . import views # the "." means current directory, so we are importing views.py from the current directory
 from django.urls import path
-from . import views
+from . import views # the "." means current directory, so we are importing views.py from the current directory
 from django.contrib.auth.views import LoginView
 
 urlpatterns = [
@@ -26,11 +25,11 @@ urlpatterns = [
     path('', views.home, name='home'), # When someone visits the home page ('/'), call the home view and name this URL 'home'
     path('search/', views.search_view, name='search'),
     path('index/', views.index_view, name='index'),
-    path('home/', views.home_view, name='home'),
+    path('home/', views.home_view, name='home_view'),
     path('about/', views.about_view, name='about'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('signup/', views.signup_role, name = 'signup_role'), #added the url for the first signup page where the user chooses their role
     path('signup/<str:role>/', views.signup_user, name='signup_user'), #added url for the actual signup form (dynamically changes depending on the selected role)
-    path("login/content/mainPage", views.main_page, name="mainPage"),
+    path("content/mainPage", views.main_page, name="mainPage"), #changed
 ]
