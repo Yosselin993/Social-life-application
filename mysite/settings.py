@@ -73,12 +73,14 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
+DATABASES = { #database has already been set up
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+#django automatically creates SQLite databse. user account will be stored in that database
+#didn't kneed to install anything
 
 
 # Password validation
