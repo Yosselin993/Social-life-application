@@ -38,19 +38,20 @@ def about_view(request):
     return render(request, 'myapp/about.html')
 
 def user_login(request):
-    # Redirect authenticated users to a home page
-    if request.user.is_authenticated:
-        return redirect('content/mainPage')  # Replace 'main_page' with your desired redirect URL name
+    # if user is already logged in, send them to the main page
+    # if request.user.is_authenticated:
+    #   return redirect('mainPage')  # Replace 'main_page' with your desired redirect URL name
 
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password) #authenticate the user
 
         if user is not None:
             login(request, user)
-            return redirect('home')  # Redirect to a home page after successful login
+            messages.success(request, "Login successful!") #added this messae
+            return redirect('mainPage')  # Redirect to a home page after successful login
         else:
             messages.error(request, 'Invalid username or password')
 
@@ -78,9 +79,11 @@ def signup_user(request, role): #handles the actual signup form based on the rol
         form = UserCreationForm(request.POST)
         if form.is_valid(): #check if the submitted form is valid (all fields filled and passwords match)
             form.save() #save the new user to the database
-            messages.success(request, f"{role.capitalize()} account created successfully!") #show a success message telling the user their account was created
-            return redirect('login') #after signup, send the user to the login page
+            messages.success(request, "Account created successfully! You can now log in.") #show a success message telling the user their account was created
+            form = UserCreationForm() #resets the form so page doesn't show filled data
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
-        form = UserCreationForm() #if the page is just opened, (not submitted yet), show a blank signup form
+            form = UserCreationForm()
 
     return render(request, 'registration/signup_user.html', {'form': form, 'role': role}) #rend the signup page with the form and the chosen role
