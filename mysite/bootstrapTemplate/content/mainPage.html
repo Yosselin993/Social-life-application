@@ -89,15 +89,20 @@
         {% block content %} <!--This matches the content block in base.html. Anything inside here will replace the content block in base.html -->
         
         <h1 style="font-size: 250%; color: #4b565a;">Home</h1>
+         <p>Hi, {{ user.username }}! :)</p>
         {% endblock %}
         {% bootstrap_javascript %} <!-- loads Bootstrap JS -->
     </div> 
-  
     <div class ="search-container">
     <form class="your-form-class" method="GET">
     <input type="search" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
     <button type="submit">Search</button>
+    </form>
     </div>
+    <form method="post" action="{% url 'logout' %}">  <!-- logout form -->
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+     </form>
 <div class="search-results-container">
 </form> <!--This matches the content block in base.html. Anything inside here will replace the content block in base.html -->
 {% if results %}
@@ -110,5 +115,9 @@
     <p>No results found.</p>
 {% endif %}
 </div>
+<form>  <!-- logout form -->
+            {% csrf_token %}
+            <button type="submit">Calendar</button>
+     </form>
 </body> <!-- Ends the main visible part of the page -->
 </html>

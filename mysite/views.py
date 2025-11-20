@@ -65,7 +65,7 @@ def main_page(request):
 @login_required
 def user_logout(request):
     logout(request)
-    return redirect('home')   # Redirect to the home page after logout
+    return redirect('login')   # Redirect to the login page after logout
 
 #added
 def signup_role(request): #handles the first signup page where the user chooses their role
