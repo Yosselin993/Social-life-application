@@ -10,32 +10,120 @@
     <meta charset="UTF-8">
     <!-- title is the text that will appear in the browser tab -->
      <!-- let child templates override the title if needed-->
-    <title>{% block title %}My Site{% endblock %}</title>
+    <title>{% block title %}Home{% endblock %}</title>
     {% bootstrap_css %} <!-- loads Bootstrap CSS -->
-</head>
-<body> <!-- Starts the main visible part of the page -->
+
     <style>
+    /* I define my classes here */
+    body {
+        background: linear-gradient(to right, #fff3e0, #ff9800); /* orange and white */
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        font-family: 'Arial', sans-serif;
+
+        margin: 0; 
+        padding: 0;
+        }
+
+    .card{
+         width: 1200px;
+        padding: 80px;  /* top/bottom = 20px, left/right = 80px */
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px #cd696926;
+        /*border: 1px solid #88808026; */
+        margin: 2px auto;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px; /* same as mb-4 */
+    }
+
+    
+
+    
+    /* the style for each form group and buttom*/
+    /*what does "form group" mean? Its a common term in web development that basically a container for a signal lable and an input box */
+    .form-group, .btn {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    /*the boxes style for each form group */
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 12px;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+    /*Error or information message */
+    .messages {
+        list-style-type: none;
+        color: red;
+        text-align: center;
+        padding: 0;
+    }
+
+
+   /* .search-container { */
+       /* float: right; *//* Floats the search form to the right */
+       /* margin-left: 20px; *//* Optional: Add some spacing */
+  /*  } */
+    
+   /* .search-results-container { */
+        /* If you want results to also be on the right, you can float them too,
+           or clear the float if they should appear below the search bar */
+       /* float: right;*/
+       /* clear: both; */ /* Clear the float to prevent wrapping issues */
+   /* } */
+   
+</style>
+</head>
+<body> 
+    <div class="container mt-5">
         
-    </style>
-    <div class="container mt-4"> <!-- This is a Bootstrap container -->
-        {% block content %}
-        <h1>Main Page</h1> <!-- Header text inside the block. This is the default content if not overridden -->
-        {% endblock %}
-    </div>
-    {% bootstrap_javascript %} <!-- loads Bootstrap JS -->
-    <!-- include login.html -->
-    <form class="your-form-class" method="GET">
-    <input type="search" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
-    <button type="submit">Search</button>
-</form> <!--This matches the content block in base.html. Anything inside here will replace the content block in base.html -->
-{% if results %}
-    <ul>
-        {% for item in results %}
-            <li>{{ item.title }} - {{ item.description }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No results found.</p>
-{% endif %}
-</body> <!-- Ends the main visible part of the page -->
+        <div class="mb-4 header">
+            <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
+            <p>Hi, {{ user.username }}! :)</p>
+            <form method="post" action="{% url 'logout' %}" class="me-2">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+
+        <div class="mb-4">
+            <div class="card">
+            <form method="GET" class="d-flex me-3">
+                <input type="search" placeholder="Search..." name="search_query" class="form-control" value="{{ request.GET.search_query|default:'' }}">
+                <button type="submit" class="btn btn-primary ms-2">Search</button>
+            </form>
+
+            <form>
+                <button type="submit" class="btn btn-outline-secondary">Calendar</button>
+            </form>
+
+            </div>
+
+        </div>
+
+        <div class="search-results-container">
+            <h3>Search Results</h3>
+            {% if results %}
+                <ul class="list-group">
+                    {% for item in results %}
+                        <li class="list-group-item">{{ item.title }} - {{ item.description }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No results found.</p>
+            {% endif %}
+        </div>
+        
+    </div> {% bootstrap_javascript %}
+</body>
 </html>
+

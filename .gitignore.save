@@ -1,0 +1,12 @@
+# Ignore local virtual enviroments
+virt/
+venv/
+
+#python cache
+__Pycache__/
+*.pyc
+
+#Djanjo local file
+db.sqlite3
+.env
+
