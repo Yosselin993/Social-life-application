@@ -28,14 +28,14 @@
 
     .card{
         width: 90%; 
-        max-width: 1200px;
-        padding: 30px 80px;  /* top/bottom = 20px, left/right = 80px */
+        max-width: 1290px;
+        padding: 40px 80px;  /* top/bottom = 20px, left/right = 80px */
         background-color: white;
         border-radius: 12px;
-        box-shadow: 0 4px 10px #cd696926;
+        /*box-shadow: 0 4px 10px #cd696926;*/
         /*border: 1px solid #88808026; */
         margin: 2px auto;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
     }
 
     .header {
@@ -69,10 +69,12 @@
         margin-bottom: 0;
     }
 
-    .Calendar-form-group{
-        align-items: center;
-
-
+    .button-container {
+        display: flex;
+        gap: 15px;
+        color: white;
+        margin-left: auto;
+        margin-right: auto;
     }
 
 
@@ -117,7 +119,7 @@
 </style>
 </head>
 <body> 
-    <div class="container mt-5">
+    <div class="container mt-2">
         
       <div class="mb-4 header">
             <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
@@ -136,9 +138,15 @@
                 <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
             </form>
 
-            <form class="Calendar-form-group">
-                <button type="submit">Calendar</button>
+            <div class="button-container">
+            <form>
+                <button type="submit" class="btn btn-primary" >Event Calendar</button>
             </form>
+
+            <form>
+                <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
+            </form>
+            </div>
 
             </div>
 
@@ -160,4 +168,5 @@
     </div> {% bootstrap_javascript %}
 </body>
 </html>
+
 
