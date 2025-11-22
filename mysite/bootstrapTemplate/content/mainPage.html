@@ -8,6 +8,7 @@
 <head>
     <!-- This sets the character encoding for the document this even includes emojis-->
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
     <!-- title is the text that will appear in the browser tab -->
      <!-- let child templates override the title if needed-->
     <title>{% block title %}Home{% endblock %}</title>
@@ -21,19 +22,20 @@
         display: flex;
         justify-content: center;
         font-family: 'Arial', sans-serif;
-
         margin: 0; 
         padding: 0;
         }
 
     .card{
-         width: 1200px;
-        padding: 80px;  /* top/bottom = 20px, left/right = 80px */
+        width: 90%; 
+        max-width: 1200px;
+        padding: 30px 80px;  /* top/bottom = 20px, left/right = 80px */
         background-color: white;
         border-radius: 12px;
         box-shadow: 0 4px 10px #cd696926;
         /*border: 1px solid #88808026; */
         margin: 2px auto;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
     .header {
@@ -43,7 +45,38 @@
         margin-bottom: 16px; /* same as mb-4 */
     }
 
-    
+    .search-form-group {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        width: 100%;
+        align-items: center; /* This is the key for vertical centering */
+    }
+
+    .search-form-group input[type="search"] {
+        flex-grow: 1; /* Input takes up remaining space */
+        height: 38px; /* Set a standard height */
+        margin-top: 0; /* Remove vertical margins */
+        margin-bottom: 0;
+    }
+
+    .search-form-group button[type="submit"] {
+        width: 100px; /* Button keeps its fixed width */
+        flex-shrink: 0;
+        height: 38px; /* Match the height of the input */
+        margin-top: 0; /* Remove vertical margins */
+        margin-bottom: 0;
+    }
+
+    .Calendar-form-group{
+        align-items: center;
+
+
+    }
+
+
+
 
     
     /* the style for each form group and buttom*/
@@ -86,24 +119,25 @@
 <body> 
     <div class="container mt-5">
         
-        <div class="mb-4 header">
+      <div class="mb-4 header">
             <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
-            <p>Hi, {{ user.username }}! :)</p>
-            <form method="post" action="{% url 'logout' %}" class="me-2">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
+            <!--<p>Hi, {{ user.username }}! :)</p> -->
+            <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
+            {% csrf_token %}
+            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
+            Logout</a>
             </form>
         </div>
 
         <div class="mb-4">
             <div class="card">
-            <form method="GET" class="d-flex me-3">
-                <input type="search" placeholder="Search..." name="search_query" class="form-control" value="{{ request.GET.search_query|default:'' }}">
-                <button type="submit" class="btn btn-primary ms-2">Search</button>
+            <form method="GET" class="search-form-group">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
             </form>
 
-            <form>
-                <button type="submit" class="btn btn-outline-secondary">Calendar</button>
+            <form class="Calendar-form-group">
+                <button type="submit">Calendar</button>
             </form>
 
             </div>
