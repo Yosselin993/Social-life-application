@@ -29,8 +29,89 @@
     }
 
     body{
-        margin: 0;
-        background: linear-gradient(to right, #fff3e0, #ff9800);
+        background: linear-gradient(to right, #fff3e0, #ff9800); /* orange and white */
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        font-family: 'Arial', sans-serif;
+        margin: 0; 
+        padding: 0;
+    }
+    .card{
+        width: 90%; 
+        max-width: 1290px;
+        padding: 40px 80px;  /* top/bottom = 20px, left/right = 80px */
+        background-color: white;
+        border-radius: 12px;
+        /*box-shadow: 0 4px 10px #cd696926;*/
+        /*border: 1px solid #88808026; */
+        margin: 2px auto;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px; /* same as mb-4 */
+    }
+
+    .search-form-group {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        width: 100%;
+        align-items: center; /* This is the key for vertical centering */
+    }
+
+    .search-form-group input[type="search"] {
+        flex-grow: 1; /* Input takes up remaining space */
+        height: 38px; /* Set a standard height */
+        margin-top: 0; /* Remove vertical margins */
+        margin-bottom: 0;
+    }
+
+    .search-form-group button[type="submit"] {
+        width: 100px; /* Button keeps its fixed width */
+        flex-shrink: 0;
+        height: 38px; /* Match the height of the input */
+        margin-top: 0; /* Remove vertical margins */
+        margin-bottom: 0;
+    }
+
+    .button-container {
+        display: flex;
+        gap: 15px;
+        color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+
+
+    
+    /* the style for each form group and buttom*/
+    /*what does "form group" mean? Its a common term in web development that basically a container for a signal lable and an input box */
+    .form-group, .btn {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    /*the boxes style for each form group */
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 12px;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+    /*Error or information message */
+    .messages {
+        list-style-type: none;
+        color: red;
+        text-align: center;
+        padding: 0;
     }
 
     /* the position placement for my header inside the box*/
