@@ -80,31 +80,56 @@
         clear: both; /* Clear the float to prevent wrapping issues */
     }
 </style>
-
-    <style>
+</head>
+<body> 
+    <div class="container mt-2">
         
-    </style>
-    <div class="container mt-4"> <!-- This is a Bootstrap container -->
-        {% block content %}
-        <h1>Main Page</h1> <!-- Header text inside the block. This is the default content if not overridden -->
-        {% endblock %}
-    </div>
-    {% bootstrap_javascript %} <!-- loads Bootstrap JS -->
-    <!-- include login.html -->
-    <form class="your-form-class" method="GET">
-    <input type="search" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
-    <button type="submit">Search</button>
-</form> <!--This matches the content block in base.html. Anything inside here will replace the content block in base.html -->
-{% if results %}
-    <ul>
-        {% for item in results %}
-            <li>{{ item.title }} - {{ item.description }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No results found.</p>
-{% endif %}
-</body> <!-- Ends the main visible part of the page -->
+      <div class="mb-4 header">
+            <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
+            <!--<p>Hi, {{ user.username }}! :)</p> -->
+            <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
+            {% csrf_token %}
+            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
+            Logout</a>
+            </form>
+        </div>
+
+        <div class="mb-4">
+            <div class="card">
+            <form method="GET" class="search-form-group">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
+            </form>
+
+            <div class="button-container">
+            <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar-->
+                <button type="submit" class="btn btn-primary" >Event Calendar</button>
+            </form>
+
+            <form>
+                <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
+            </form>
+            </div>
+
+            </div>
+
+        </div>
+
+        <div class="search-results-container">
+            <h3>Search Results</h3>
+            {% if results %}
+                <ul class="list-group">
+                    {% for item in results %}
+                        <li class="list-group-item">{{ item.title }} - {{ item.description }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No results found.</p>
+            {% endif %}
+        </div>
+        
+    </div> {% bootstrap_javascript %}
+</body>
 </html>
 
 
