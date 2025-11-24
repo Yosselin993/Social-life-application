@@ -49,7 +49,7 @@
                     {% csrf_token %} <!-- Django security token to prevent cross-site attacks -->
                     <!-- username input field -->
                     <div class="mb-3">
-                        <label for="id_username">Username</label>
+                        <label for="id_username">Username or Email</label>
                         {{ form.username }} <!-- now using form object so that it actually gets saved-->
                         <!--display error with username (guidelines for it below)-->
                         {% if form.username.errors %}
