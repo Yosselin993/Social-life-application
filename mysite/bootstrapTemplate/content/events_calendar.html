@@ -151,4 +151,154 @@
 
 </div>
 </body>
+</html>{% load bootstrap5 %} <!--;pads django's bootstrap template tags-->
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+
+    <!-- this is the title that appears in the browser tab-->
+     <title>Events Calendar</title>
+     {% bootstrap_css %} <!--inserts bootstrap5 css-->
+
+     <style>
+
+        /* page background */
+         body {
+            background: linear-gradient(to right, #fff3e0, #ff9800); /* light orange to white gradient */
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        /*the same main white card for the calendar*/
+        .card {
+            width: 90%;
+            max-width: 1200px;
+            padding: 40px 40px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+            margin: 40px auto;
+        }
+
+
+        /*header inside the card*/
+         .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* the calendar grid*/
+         /* === Calendar grid === */
+        .calendar-row {
+            display: flex;
+            justify-content: flex-start; /* starts cells from the left */
+            flex-wrap: wrap; 
+        }
+
+        /* each day box */
+        .day-box { 
+            border: 1px solid #ddd;
+            height: 120px;
+            width: calc(100% / 7 - 4px); /* forces each day to be exactly 1/7th of the width minus margin */
+            margin: 2px;
+            padding: 5px;
+            border-radius: 8px;
+            background: #fafafa;
+            position: relative;
+            box-sizing: border-box; /* ensures padding and border are included in the 1/7th width */
+        }
+
+        /* event inside a day bpx*/
+        .event-item {
+            background: #0d47a1;
+            color: white;
+            padding: 3px 6px;
+            font-size: 12px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /*back button style*/
+        .back-btn {
+            margin-top: 20px;
+        }
+     </style>
+</head>
+
+<body>
+<div class = "container">
+
+    <!--white card for content-->
+    <div class = "card">
+
+        <!-- to have the top header like the main page -->
+        <div class="header">
+            <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
+
+            <!-- Logout form -->
+            <form method="post" action="{% url 'logout' %}" id="logout-form">
+                {% csrf_token %}
+                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="btn btn-secondary">
+                    Logout
+                </a>
+            </form>
+        </div>
+
+    <!-- page title -->
+    <h2 class = "text-center mb-4">Events Calendar</h2>
+
+    <div class = "d-flex justify-content-between align-items-center mb-4">
+
+        <div style = "width: 50px;"></div> 
+
+        <h3 class = "text-center" style = "color: #051c3f; margin: 0;">     <!--displays the month name and year -->
+            {{ month_name }} {{ year }}
+        </h3>
+
+        <a href="{% url 'events_calendar_nav' next_month_year next_month_num %}" class="btn btn-outline-primary">
+            Next &raquo;
+        </a> 
+    </div>
+
+     <!--weekday labels-->
+     <div class = "calendar-row fw-bold text-center mb-2" style = "height: auto;">
+            <div style="flex: 1; margin: 2px;">Sun</div> <div style = "flex: 1; margin: 2px;">Mon</div>
+            <div style="flex: 1; margin: 2px;">Tue</div>            
+            <div style="flex: 1; margin: 2px;">Wed</div>            
+            <div style="flex: 1; margin: 2px;">Thu</div>            
+            <div style="flex: 1; margin: 2px;">Fri</div>     
+            <div style="flex: 1; margin: 2px;">Sat</div>                
+     </div>
+     
+    <!-- calendar days -->
+    <div class="calendar-row text-center">
+        <!-- blank boxes before the first day -->
+        {% for _ in blank_days %}
+            <div class="day-box"></div>
+        {% endfor %}
+
+        <!-- loop over all days -->
+        {% for day in days %}
+            <div class="day-box">
+                <div class = "day-number fw-bod mb-1"> {{ day }} </div>
+
+                {% for event in events %}
+                    {% if event.day == day and event.month == month and event.year == year %}
+                        <div class="event-item">{{ event.title }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+</body>
 </html>

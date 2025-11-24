@@ -13,7 +13,8 @@
      <!-- let child templates override the title if needed-->
     <title>{% block title %}Home{% endblock %}</title>
     {% bootstrap_css %} <!-- loads Bootstrap CSS -->
-    <style>
+
+ <style>
     /* I define my classes here */
     .box { /* this is my container for the inside of the login box*/
         width: 500px;
@@ -48,38 +49,38 @@
         margin: 2px auto;
         box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
     }
-
+    /*Used for "UTRGVconnect" header and logout button*/
     .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 16px; /* same as mb-4 */
     }
-
+    /*styles the search form’s container so items line up horizontally with spacing, full width, and some margin below it*/
     .search-form-group {
         display: flex;
         gap: 0.5rem;
         margin-top: 0;
         margin-bottom: 1rem;
         width: 100%;
-        align-items: center; /* This is the key for vertical centering */
+        align-items: center;
     }
 
     .search-form-group input[type="search"] {
-        flex-grow: 1; /* Input takes up remaining space */
-        height: 38px; /* Set a standard height */
-        margin-top: 0; /* Remove vertical margins */
+        flex-grow: 1; 
+        height: 38px; 
+        margin-top: 0;
         margin-bottom: 0;
     }
 
     .search-form-group button[type="submit"] {
-        width: 100px; /* Button keeps its fixed width */
+        width: 100px; 
         flex-shrink: 0;
-        height: 38px; /* Match the height of the input */
-        margin-top: 0; /* Remove vertical margins */
+        height: 38px; 
+        margin-top: 0;
         margin-bottom: 0;
     }
-
+    /*Used to to help display Calendar and Browse all buttons side by side with some space between them, and has the same margins */
     .button-container {
         display: flex;
         gap: 15px;
@@ -87,85 +88,92 @@
         margin-left: auto;
         margin-right: auto;
     }
-
-
-
-
-    
-    /* the style for each form group and buttom*/
-    /*what does "form group" mean? Its a common term in web development that basically a container for a signal lable and an input box */
-    .form-group, .btn {
+    /*layout container*/
+    /* Creates a 3-column grid layout with side columns fixed at 3.5in and a flexible center column */
+    .main-content-grid{
+        display: grid;
+        grid-template-columns: 3.5in 1fr 3.5in;
+        gap: 20px;
+        align-items: start;
         width: 100%;
-        margin-bottom: 15px;
     }
-    /*the boxes style for each form group */
-    .form-group input {
-        width: 100%;
-        padding: 10px;
-        font-size: 12px;
-        box-sizing: border-box;
-        font-size: 12px;
-    }
-    /*Error or information message */
-    .messages {
-        list-style-type: none;
-        color: red;
-        text-align: center;
-        padding: 0;
-    }
-
-    /* the position placement for my header inside the box*/
-    .header-of-box {
-        position: absolute;
-        top: 70px;
-        left: 60px;
-    }
-    /* This push the input boxes with lables lower within the login box*/
-    .pushing-information-boxes-lower {
-        margin-top: 160px;
-        width: 100%;
+    /* Styles the left column and stacks its content vertically */
+    .left-colum{
+        grid-column: 1;
         display: flex;
         flex-direction: column;
-        align-items: center;
-    }
-    /* the style for each form group and buttom*/
-    /*what does "form group" mean? Its a common term in web development that basically a container for a signal lable and an input box */
-    .form-group, .btn {
-        width: 80%;
-        margin-bottom: 15px;
-    }
-    /*the boxes style for each form group */
-    .form-group input {
-        width: 100%;
-        padding: 10px;
-        font-size: 12px;
-        box-sizing: border-box;
-        font-size: 12px;
-    }
-    /*Error or information message */
-    .messages {
-        list-style-type: none;
-        color: red;
-        text-align: center;
-        padding: 0;
-    }
-    .search-container {
-        float: right; /* Floats the search form to the right */
-        margin-left: 20px; /* Optional: Add some spacing */
     }
 
-    .search-results-container {
-        /* If you want results to also be on the right, you can float them too,
-           or clear the float if they should appear below the search bar */
-        float: right;
-        clear: both; /* Clear the float to prevent wrapping issues */
+    /* Styles the central column of the grid */
+    .central-column{
+        grid-column: 2;
     }
+    /*------------------*/
+    /*Creating a new 'card' that will store the student tag content*/
+    .student-tag{
+        width: 3.5in;
+        height: 2.2in;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+    }
+    /*Used to display the circle with the student tag*/
+    .student-photo-placeholder {
+        width: 120px;
+        height: 120px;
+        background-color: #e0e0e0;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+        margin-top: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        color: #888;
+    }
+    /*Creating a new 'card' that will store the notification content*/
+    .notification-box{
+        width: 3.5in;
+        height: 3.5in;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+    }
+    /*Creating a new 'card' that will store the different clubs the user is a member of, content.*/
+    .visit-club-box{
+        width: 3.5in;
+        height: 5in;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+        grid-column: 3;
+        margin-top: 5px;
+
+    }
+    /*style's the color of thw words, center the words within the 'card', and how far down it is from the top of the 'card'*/
+    /*Used for both notification-box and visit-club-box*/
+    .notification-placeholder{
+        color: #0d47a1;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+
+
 </style>
 </head>
 <body> 
     <div class="container mt-2">
-        
-      <div class="mb-4 header">
+             <!--only the seletor 'header' is used here but a class from bootstrap that controls to margins from the top-->
+      <div class="mb-4 header"> <!-- header content starts -->
             <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
             <!--<p>Hi, {{ user.username }}! :)</p> -->
             <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
@@ -173,43 +181,61 @@
             <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
             Logout</a>
             </form>
-        </div>
+        </div> <!-- header content ends-->
 
-        <div class="mb-4">
-            <div class="card">
-            <form method="GET" class="search-form-group">
-                <button type="submit" class="btn btn-primary">Search</button>
-                <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
-            </form>
-
+        <div class="mb-2"> <!--class from bootstrap that controls to margins from the top-->
+            <div class="card"> <!--Seletor class "card" is called, everthing displayed within card starts here"-->
+                <form method="GET" class="search-form-group">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
+                </form>
             <div class="button-container">
-            <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar-->
-                <button type="submit" class="btn btn-primary" >Event Calendar</button>
-            </form>
-
-            <form>
-                <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
-            </form>
+                <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar-- action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar-->
+                    <button type="submit" class="btn btn-primary" >Event Calendar</button>
+                </form>
+                <form>
+                    <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
+                </form>
             </div>
 
-            </div>
+            </div> 
+        </div> <!-- card content ends here-->
 
-        </div>
-
-        <div class="search-results-container">
-            <h3>Search Results</h3>
-            {% if results %}
-                <ul class="list-group">
-                    {% for item in results %}
-                        <li class="list-group-item">{{ item.title }} - {{ item.description }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="text-muted">No results found.</p>
-            {% endif %}
-        </div>
-        
-    </div> {% bootstrap_javascript %}
+        <div class="main-content-grid">
+            
+            <div class="left-column"> <!--information display in the left side of the page starts-->
+                 <!-- this is where the tag information will start-->
+                <div class="student-tag">
+                    <div class="student-photo-placeholder">
+                    </div>
+                </div> <!--This is where the tag information will end-->
+                
+                <div class="notification-box"> <!-- This is where the noification content starts-->
+                    <div class="notification-placeholder">
+                        <p>Notification</p>
+                    </div>
+                </div> <!--This is where the noification conten ends-->
+                
+            </div> <!--information display in the left side of the page ends-->
+            <div class="central-column">
+                <div class="search-results-container">
+                  {% if results %}
+                        <ul class="list-group">
+                            {% for item in results %}
+                                <li class="list-group-item">{{ item.title }} - {{ item.description }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                      {% endif %}
+                </div>
+            </div> 
+            <div class="visit-club-box"> <!--Where the visiting information starts-->
+                <div class="notification-placeholder">
+                    <p>Make sure to visit your clubs!</p>
+                </div>
+            </div> <!--Where the visiting information ends-->
+        </div> 
+    </div>{% bootstrap_javascript %}
 </body>
 </html>
 
