@@ -87,3 +87,70 @@ def signup_user(request, role): #handles the actual signup form based on the rol
             form = UserCreationForm()
 
     return render(request, 'registration/signup_user.html', {'form': form, 'role': role}) #rend the signup page with the form and the chosen role
+
+#python's calendar and datetime dynamic based for calendar
+import calendar 
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta #if this doesn't work, install this in your virtual environment "pip install python-dateutil"
+from django.shortcuts import render
+
+def events_calendar(request, year=None, month=None):
+    #current month and year
+    today = date.today()
+
+    if year is None or month is None:
+        display_date = today #if no month/year provided, use current month
+    else:
+        try:
+            display_date = date(int(year), int(month), 1) #if month/year provided, use those values
+        except ValueError:
+            display_date = today #handle invalid month/year
+
+    year = display_date.year
+    month = display_date.month
+
+    #calculate the first day of the *next* month
+    next_date = display_date + relativedelta(months=1)
+
+    #check to see if the currently displayed month is the current month
+    is_current_month = (year == today.year and month == today.month)
+
+    #navigation links 
+    next_month_year = next_date.year
+    next_month_num = next_date.month
+
+    #calculate the month name for the title
+    current_month_name = datetime(year, month, 1).strftime('%B')
+
+    #get the number of days in month
+    num_days = calendar.monthrange(year,month)[1] #returns weekday of 1st, number of days
+
+    #get the weekday os the 1st day of month (0=monday, 6=sunday)
+    first_weekday = calendar.monthrange(year,month)[0]
+    first_weekday = (first_weekday + 1) % 7
+
+    #create a list of day numbers
+    days = list(range(1, num_days + 1))
+    blank_days = list(range(first_weekday)) #list for empty boxes
+
+    #dummy events
+    events = [
+        {"title": "Chess Club", "day": 3, "month": 12, "year": year},
+        {"title": "AI Workshop", "day": 10, "month": 12, "year": year},
+        {"title": "Robotics Club", "day": 15, "month": 12, "year": year},
+    ]
+
+    return render(request, "content/events_calendar.html", {
+        "year": year,
+        "month": month,
+        "month_name": current_month_name, 
+        "days": days,
+        "blank_days": blank_days,
+        "events":events,
+         #passing this template to know where to start
+
+         "next_month_year": next_month_year,
+         "next_month_num": next_month_num,
+         "is_current_month": is_current_month,
+    })
+
