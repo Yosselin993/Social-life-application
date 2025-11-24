@@ -19,6 +19,8 @@ from django.urls import path
 from django.urls import path
 from . import views # the "." means current directory, so we are importing views.py from the current directory
 from django.contrib.auth.views import LoginView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,3 +37,6 @@ urlpatterns = [
     path("events/", views.events_calendar, name = "events_calendar"), #url for the events calendar
     path('calendar/<int:year>/<int:month>/', views.events_calendar, name = 'events_calendar_nav'), #path for navigaing to a specific month/year
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

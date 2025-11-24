@@ -206,9 +206,17 @@
             <div class="left-column"> <!--information display in the left side of the page starts-->
                  <!-- this is where the tag information will start-->
                 <div class="student-tag">
-                    <div class="student-photo-placeholder">
+
+                    <!-- Clickable photo placeholder -->
+                    <div class="student-photo-placeholder" id="photoBox">
+                        <img id="studentPhoto" alt="Student Photo">
+                        <span id="placeholderText">Click to upload</span>
                     </div>
-                </div> <!--This is where the tag information will end-->
+
+                    <!-- Hidden input -->
+                    <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+
+                </div> <!-- this is where the tag information will end-->
                 
                 <div class="notification-box"> <!-- This is where the noification content starts-->
                     <div class="notification-placeholder">

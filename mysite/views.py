@@ -8,6 +8,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm #added
+from django.shortcuts import render, redirect
+from .forms import MyImageForm
 # this is a function that handles requests to the home page
 def home(request): 
     return render(request, 'home.html') #render function to generate and return an HTML response
@@ -88,6 +90,15 @@ def signup_user(request, role): #handles the actual signup form based on the rol
 
     return render(request, 'registration/signup_user.html', {'form': form, 'role': role}) #rend the signup page with the form and the chosen role
 
+def upload_image_view(request):
+    if request.method == 'POST':
+        form = MyImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('success_page') # Redirect to a success page
+        else:
+            form = MyImageForm()
+    return render(request, 'upload_image.html', {'form': form})
 #python's calendar and datetime dynamic based for calendar
 import calendar 
 from datetime import date, datetime
