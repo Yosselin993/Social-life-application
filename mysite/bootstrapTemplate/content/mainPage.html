@@ -14,9 +14,22 @@
     <title>{% block title %}Home{% endblock %}</title>
     {% bootstrap_css %} <!-- loads Bootstrap CSS -->
 
- <style>
+    <style>
     /* I define my classes here */
-    body {
+    .box { /* this is my container for the inside of the login box*/
+        width: 500px;
+        height: 500px;
+        background-color: #ffffffcc;
+        margin: 100px auto;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        border-radius: 30px; 
+    }
+
+    body{
         background: linear-gradient(to right, #fff3e0, #ff9800); /* orange and white */
         min-height: 100vh;
         display: flex;
@@ -25,7 +38,7 @@
         margin: 0; 
         padding: 0;
         }
-    /*This card is used to store search bar, event clander, and Browse all buttons */
+
     .card{
         width: 90%; 
         max-width: 1290px;
@@ -151,11 +164,22 @@
     .notification-placeholder{
         color: #0d47a1;
         text-align: center;
-        margin-top: 10px;
+        padding: 0;
     }
 
 
-
+   /* .search-container { */
+       /* float: right; *//* Floats the search form to the right */
+       /* margin-left: 20px; *//* Optional: Add some spacing */
+  /*  } */
+    
+   /* .search-results-container { */
+        /* If you want results to also be on the right, you can float them too,
+           or clear the float if they should appear below the search bar */
+       /* float: right;*/
+       /* clear: both; */ /* Clear the float to prevent wrapping issues */
+   /* } */
+   
 </style>
 </head>
 <body> 
@@ -178,12 +202,13 @@
                     <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
                 </form>
             <div class="button-container">
-                <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar-->
-                    <button type="submit" class="btn btn-primary" >Event Calendar</button>
-                </form>
-                <form>
-                    <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
-                </form>
+            <form>
+                <button type="submit" class="btn btn-primary" >Event Calendar</button>
+            </form>
+
+            <form>
+                <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
+            </form>
             </div>
 
             </div> 
