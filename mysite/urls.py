@@ -34,4 +34,5 @@ urlpatterns = [
     path("content/mainPage", views.main_page, name="mainPage"), #changed
     path("events/", views.events_calendar, name = "events_calendar"), #url for the events calendar
     path('calendar/<int:year>/<int:month>/', views.events_calendar, name = 'events_calendar_nav'), #path for navigaing to a specific month/year
+    path('browse-all/', views.browse_all, name='browse_all'),
 ]

@@ -154,3 +154,6 @@ def events_calendar(request, year=None, month=None):
          "is_current_month": is_current_month,
     })
 
+def browse_all(request):
+    return render(request, 'content/Browse_All.html')
+
