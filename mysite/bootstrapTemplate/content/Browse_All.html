@@ -3,7 +3,7 @@
 <html lang = "en">
 <head>
     <meta charset = "UTF-8">
-     <title>Events Calendar</title>
+     <title>Browse All</title>
      {% bootstrap_css %} <!--inserts bootstrap5 css-->
 
 <style>
@@ -30,6 +30,8 @@
     }
     .card-placement{
         text-align: center;
+        color: #0d47a1;
+        font-size: 30px;
     }
     /*Used for "UTRGVconnect" header and logout button*/
     .header {
@@ -38,6 +40,7 @@
         align-items: center;
         margin-bottom: 16px; /* same as mb-4 */
     }
+
 
 </style>
 </head>
@@ -55,10 +58,12 @@
         </div>
 
         <div class="card card-placement">
+            <div class="header">
+                <form action = "{% url 'mainPage' %}"> <!--changed this to now go to the actual calendar-->
+                    <button type="submit" class="btn btn-primary" >Home</button>
+                </form>
+            </div>
             <p>Browse All</p>
-
-
-
         </div>
 
 </body>
