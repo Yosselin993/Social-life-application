@@ -202,7 +202,7 @@
                     <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
                 </form>
             <div class="button-container">
-            <form>
+            <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar--> 
                 <button type="submit" class="btn btn-primary" >Event Calendar</button>
             </form>
 

@@ -91,13 +91,13 @@
             <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
 
             <!-- Logout form -->
-            <form method="post" action="{% url 'logout' %}" id="logout-form">
+            <form method="post" action="{% url 'logout' %}" class = "me-2"  id="logout-form">
                 {% csrf_token %}
-                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="btn btn-secondary">
+                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
                     Logout
                 </a>
             </form>
-            <form action = "{% url 'mainPage' %}"> <!--changed this to now go to the actual calendar-->
+            <form action = "{% url 'mainPage' %}"> <!--changed this to go to mainpage-->
                 <button type="submit" class="btn btn-primary" >Home</button>
             </form>
         </div>
