@@ -1,7 +1,7 @@
 from django import forms
-from .models import MyImageModel
+from .models import Student
 
-class MyImageForm(forms.ModelForm):
+class StudentForm(forms.ModelForm):
     class Meta:
-        model = MyImageModel
-        fields = ['title', 'image']
+        model = Student
+        fields = ['photo']

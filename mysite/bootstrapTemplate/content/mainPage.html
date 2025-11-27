@@ -14,7 +14,7 @@
     <title>{% block title %}Home{% endblock %}</title>
     {% bootstrap_css %} <!-- loads Bootstrap CSS -->
 
- <style>
+<style>
     /* I define my classes here */
     .box { /* this is my container for the inside of the login box*/
         width: 500px;
@@ -166,7 +166,31 @@
         margin-top: 10px;
     }
 
+    .student-photo-placeholder {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #aaa;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background-color: #f7f7f7;
+    }
 
+    .student-photo-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #placeholderText {
+        color: #777;
+        font-size: 14px;
+        position: absolute;
+    }
 
 </style>
 </head>
@@ -206,15 +230,23 @@
             <div class="left-column"> <!--information display in the left side of the page starts-->
                  <!-- this is where the tag information will start-->
                 <div class="student-tag">
+                    <form method="POST" enctype="multipart/form-data" id="photoForm">
+                        {% csrf_token %}
 
-                    <!-- Clickable photo placeholder -->
-                    <div class="student-photo-placeholder" id="photoBox">
-                        <img id="studentPhoto" alt="Student Photo">
-                        <span id="placeholderText">Click to upload</span>
-                    </div>
+                            <!-- Clickable box -->
+                        <div class="student-photo-placeholder" id="photoBox">
+                            {% if student.photo %}
+                                <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
+                                <span id="placeholderText" style="display:none;">Click to upload</span>
+                            {% else %}
+                                <img id="studentPhoto" src="" alt="Student photo" style="display:none;">
+                                <span id="placeholderText">Click to upload</span>
+                            {% endif %}
+                        </div>
 
-                    <!-- Hidden input -->
-                    <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                        <!-- Hidden file input -->
+                        <input type="file" id="photoUpload" name="photo" accept="image/*" style="display:none;">
+                    </form>
 
                 </div> <!-- this is where the tag information will end-->
                 
@@ -246,5 +278,30 @@
     </div>{% bootstrap_javascript %}
 </body>
 </html>
+
+<script>
+const photoBox = document.getElementById("photoBox");
+const photoUpload = document.getElementById("photoUpload");
+const studentPhoto = document.getElementById("studentPhoto");
+const placeholderText = document.getElementById("placeholderText");
+const photoForm = document.getElementById("photoForm");
+
+// Click opens file dialog
+photoBox.addEventListener("click", () => {
+    photoUpload.click();
+});
+
+// Preview selected image instantly and auto-submit
+photoUpload.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        studentPhoto.src = URL.createObjectURL(file);
+        studentPhoto.style.display = "block";
+        placeholderText.style.display = "none";
+        // Auto-submit the form
+        photoForm.submit();
+    }
+});
+</script>
 
 

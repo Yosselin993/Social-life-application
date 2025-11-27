@@ -1,5 +1,10 @@
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Upload</button>
-    </form>
+   
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.photo }}
+    <button type="submit">Save</button>
+</form>
+
+{% if student.photo %}
+    <img src="{{ student.photo.url }}" width="150">
+{% endif %}

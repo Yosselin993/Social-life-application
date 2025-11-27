@@ -34,9 +34,7 @@ urlpatterns = [
     path('signup/', views.signup_role, name = 'signup_role'), #added the url for the first signup page where the user chooses their role
     path('signup/<str:role>/', views.signup_user, name='signup_user'), #added url for the actual signup form (dynamically changes depending on the selected role)
     path("content/mainPage", views.main_page, name="mainPage"), #changed
+    path('upload-photo/', views.upload_image_view, name='upload_photo'),
     path("events/", views.events_calendar, name = "events_calendar"), #url for the events calendar
     path('calendar/<int:year>/<int:month>/', views.events_calendar, name = 'events_calendar_nav'), #path for navigaing to a specific month/year
-]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm #added
 from django.shortcuts import render, redirect
-from .forms import MyImageForm
+from .forms import StudentForm
+from .models import Student
 # this is a function that handles requests to the home page
 def home(request): 
     return render(request, 'home.html') #render function to generate and return an HTML response
@@ -60,8 +61,24 @@ def user_login(request):
     return render(request, 'registration/login.html')
 
 
+@login_required(login_url='login')
 def main_page(request):
-    return render(request, 'content/mainPage.html')
+    # Get or create a Student instance for the current user
+    student, created = Student.objects.get_or_create(user=request.user)
+    
+    # Handle photo upload
+    if request.method == "POST":
+        form = StudentForm(request.POST, request.FILES, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile picture updated successfully!")
+            return redirect('mainPage')
+        else:
+            messages.error(request, "Error uploading photo. Please try again.")
+    else:
+        form = StudentForm(instance=student)
+    
+    return render(request, 'content/mainPage.html', {'student': student, 'form': form})
 
 
 @login_required
@@ -90,15 +107,24 @@ def signup_user(request, role): #handles the actual signup form based on the rol
 
     return render(request, 'registration/signup_user.html', {'form': form, 'role': role}) #rend the signup page with the form and the chosen role
 
+@login_required
 def upload_image_view(request):
-    if request.method == 'POST':
-        form = MyImageForm(request.POST, request.FILES)
+    # Get or create a Student instance for the current user
+    student, created = Student.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        form = StudentForm(request.POST, request.FILES, instance=student)
         if form.is_valid():
             form.save()
-            return redirect('success_page') # Redirect to a success page
+            messages.success(request, "Profile picture updated successfully!")
+            return redirect('upload_photo')
         else:
-            form = MyImageForm()
-    return render(request, 'upload_image.html', {'form': form})
+            messages.error(request, "Error uploading photo. Please try again.")
+    else:
+        form = StudentForm(instance=student)
+
+    return render(request, 'content/mainPage.html', {'form': form, 'student': student})
+
 #python's calendar and datetime dynamic based for calendar
 import calendar 
 from datetime import date, datetime
