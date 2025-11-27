@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm #added
+from clubs.models import Club
 # this is a function that handles requests to the home page
 def home(request): 
     return render(request, 'home.html') #render function to generate and return an HTML response
@@ -154,6 +155,8 @@ def events_calendar(request, year=None, month=None):
          "is_current_month": is_current_month,
     })
 
+#def browse_all(request):
+    #return render(request, 'content/Browse_All.html')
 def browse_all(request):
-    return render(request, 'content/Browse_All.html')
-
+    clubs = Club.objects.all()  # get all clubs from the database
+    return render(request, 'content/Browse_All.html', {'clubs': clubs})

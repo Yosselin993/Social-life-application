@@ -19,6 +19,7 @@ from django.urls import path
 from django.urls import path
 from . import views # the "." means current directory, so we are importing views.py from the current directory
 from django.contrib.auth.views import LoginView
+from clubs import views as clubs_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,5 +35,7 @@ urlpatterns = [
     path("content/mainPage", views.main_page, name="mainPage"), #changed
     path("events/", views.events_calendar, name = "events_calendar"), #url for the events calendar
     path('calendar/<int:year>/<int:month>/', views.events_calendar, name = 'events_calendar_nav'), #path for navigaing to a specific month/year
-    path('browse-all/', views.browse_all, name='browse_all'),
+    #path('browse-all/', views.browse_all, name='browse_all'),
+    path('browse-all/', clubs_views.browse_all_clubs, name='browse_all'),
+    
 ]
