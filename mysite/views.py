@@ -172,9 +172,9 @@ def events_calendar(request, year=None, month=None):
 
     #dummy events
     events = [
-        {"title": "Chess Club", "day": 3, "month": 12, "year": year},
-        {"title": "AI Workshop", "day": 10, "month": 12, "year": year},
-        {"title": "Robotics Club", "day": 15, "month": 12, "year": year},
+        {"title": "Chess Club @ 5pm", "day": 3, "month": 12, "year": year},
+        {"title": "AI Workshop @ 6:30pm", "day": 10, "month": 12, "year": year},
+        {"title": "Robotics Club @ 3:15pm", "day": 15, "month": 12, "year": year},
     ]
 
     return render(request, "content/events_calendar.html", {
@@ -190,4 +190,7 @@ def events_calendar(request, year=None, month=None):
          "next_month_num": next_month_num,
          "is_current_month": is_current_month,
     })
+
+def browse_all(request):
+    return render(request, 'content/Browse_All.html')
 
