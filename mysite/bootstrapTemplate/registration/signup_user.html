@@ -26,7 +26,7 @@
 <!-- main Bootstrap cotainer to hold all content-->
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-5">
+        <div class="col-12 col-md-8 col-lg-6 mx-auto">
             <div class="card shadow-lg p-4">
                 <div class="text-center mb-4">
                     <!-- Django template variable displays "Student" or "Club" dynamically -->
@@ -49,8 +49,11 @@
                     {% csrf_token %} <!-- Django security token to prevent cross-site attacks -->
                     <!-- username input field -->
                     <div class="mb-3">
-                        <label for="id_username">Username or Email</label>
+                        <label for="id_username">Username</label>
                         {{ form.username }} <!-- now using form object so that it actually gets saved-->
+
+                        <small class = "text-muted d-block mt-1">Username must contain '@utrgv.edu'</small> <!--added for requirement (bootstrap spacing class)-->
+
                         <!--display error with username (guidelines for it below)-->
                         {% if form.username.errors %}
                             {% for error in form.username.errors %}
@@ -63,6 +66,7 @@
                     <div class="mb-3">
                         <label for="id_password1">Password</label>
                         {{ form.password1 }} <!-- now using form object so that it actually gets saved-->
+
                         <!--display error with username (guidelines for it below)-->
                         {% if form.password1.errors %}
                             {% for error in form.password1.errors %}
@@ -81,6 +85,19 @@
                             <div class="alert alert-danger">{{ error }}</div> <!--bootstrap class that gives a red background and white text-->
                         {% endfor %}
                     {% endif %}
+                    </div>
+
+                <!--added password requirements for display-->
+                    <div class = "card mt-3">
+                        <div class = "card-body">
+                            <h5 class = "card-title">Password Requirements</h5>     
+                            <ul>
+                                <li>Your password must contain <strong> at least 8 characters</strong></li>
+                                <li>Your password cannot be <strong>too similar</strong> to your username</li>
+                                <li>Your password cannot be a <strong>common password</strong></li>
+                                <li>Your password cannot be <strong>entirely numeric</strong></li>
+                            </ul>
+                        </div>
                     </div>
 
                 <!-- submit button for the form-->
