@@ -90,17 +90,24 @@
         <div class="header">
             <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
 
-            <!-- Logout form -->
-            <form method="post" action="{% url 'logout' %}" id="logout-form">
-                {% csrf_token %}
-                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="btn btn-secondary">
-                    Logout
-                </a>
-            </form>
-            <form action = "{% url 'mainPage' %}"> <!--changed this to now go to the actual calendar-->
-                <button type="submit" class="btn btn-primary" >Home</button>
-            </form>
+            <div style = "display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+
+                <!--updated home button -->
+                <form action = "{% url 'mainPage' %}"> <!--changed this to now go to the actual calendar-->
+                    <button type="submit" class="btn btn-primary" >Home</button>
+                 </form>
+
+                <!-- updated logout button -->
+                <form method="post" action="{% url 'logout' %}" id="logout-form">
+                    {% csrf_token %}
+                    <a href="#" onclick="document.getElementById('logout-form').submit(); return false;"
+                        syle = "color: #0d47a1; text-decoration: underline; font-size: 16px; cursor: pointer;">
+                         Logout
+                    </a>
+                </form>
+            
         </div>
+    </div>
 
     <!-- page title -->
     <h2 class = "text-center mb-4">Events Calendar</h2>
