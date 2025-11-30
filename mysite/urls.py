@@ -15,8 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.urls import path
+from django.urls import path, include
 from . import views # the "." means current directory, so we are importing views.py from the current directory
 from django.contrib.auth.views import LoginView
 from clubs import views as clubs_views
@@ -36,6 +35,7 @@ urlpatterns = [
     path("events/", views.events_calendar, name = "events_calendar"), #url for the events calendar
     path('calendar/<int:year>/<int:month>/', views.events_calendar, name = 'events_calendar_nav'), #path for navigaing to a specific month/year
     #path('browse-all/', views.browse_all, name='browse_all'),
-    path('browse-all/', clubs_views.browse_all_clubs, name='browse_all'),
-    
+    path('browse-all/', clubs_views.browse_all_clubs, name='browse_all'),  
+    path('clubs/', include('clubs.urls')),
+    path('club-setup/', views.club_first_login, name = 'club_first_login'),
 ]

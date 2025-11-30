@@ -65,6 +65,23 @@
             </div>
             <p>Browse All</p>
 
+            <div class="container mt-4">
+                {% for club in clubs %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ club.name }}</h5>
+                        <p class="card-text">{{ club.description }}</p>
+                        <p><strong>Meeting Time:</strong> {{ club.meeting_time }}</p>
+                        <p><strong>Location:</strong> {{ club.location }}</p>
+                        <p><strong>Tags:</strong> {{ club.descriptions }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+</div>
+
+
+
+
         </div>
     </div>
 

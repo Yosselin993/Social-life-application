@@ -119,11 +119,18 @@
         <h3 class = "text-center" style = "color: #051c3f; margin: 0;">     <!--displays the month name and year -->
             {{ month_name }} {{ year }}
         </h3>
-
         <a href="{% url 'events_calendar_nav' next_month_year next_month_num %}" class="btn btn-outline-primary">
             Next &raquo;
         </a> 
     </div>
+
+        <!--added-->
+        {% if is_club_leader %}
+            <div class="text-end mb-3">
+                <a href="{% url 'add_event' %}" class="btn btn-success">Add An Event</a>
+            </div>
+        {% endif %}
+
 
      <!--weekday labels-->
      <div class = "calendar-row fw-bold text-center mb-2" style = "height: auto;">
@@ -148,8 +155,8 @@
                 <div class = "day-number fw-bod mb-1"> {{ day }} </div>
 
                 {% for event in events %}
-                    {% if event.day == day and event.month == month and event.year == year %}
-                        <div class="event-item">{{ event.title }}</div>
+                    {% if event.day == day %}
+                        <div class="event-item">{{ event.title }} - {{ event.club.name }}</div>
                     {% endif %}
                 {% endfor %}
             </div>

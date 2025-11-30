@@ -9,6 +9,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm #added
 from clubs.models import Club
+from clubs.models import Event
+from clubs.forms import ClubForm
+
+
 # this is a function that handles requests to the home page
 def home(request): 
     return render(request, 'home.html') #render function to generate and return an HTML response
@@ -51,6 +55,13 @@ def user_login(request):
 
         if user is not None:
             login(request, user)
+
+            #added
+            if user.clubs_led.exists():
+                club = user.clubs_led.first()
+                if not club.first_login_completed:
+                    return redirect('club_first_login')
+    
             messages.success(request, "Login successful!") #added this messae
             return redirect('mainPage')  # Redirect to a home page after successful login
         else:
@@ -60,7 +71,20 @@ def user_login(request):
 
 
 def main_page(request):
-    return render(request, 'content/mainPage.html')
+    club = None
+    form = None
+    is_club_leader = request.user.clubs_led.exists()
+
+    if is_club_leader:
+        club = request.user.clubs_led.first()
+        if not club.first_login_completed:
+            from clubs.forms import ClubForm
+            form = ClubForm(instance=club)
+
+    return render(request, 'content/mainPage.html', {
+        'form':form,
+        'is_club_leader': is_club_leader
+        })
 
 
 @login_required
@@ -79,9 +103,19 @@ def signup_user(request, role): #handles the actual signup form based on the rol
     if request.method == 'POST': #if the form was submitted (method is POST), process the form data
         form = UserCreationForm(request.POST)
         if form.is_valid(): #check if the submitted form is valid (all fields filled and passwords match)
-            form.save() #save the new user to the database
+            new_user = form.save() #save the new user to the database
+
+            if role == 'club':
+                # Create the Club object. It will have default/blank fields.
+                new_club = Club.objects.create(
+                    name=f"New Club - {new_user.username}'s Club",
+                )
+                # Link the user as a leader (this populates clubs_led)
+                new_club.leaders.add(new_user)
+            
             messages.success(request, "Account created successfully! You can now log in.") #show a success message telling the user their account was created
-            form = UserCreationForm() #resets the form so page doesn't show filled data
+            
+            return redirect('login')
         else:
             messages.error(request, "Please correct the errors below.")
     else:
@@ -95,6 +129,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta #if this doesn't work, install this in your virtual environment "pip install python-dateutil"
 from django.shortcuts import render
 
+@login_required
 def events_calendar(request, year=None, month=None):
     #current month and year
     today = date.today()
@@ -134,12 +169,8 @@ def events_calendar(request, year=None, month=None):
     days = list(range(1, num_days + 1))
     blank_days = list(range(first_weekday)) #list for empty boxes
 
-    #dummy events
-    events = [
-        {"title": "Chess Club @ 5pm", "day": 3, "month": 12, "year": year},
-        {"title": "AI Workshop @ 6:30pm", "day": 10, "month": 12, "year": year},
-        {"title": "Robotics Club @ 3:15pm", "day": 15, "month": 12, "year": year},
-    ]
+    # events loaded from database
+    events = Event.objects.filter(month=month, year=year)
 
     return render(request, "content/events_calendar.html", {
         "year": year,
@@ -153,6 +184,8 @@ def events_calendar(request, year=None, month=None):
          "next_month_year": next_month_year,
          "next_month_num": next_month_num,
          "is_current_month": is_current_month,
+         "user": request.user, #added
+         "is_club_leader": request.user.clubs_led.exists() #added
     })
 
 #def browse_all(request):
@@ -160,3 +193,31 @@ def events_calendar(request, year=None, month=None):
 def browse_all(request):
     clubs = Club.objects.all()  # get all clubs from the database
     return render(request, 'content/Browse_All.html', {'clubs': clubs})
+
+
+@login_required
+def club_first_login(request):
+    #ensure the user is a club leader and retrieve their club
+    if not request.user.clubs_led.exists():
+        return redirect('mainPage') #user is not a leader or club wasn't created
+    
+    club = request.user.clubs_led.first()
+    
+    if club.first_login_completed: #check if the setup is already complete
+        return redirect('mainPage')
+    
+    if request.method == 'POST':
+        form = ClubForm(request.POST, instance = club)
+        if form.is_valid():
+            club = form.save(commit=False)
+            club.first_login_completed = True
+            club.save()
+            form.save_m2m() #important for many to many fields
+            messages.success(request, f"Welcome to the platform, {club.name}!")
+            return redirect('mainPage')
+    else:
+        form = ClubForm(instance=club) #load the form with the exisiting club data
+
+    return render(request, 'content/club_first_login.html', {'form': form})
+
+
