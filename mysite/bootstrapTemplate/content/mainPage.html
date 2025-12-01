@@ -250,14 +250,21 @@
                         {% csrf_token %}
 
                             <!-- Clickable box -->
-                        <div class="student-photo-placeholder" id="photoBox">
-                            {% if student.photo %}
-                                <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
-                                <span id="placeholderText" style="display:none;">Click to upload</span>
-                            {% else %}
-                                <img id="studentPhoto" src="" alt="Student photo" style="display:none;">
-                                <span id="placeholderText">Click to upload</span>
-                            {% endif %}
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="student-photo-placeholder" id="photoBox">
+                                {% if student.photo %}
+                                    <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
+                                    <span id="placeholderText" style="display:none;">Click to upload</span>
+                                {% else %}
+                                    <img id="studentPhoto" src="" alt="Student photo" style="display:none;">
+                                    <span id="placeholderText">Click to upload</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="student-info" style="display:flex; flex-direction:column;">
+                                <span class="student-username" style="font-weight:600;">{{ student.user.username }}</span>
+                                <span class="student-fullname" style="color:#666;">{{ student.user.get_full_name }}</span>
+                            </div>
                         </div>
 
                         <!-- Hidden file input -->
