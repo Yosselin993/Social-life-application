@@ -90,17 +90,24 @@
         <div class="header">
             <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
 
-            <!-- Logout form -->
-            <form method="post" action="{% url 'logout' %}" id="logout-form">
-                {% csrf_token %}
-                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="btn btn-secondary">
-                    Logout
-                </a>
-            </form>
-            <form action = "{% url 'mainPage' %}"> <!--changed this to now go to the actual calendar-->
-                <button type="submit" class="btn btn-primary" >Home</button>
-            </form>
+            <div style = "display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+
+                <!--updated home button -->
+                <form action = "{% url 'mainPage' %}"> <!--changed this to now go to the actual calendar-->
+                    <button type="submit" class="btn btn-primary" >Home</button>
+                 </form>
+
+                <!-- updated logout button -->
+                <form method="post" action="{% url 'logout' %}" id="logout-form">
+                    {% csrf_token %}
+                    <a href="#" onclick="document.getElementById('logout-form').submit(); return false;"
+                        syle = "color: #0d47a1; text-decoration: underline; font-size: 16px; cursor: pointer;">
+                         Logout
+                    </a>
+                </form>
+            
         </div>
+    </div>
 
     <!-- page title -->
     <h2 class = "text-center mb-4">Events Calendar</h2>
@@ -112,11 +119,18 @@
         <h3 class = "text-center" style = "color: #051c3f; margin: 0;">     <!--displays the month name and year -->
             {{ month_name }} {{ year }}
         </h3>
-
         <a href="{% url 'events_calendar_nav' next_month_year next_month_num %}" class="btn btn-outline-primary">
             Next &raquo;
         </a> 
     </div>
+
+        <!--added-->
+        {% if is_club_leader %}
+            <div class="text-end mb-3">
+                <a href="{% url 'add_event' %}" class="btn btn-success">Add An Event</a>
+            </div>
+        {% endif %}
+
 
      <!--weekday labels-->
      <div class = "calendar-row fw-bold text-center mb-2" style = "height: auto;">
@@ -141,8 +155,8 @@
                 <div class = "day-number fw-bod mb-1"> {{ day }} </div>
 
                 {% for event in events %}
-                    {% if event.day == day and event.month == month and event.year == year %}
-                        <div class="event-item">{{ event.title }}</div>
+                    {% if event.day == day %}
+                        <div class="event-item">{{ event.title }} - {{ event.club.name }}</div>
                     {% endif %}
                 {% endfor %}
             </div>

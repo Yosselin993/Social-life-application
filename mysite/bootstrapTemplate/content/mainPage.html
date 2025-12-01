@@ -99,7 +99,7 @@
         width: 100%;
     }
     /* Styles the left column and stacks its content vertically */
-    .left-colum{
+    .left-column{
         grid-column: 1;
         display: flex;
         flex-direction: column;
@@ -248,6 +248,31 @@
             </div> <!--Where the visiting information ends-->
         </div> 
     </div> {% bootstrap_javascript %}
+
+    {% if user.clubs_led.first and not user.clubs_led.first.first_login_completed %}
+    <div class="modal fade" id="clubFirstLoginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">Complete Your Club Profile</h5>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'club_first_login' %}">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <button type="submit" class="btn btn-success mt-2">Save & Continue</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var myModal = new bootstrap.Modal(document.getElementById('clubFirstLoginModal'));
+    myModal.show();
+</script>
+{% endif %}
+
 </body>
 </html>
 
