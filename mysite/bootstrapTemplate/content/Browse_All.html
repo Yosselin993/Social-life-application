@@ -28,11 +28,33 @@
         margin: 2px auto;
         box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
     }
+
+    .card-club-version{
+        /*width: 4in; 
+        height: 2.2in; */
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+        height: 100%;
+    }
+
+
+
     .card-placement{
         text-align: center;
         color: #0d47a1;
         font-size: 25px;
     }
+    .row.club-cards {
+        display: flex;
+        flex-wrap: wrap;
+        /* Adds margin below the row */
+        margin-bottom: 20px;
+    }
+
+
     /*Used for "UTRGVconnect" header and logout button*/
     .header {
         display: flex;
@@ -64,32 +86,27 @@
                 </form>
             </div>
             <p>Browse All</p>
+        </div>
 
             <div class="container mt-4">
+            <div class="row club-cards">
                 {% for club in clubs %}
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ club.name }}</h5>
-                        <p class="card-text">{{ club.description }}</p>
-                        <p><strong>Meeting Time:</strong> {{ club.meeting_time }}</p>
-                        <p><strong>Location:</strong> {{ club.location }}</p>
-                        <p><strong>Tags:</strong> {{ club.descriptions }}</p>
+                <div class="col-12 col-sm-6 col-md-4 mb-4">
+                    <div class="card-club-version">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ club.name }}</h5>
+                            <p class="card-text">{{ club.description }}</p>
+                            <p><strong>Meeting Time:</strong> {{ club.meeting_time }}</p>
+                            <p><strong>Location:</strong> {{ club.location }}</p>
+                            <p><strong>Tags:</strong> {{ club.descriptions }}</p>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
-</div>
-
-
-
-
-        </div>
+            </div>
+            </div>
+      
     </div>
 
-
-
-
-
-
-    
 </body>
 </html>
