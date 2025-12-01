@@ -42,5 +42,4 @@ urlpatterns = [
     path('browse-all/', clubs_views.browse_all_clubs, name='browse_all'),  
     path('clubs/', include('clubs.urls')),
     path('club-setup/', views.club_first_login, name = 'club_first_login'),
-]
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

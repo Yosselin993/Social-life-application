@@ -76,34 +76,39 @@ def user_login(request):
 @login_required(login_url='login')
 def main_page(request):
     club = None
-    form = None
+    club_form = None
     is_club_leader = request.user.clubs_led.exists()
 
     if is_club_leader:
         club = request.user.clubs_led.first()
         if not club.first_login_completed:
             from clubs.forms import ClubForm
-            form = ClubForm(instance=club)
+            club_form = ClubForm(instance=club)
 
     # Get or create a Student instance for the current user
     student, created = Student.objects.get_or_create(user=request.user)
-    
+
     # Handle photo upload
     if request.method == "POST":
-        form = StudentForm(request.POST, request.FILES, instance=student)
-        if form.is_valid():
-            form.save()
+        student_form = StudentForm(request.POST, request.FILES, instance=student)
+        if student_form.is_valid():
+            student_form.save()
             messages.success(request, "Profile picture updated successfully!")
             return redirect('mainPage')
         else:
             messages.error(request, "Error uploading photo. Please try again.")
     else:
-        form = StudentForm(instance=student)
-    
-    return render(request, 'content/mainPage.html', {
-        'form':form,
-        'is_club_leader': is_club_leader
-        }, {'student': student, 'form': form})
+        student_form = StudentForm(instance=student)
+
+    context = {
+        'form': student_form,
+        'student': student,
+        'is_club_leader': is_club_leader,
+        'club_form': club_form,
+        'club': club,
+    }
+
+    return render(request, 'content/mainPage.html', context)
 
 
 @login_required
