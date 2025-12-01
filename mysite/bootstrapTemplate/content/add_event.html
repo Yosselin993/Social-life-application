@@ -1,0 +1,21 @@
+{% load bootstrap5 %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Event</title>
+    {% bootstrap_css %}
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Add a New Event</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-success mt-3">Save Event</button>
+    </form>
+
+    <a href="{% url 'events_calendar' %}" class="btn btn-primary mt-3">Back to Calendar</a>
+</div>
+</body>
+</html>

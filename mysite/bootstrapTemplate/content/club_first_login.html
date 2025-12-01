@@ -1,0 +1,26 @@
+{% load bootstrap5 %} 
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+    <title>Club Setup</title>
+    {% bootstrap_css %}
+    </head>
+<body>
+    <div class="container mt-2">
+        <div class="card card-placement">
+            
+            <h2 class="mt-4" style="color: #0d47a1;">Complete Your Club Profile</h2>
+            <p class="mb-4">This information will be displayed on the Browse All Clubs page.</p>
+
+            <form method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %} 
+                <button type="submit" class="btn btn-success mt-4">Save Club Details & Continue</button>
+            </form>
+
+        </div>
+    </div>
+    {% bootstrap_javascript %} 
+</body>
+</html>
