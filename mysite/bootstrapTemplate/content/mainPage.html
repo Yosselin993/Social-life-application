@@ -224,7 +224,7 @@
 
         <div class="mb-2"> <!--class from bootstrap that controls to margins from the top-->
             <div class="card"> <!--Seletor class "card" is called, everthing displayed within card starts here"-->
-                <form method="GET" class="search-form-group">
+                <form method="GET" action="{% url 'search' %}" class="search-form-group">
                     <button type="submit" class="btn btn-primary">Search</button>
                     <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
                 </form>
