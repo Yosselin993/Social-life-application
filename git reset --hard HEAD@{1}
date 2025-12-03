@@ -1,0 +1,29 @@
+[33m1cd7bce[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32m11/28-branch[m[33m)[m HEAD@{0}: commit (merge): Merge branch 'AngelA' of https://github.com/Yosselin993/Social-life-application into 11/28-branch
+[33m88b4a0a[m[33m ([m[1;31morigin/11/28-branch[m[33m)[m HEAD@{1}: commit: added the popup and updated the databases
+[33m5387a33[m HEAD@{2}: commit: updated the logoutlink and password display
+[33mba39a09[m[33m ([m[1;32mupdating-signup[m[33m)[m HEAD@{3}: checkout: moving from updating-signup to 11/28-branch
+[33mba39a09[m[33m ([m[1;32mupdating-signup[m[33m)[m HEAD@{4}: commit (merge): updated the logout link layout 11/29
+[33m2e65c07[m HEAD@{5}: rebase (abort): returning to refs/heads/updating-signup
+[33m32737e9[m[33m ([m[1;31morigin/updating-signup[m[33m)[m HEAD@{6}: pull origin updating-signup --rebase (start): checkout 32737e96759332035fe95e74f90f4dffcfae0038
+[33m2e65c07[m HEAD@{7}: commit: updating the logout link
+[33m2ed063c[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{8}: reset: moving to origin
+[33m2ed063c[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{9}: checkout: moving from updating-signup to updating-signup
+[33m2ed063c[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{10}: reset: moving to origin/main
+[33m32737e9[m[33m ([m[1;31morigin/updating-signup[m[33m)[m HEAD@{11}: commit (merge): merging
+[33m117876d[m[33m ([m[1;31morigin/AngelA[m[33m)[m HEAD@{12}: pull origin AngelA: Fast-forward
+[33m0afe31c[m HEAD@{13}: reset: moving to HEAD
+[33m0afe31c[m HEAD@{14}: reset: moving to HEAD
+[33m0afe31c[m HEAD@{15}: commit: minor changes
+[33m10acfba[m HEAD@{16}: checkout: moving from main to updating-signup
+[33me660d68[m[33m ([m[1;32mmain[m[33m)[m HEAD@{17}: checkout: moving from updating-signup to main
+[33m10acfba[m HEAD@{18}: commit: views.py updated
+[33m7b61b49[m HEAD@{19}: commit (merge): Merge branch 'AngelA' of https://github.com/Yosselin993/Social-life-application into updating-signup
+[33m9d5f8b7[m HEAD@{20}: commit (merge): Merge branch 'updating-main-page' of https://github.com/Yosselin993/Social-life-application into updating-signup
+[33m38608a9[m HEAD@{21}: commit: added the events calendar
+[33m7f09034[m HEAD@{22}: pull origin updating-main-page: Fast-forward
+[33mcaf350d[m HEAD@{23}: pull origin updating-main-page: Fast-forward
+[33m8dfd767[m HEAD@{24}: commit: Edited the signup to connect database
+[33me660d68[m[33m ([m[1;32mmain[m[33m)[m HEAD@{25}: checkout: moving from main to updating-signup
+[33me660d68[m[33m ([m[1;32mmain[m[33m)[m HEAD@{26}: checkout: moving from updating-signup to main
+[33me660d68[m[33m ([m[1;32mmain[m[33m)[m HEAD@{27}: checkout: moving from main to updating-signup
+[33me660d68[m[33m ([m[1;32mmain[m[33m)[m HEAD@{28}: clone: from https://github.com/Yosselin993/Social-life-application.git

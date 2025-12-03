@@ -6,4 +6,6 @@ urlpatterns = [
     # and name this URL "browse_all_clubs" so we can use it in templates
     path('all/', views.browse_all_clubs, name='browse_all_clubs'),
     path('add-event/', views.add_event, name='add_event'), #goes to the add_event html to add the new event
+    #adding individul club profile pages
+    path('club/<int:club_id>/', views.club_profile, name='club_profile'), 
 ]
