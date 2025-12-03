@@ -263,3 +263,5 @@ def club_first_login(request):
     return render(request, 'content/club_first_login.html', {'form': form})
 
 
+def club_profile(request):
+    return render(request, 'content/club_profile.html')

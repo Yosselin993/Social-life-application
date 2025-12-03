@@ -47,12 +47,27 @@
         color: #0d47a1;
         font-size: 25px;
     }
+
+    .row.club-cards > [class^="col-"] {
+    display: flex;
+    }
+
+
     .row.club-cards {
         display: flex;
         flex-wrap: wrap;
         /* Adds margin below the row */
         margin-bottom: 20px;
     }
+
+    .row.club-cards a {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+
 
 
     /*Used for "UTRGVconnect" header and logout button*/
@@ -92,6 +107,7 @@
             <div class="row club-cards">
                 {% for club in clubs %}
                 <div class="col-12 col-sm-6 col-md-4 mb-4">
+                  <a href="{% url 'club_profile' club.id %}" style="text-decoration:none; color:inherit; height: 100%;">
                     <div class="card-club-version">
                         <div class="card-body">
                             <h5 class="card-title">{{ club.name }}</h5>
@@ -101,7 +117,7 @@
                             <p><strong>Tags:</strong> {{ club.descriptions }}</p>
                         </div>
                     </div>
-                </div>
+                  </a></div>
                 {% endfor %}
             </div>
             </div>
