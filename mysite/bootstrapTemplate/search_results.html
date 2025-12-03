@@ -33,9 +33,19 @@
         .result-item {
             padding: 15px;
             border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .result-item:hover {
+            background-color: #fafafa;
         }
         .result-item:last-child {
             border-bottom: none;
+        }
+        .result-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
         .result-title {
             font-size: 18px;
@@ -79,10 +89,12 @@
                     <h3>Clubs ({{ clubs|length }})</h3>
                     {% for club in clubs %}
                         <div class="result-item">
-                            <div class="result-title">{{ club.name }}</div>
-                            {% if club.description %}
-                                <div class="result-description">{{ club.description|truncatewords:20 }}</div>
-                            {% endif %}
+                            <a href="{% url 'club_profile' club.id %}">
+                                <div class="result-title">{{ club.name }}</div>
+                                {% if club.description %}
+                                    <div class="result-description">{{ club.description|truncatewords:20 }}</div>
+                                {% endif %}
+                            </a>
                         </div>
                     {% endfor %}
                 </div>
