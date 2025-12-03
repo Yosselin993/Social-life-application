@@ -13,6 +13,9 @@ from clubs.models import Event
 from clubs.forms import ClubForm
 
 
+from django.shortcuts import render, redirect
+from .forms import StudentForm
+from .models import Student
 # this is a function that handles requests to the home page
 def home(request): 
     return render(request, 'home.html') #render function to generate and return an HTML response
@@ -70,21 +73,42 @@ def user_login(request):
     return render(request, 'registration/login.html')
 
 
+@login_required(login_url='login')
 def main_page(request):
     club = None
-    form = None
+    club_form = None
     is_club_leader = request.user.clubs_led.exists()
 
     if is_club_leader:
         club = request.user.clubs_led.first()
         if not club.first_login_completed:
             from clubs.forms import ClubForm
-            form = ClubForm(instance=club)
+            club_form = ClubForm(instance=club)
 
-    return render(request, 'content/mainPage.html', {
-        'form':form,
-        'is_club_leader': is_club_leader
-        })
+    # Get or create a Student instance for the current user
+    student, created = Student.objects.get_or_create(user=request.user)
+
+    # Handle photo upload
+    if request.method == "POST":
+        student_form = StudentForm(request.POST, request.FILES, instance=student)
+        if student_form.is_valid():
+            student_form.save()
+            messages.success(request, "Profile picture updated successfully!")
+            return redirect('mainPage')
+        else:
+            messages.error(request, "Error uploading photo. Please try again.")
+    else:
+        student_form = StudentForm(instance=student)
+
+    context = {
+        'form': student_form,
+        'student': student,
+        'is_club_leader': is_club_leader,
+        'club_form': club_form,
+        'club': club,
+    }
+
+    return render(request, 'content/mainPage.html', context)
 
 
 @login_required
@@ -122,6 +146,24 @@ def signup_user(request, role): #handles the actual signup form based on the rol
             form = UserCreationForm()
 
     return render(request, 'registration/signup_user.html', {'form': form, 'role': role}) #rend the signup page with the form and the chosen role
+
+@login_required
+def upload_image_view(request):
+    # Get or create a Student instance for the current user
+    student, created = Student.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        form = StudentForm(request.POST, request.FILES, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile picture updated successfully!")
+            return redirect('upload_photo')
+        else:
+            messages.error(request, "Error uploading photo. Please try again.")
+    else:
+        form = StudentForm(instance=student)
+
+    return render(request, 'content/mainPage.html', {'form': form, 'student': student})
 
 #python's calendar and datetime dynamic based for calendar
 import calendar 

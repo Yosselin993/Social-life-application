@@ -37,8 +37,7 @@
         font-family: 'Arial', sans-serif;
         margin: 0; 
         padding: 0;
-        }
-
+    }
     .card{
         width: 90%; 
         max-width: 1290px;
@@ -180,6 +179,34 @@
        /* clear: both; */ /* Clear the float to prevent wrapping issues */
    /* } */
    
+    
+
+    .student-photo-placeholder {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #aaa;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background-color: #f7f7f7;
+    }
+
+    .student-photo-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #placeholderText {
+        color: #777;
+        font-size: 14px;
+        position: absolute;
+    }
+
 </style>
 </head>
 <body> 
@@ -202,12 +229,13 @@
                     <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
                 </form>
             <div class="button-container">
-                <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar-->
-                    <button type="submit" class="btn btn-primary" >Event Calendar</button>
-                </form>
-                <form action="{% url 'browse_all' %}">
-                    <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
-                </form>
+            <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar--> 
+                <button type="submit" class="btn btn-primary" >Event Calendar</button>
+            </form>
+
+            <form action = "{% url 'browse_all' %}"> <!--changed this to now go to the actual calendar-->
+                <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
+            </form>
             </div>
 
             </div> 
@@ -218,9 +246,25 @@
             <div class="left-column"> <!--information display in the left side of the page starts-->
                  <!-- this is where the tag information will start-->
                 <div class="student-tag">
-                    <div class="student-photo-placeholder">
-                    </div>
-                </div> <!--This is where the tag information will end-->
+                    <form method="POST" enctype="multipart/form-data" id="photoForm">
+                        {% csrf_token %}
+
+                            <!-- Clickable box -->
+                        <div class="student-photo-placeholder" id="photoBox">
+                            {% if student.photo %}
+                                <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
+                                <span id="placeholderText" style="display:none;">Click to upload</span>
+                            {% else %}
+                                <img id="studentPhoto" src="" alt="Student photo" style="display:none;">
+                                <span id="placeholderText">Click to upload</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Hidden file input -->
+                        <input type="file" id="photoUpload" name="photo" accept="image/*" style="display:none;">
+                    </form>
+
+                </div> <!-- this is where the tag information will end-->
                 
                 <div class="notification-box"> <!-- This is where the noification content starts-->
                     <div class="notification-placeholder">
@@ -275,5 +319,30 @@
 
 </body>
 </html>
+
+<script>
+const photoBox = document.getElementById("photoBox");
+const photoUpload = document.getElementById("photoUpload");
+const studentPhoto = document.getElementById("studentPhoto");
+const placeholderText = document.getElementById("placeholderText");
+const photoForm = document.getElementById("photoForm");
+
+// Click opens file dialog
+photoBox.addEventListener("click", () => {
+    photoUpload.click();
+});
+
+// Preview selected image instantly and auto-submit
+photoUpload.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        studentPhoto.src = URL.createObjectURL(file);
+        studentPhoto.style.display = "block";
+        placeholderText.style.display = "none";
+        // Auto-submit the form
+        photoForm.submit();
+    }
+});
+</script>
 
 
