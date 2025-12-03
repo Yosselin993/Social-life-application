@@ -15,4 +15,10 @@ class ClubForm(forms.ModelForm):
 class EventForm(forms.ModelForm): #make a form that is connected to the Event model
     class Meta: 
         model = Event #this form will use the event model
-        fields = ['title', 'description', 'day', 'month', 'year']  #fields from omdel we want to show in the form
+        fields = ['title', 'description', 'day', 'month', 'year', 'time']  #fields from omdel we want to show in the form
+        widgets = {
+            'time' : forms.TimeInput(attrs={
+                'type': 'time', #shows a time picket in modern browsers
+                'class': 'form-control'
+            }),
+        }
