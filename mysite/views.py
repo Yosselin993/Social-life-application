@@ -194,12 +194,17 @@ def events_calendar(request, year=None, month=None):
     #calculate the first day of the *next* month
     next_date = display_date + relativedelta(months=1)
 
+    #calculate the first day of the *previous* month
+    prev_date = display_date - relativedelta(months=1)
+
     #check to see if the currently displayed month is the current month
     is_current_month = (year == today.year and month == today.month)
 
     #navigation links 
     next_month_year = next_date.year
     next_month_num = next_date.month
+    prev_month_year = prev_date.year
+    prev_month_num = prev_date.month
 
     #calculate the month name for the title
     current_month_name = datetime(year, month, 1).strftime('%B')
@@ -218,7 +223,7 @@ def events_calendar(request, year=None, month=None):
     # events loaded from database
     events = Event.objects.filter(month=month, year=year)
 
-    return render(request, "content/events_calendar.html", {
+    return render(request, "content/events_calendar2.html", {
         "year": year,
         "month": month,
         "month_name": current_month_name, 
@@ -229,6 +234,8 @@ def events_calendar(request, year=None, month=None):
 
          "next_month_year": next_month_year,
          "next_month_num": next_month_num,
+            "prev_month_year": prev_month_year,
+            "prev_month_num": prev_month_num,
          "is_current_month": is_current_month,
          "user": request.user, #added
          "is_club_leader": request.user.clubs_led.exists() #added
