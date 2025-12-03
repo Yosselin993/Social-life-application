@@ -20,21 +20,25 @@ from .models import Student
 def home(request): 
     return render(request, 'home.html') #render function to generate and return an HTML response
 def search_view(request):
-    search_term = request.GET.get('search_query', '') # Get the search query 
+    search_term = request.GET.get('search_query', '')
+    clubs = []
+    events = []
+    
     if search_term:
-        # Filter your model objects based on the search term
-        # Example: searching in 'title' and 'description' fields of a 'Product' model
-        results = product.objects.filter(
+        clubs = Club.objects.filter(
+            Q(name__icontains=search_term) | Q(description__icontains=search_term)
+        ).order_by('name')
+        
+        events = Event.objects.filter(
             Q(title__icontains=search_term) | Q(description__icontains=search_term)
-        ).order_by('name') # Order your results as needed
-    else:
-        results = product.objects.all().order_by('name') # Show all if no search term
+        ).order_by('title')
 
     context = {
-        'results': results,
+        'clubs': clubs,
+        'events': events,
         'search_term': search_term,
     }
-    return render(request, 'home.html', context)
+    return render(request, 'search_results.html', context)
 
 def index_view(request):
     return render(request, 'myapp/index.html')

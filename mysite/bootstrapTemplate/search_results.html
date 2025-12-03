@@ -1,0 +1,139 @@
+{% load bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    {% bootstrap_css %}
+    <style>
+        body {
+            background: linear-gradient(to right, #fff3e0, #ff9800);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .search-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .results-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .result-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .result-item:hover {
+            background-color: #fafafa;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff9800;
+        }
+        .result-description {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .back-link {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-link">
+            <a href="{% url 'mainPage' %}" class="btn btn-outline-primary">← Back to Home</a>
+        </div>
+
+        <div class="search-header">
+            <h1>Search Results</h1>
+            {% if search_term %}
+                <p>Results for: <strong>"{{ search_term }}"</strong></p>
+            {% else %}
+                <p>Enter a search term to find clubs and events.</p>
+            {% endif %}
+        </div>
+
+        {% if search_term %}
+            <!-- Clubs Results -->
+            {% if clubs %}
+                <div class="results-section">
+                    <h3>Clubs ({{ clubs|length }})</h3>
+                    {% for club in clubs %}
+                        <div class="result-item">
+                            <a href="{% url 'club_profile' club.id %}">
+                                <div class="result-title">{{ club.name }}</div>
+                                {% if club.description %}
+                                    <div class="result-description">{{ club.description|truncatewords:20 }}</div>
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Events Results -->
+            {% if events %}
+                <div class="results-section">
+                    <h3>Events ({{ events|length }})</h3>
+                    {% for event in events %}
+                        <div class="result-item">
+                            <div class="result-title">{{ event.title }}</div>
+                            {% if event.description %}
+                                <div class="result-description">{{ event.description|truncatewords:20 }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- No Results Message -->
+            {% if not clubs and not events %}
+                <div class="results-section">
+                    <div class="no-results">
+                        <h3>No results found</h3>
+                        <p>No clubs or events match your search for "{{ search_term }}"</p>
+                        <p>Try searching with different keywords.</p>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="results-section">
+                <div class="no-results">
+                    <p>Please enter a search term above.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% bootstrap_javascript %}
+</body>
+</html>
