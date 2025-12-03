@@ -1,6 +1,7 @@
 # clubs/views.py
 from django.shortcuts import render, redirect
 from .models import Club
+from django.shortcuts import render, redirect, get_object_or_404
 
 def browse_all_clubs(request):
     clubs = Club.objects.all()  # get all clubs from database
@@ -27,3 +28,8 @@ def add_event(request):
         form = EventForm()
     
     return render(request, 'content/add_event.html', {'form': form})
+
+
+def club_profile(request, club_id):
+    club = get_object_or_404(Club, id=club_id)
+    return render(request, 'content/club_profile.html', {'club': club})
