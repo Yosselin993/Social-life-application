@@ -76,7 +76,7 @@
             <!-- Clubs Results -->
             {% if clubs %}
                 <div class="results-section">
-                    <h3>Clubs ({{ clubs.count }})</h3>
+                    <h3>Clubs ({{ clubs|length }})</h3>
                     {% for club in clubs %}
                         <div class="result-item">
                             <div class="result-title">{{ club.name }}</div>
@@ -91,7 +91,7 @@
             <!-- Events Results -->
             {% if events %}
                 <div class="results-section">
-                    <h3>Events ({{ events.count }})</h3>
+                    <h3>Events ({{ events|length }})</h3>
                     {% for event in events %}
                         <div class="result-item">
                             <div class="result-title">{{ event.title }}</div>
