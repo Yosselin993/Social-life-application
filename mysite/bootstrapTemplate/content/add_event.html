@@ -1,21 +1,70 @@
-{% load bootstrap5 %}
+{% load bootstrap5 %}  <!-- Django Bootstrap 5 tags -->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add Event</title>
-    {% bootstrap_css %}
+    <meta charset="UTF-8">
+    <title>Add Event - UTRGVconnect</title>
+    {% bootstrap_css %}  <!-- includes Bootstrap CSS -->
 </head>
+
 <body>
 <div class="container mt-5">
-    <h2>Add a New Event</h2>
 
-    <form method="post">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button type="submit" class="btn btn-success mt-3">Save Event</button>
-    </form>
+    <div class="card p-4 shadow-sm">
+        <h2 class="mb-4 text-center" style="color: #0d47a1;">Add an Event</h2>
 
-    <a href="{% url 'events_calendar' %}" class="btn btn-primary mt-3">Back to Calendar</a>
+        <!-- Form for adding an event -->
+        <form method="post">
+            {% csrf_token %}  <!-- required for Django forms -->
+
+            <!-- Event Title -->
+            <div class="mb-3">
+                {{ form.title.label_tag }}
+                {{ form.title }}  <!-- Bootstrap class added in forms.py widget -->
+            </div>
+
+            <!-- Event Description -->
+            <div class="mb-3">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+            </div>
+
+            <!-- Event Day -->
+            <div class="mb-3">
+                {{ form.day.label_tag }}
+                {{ form.day }}
+            </div>
+
+            <!-- Event Month -->
+            <div class="mb-3">
+                {{ form.month.label_tag }}
+                {{ form.month }}
+            </div>
+
+            <!-- Event Year -->
+            <div class="mb-3">
+                {{ form.year.label_tag }}
+                {{ form.year }}
+            </div>
+
+            <!-- Event Time -->
+            <div class="mb-3">
+                {{ form.time.label_tag }}
+                {{ form.time }}
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-success w-100">Add Event</button>
+        </form>
+
+        <!-- Back button to events calendar -->
+        <div class="mt-3 text-center">
+            <a href="{% url 'events_calendar' %}" class="btn btn-outline-primary">Back to Calendar</a>
+        </div>
+    </div>
 </div>
+
+{% bootstrap_javascript %}  <!-- includes Bootstrap JS for interactivity -->
 </body>
 </html>

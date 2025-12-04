@@ -52,7 +52,8 @@
         /* each day box */
         .day-box { 
             border: 1px solid #ddd;
-            height: 120px;
+            min-height: 120px;
+            height: auto;
             width: calc(100% / 7 - 4px); /* forces each day to be exactly 1/7th of the width minus margin */
             margin: 2px;
             padding: 5px;
@@ -70,12 +71,22 @@
             font-size: 12px;
             border-radius: 4px;
             margin-top: 4px;
-            display: block;
+
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-width:100%;
+            word-wrap: break-word;
+            overflow-wrap:break-word;
         }
 
         /*back button style*/
         .back-btn {
             margin-top: 20px;
+        }
+
+        .event-item .d-flex {
+            flex-shrink: 0;
         }
      </style>
 </head>
@@ -101,7 +112,7 @@
                 <form method="post" action="{% url 'logout' %}" id="logout-form">
                     {% csrf_token %}
                     <a href="#" onclick="document.getElementById('logout-form').submit(); return false;"
-                        syle = "color: #0d47a1; text-decoration: underline; font-size: 16px; cursor: pointer;">
+                        style = "color: #0d47a1; text-decoration: underline; font-size: 16px; cursor: pointer;">
                          Logout
                     </a>
                 </form>
@@ -156,7 +167,23 @@
 
                 {% for event in events %}
                     {% if event.day == day %}
-                        <div class="event-item">{{ event.title }} - {{ event.club.name }}</div>
+                        <div class="event-item"
+                            data-bs-toggle="tooltip"  
+                            
+                            data-bs-placement="bottom"
+
+                            title = "{{ event.description }}">  <!--the actual text that appears in the tooltip-->
+
+                            {{event.title}} ({{ event.time|time:"g:i A" }}) - {{event.club.name}} <!--modified-->
+
+                            <!--show edit/delete buttons if it is club account-->
+                            {% if user in event.club.leaders.all %} 
+                                <div class="mt-1 d-flex gap-1"> 
+                                    <a href="{% url 'edit_event' event.id %}" class="btn btn-sm btn-warning">Edit</a> 
+                                    <a href="{% url 'delete_event' event.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                </div>
+                            {% endif %}
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -164,5 +191,21 @@
     </div>
 
 </div>
+
+{% bootstrap_javascript %} <!--this django tag loads bootstrap's javascript file that is needed for interactive features like tooltips-->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() { //waits until the whole page is loaded
+
+        //selects all elements that have data-bs-toggle="tooltip"
+        //tells bootstrap ;this sleent should have a tooltip
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+        //creates a tooltip object for each elemtn found above
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl); // bootstrap.Tooltip() is a built-in bootstrao class that activates the tooltip feature (hover)
+        });
+    });
+</script>
 </body>
 </html>

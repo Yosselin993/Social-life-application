@@ -184,8 +184,8 @@
     .student-photo-placeholder {
     width: 150px;
     height: 150px;
-    border: 2px dashed #aaa;
-    border-radius: 10px;
+    border: 2px solid #aaa;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -224,7 +224,7 @@
 
         <div class="mb-2"> <!--class from bootstrap that controls to margins from the top-->
             <div class="card"> <!--Seletor class "card" is called, everthing displayed within card starts here"-->
-                <form method="GET" class="search-form-group">
+                <form method="GET" action="{% url 'search' %}" class="search-form-group">
                     <button type="submit" class="btn btn-primary">Search</button>
                     <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
                 </form>
@@ -250,14 +250,21 @@
                         {% csrf_token %}
 
                             <!-- Clickable box -->
-                        <div class="student-photo-placeholder" id="photoBox">
-                            {% if student.photo %}
-                                <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
-                                <span id="placeholderText" style="display:none;">Click to upload</span>
-                            {% else %}
-                                <img id="studentPhoto" src="" alt="Student photo" style="display:none;">
-                                <span id="placeholderText">Click to upload</span>
-                            {% endif %}
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="student-photo-placeholder" id="photoBox">
+                                {% if student.photo %}
+                                    <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
+                                    <span id="placeholderText" style="display:none;">Click to upload</span>
+                                {% else %}
+                                    <img id="studentPhoto" src="" alt="Student photo" style="display:none;">
+                                    <span id="placeholderText">Click to upload</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="student-info" style="display:flex; flex-direction:column;">
+                                <span class="student-username" style="font-weight:600;">{{ student.user.username }}</span>
+                                <span class="student-fullname" style="color:#666;">{{ student.user.get_full_name }}</span>
+                            </div>
                         </div>
 
                         <!-- Hidden file input -->
