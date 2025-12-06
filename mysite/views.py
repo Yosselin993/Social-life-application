@@ -218,6 +218,11 @@ def events_calendar(request, year=None, month=None):
     # events loaded from database
     events = Event.objects.filter(month=month, year=year)
 
+    #calculate previous month
+    prev_date = display_date - relativedelta(months=1)
+    prev_month_year = prev_date.year
+    prev_month_num = prev_date.month
+
     return render(request, "content/events_calendar.html", {
         "year": year,
         "month": month,
@@ -231,7 +236,11 @@ def events_calendar(request, year=None, month=None):
          "next_month_num": next_month_num,
          "is_current_month": is_current_month,
          "user": request.user, #added
-         "is_club_leader": request.user.clubs_led.exists() #added
+         "is_club_leader": request.user.clubs_led.exists(), #added
+
+         #added for prev button
+         "prev_month_year": prev_month_year,
+         "prev_month_num": prev_month_num,
     })
 
 #def browse_all(request):
@@ -269,3 +278,4 @@ def club_first_login(request):
 
 def club_profile(request):
     return render(request, 'content/club_profile.html')
+
