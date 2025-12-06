@@ -17,28 +17,50 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
+            /*display: flex;
+            justify-content: center;*/
         }
 
         /*the same main white card for the calendar*/
         .card {
             width: 90%;
             max-width: 1200px;
-            padding: 40px 40px;
+            padding: 40px;
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
             margin: 40px auto;
         }
 
-
-        /*header inside the card*/
-         .header {
+        .top-header {
+            width: 100%;
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+
+            /* this makes it sit inside the orange gradient area */
+            background: transparent;
+        }
+
+        .top-header h1 {
+            color: #0d47a1;
+            font-size: 32px;
+            margin: 0;
+        }       
+
+        .top-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .top-right a {
+            color: #0d47a1;
+            text-decoration: underline;
+            font-size: 16px;
+            cursor: pointer;
         }
 
         /* the calendar grid*/
@@ -52,7 +74,7 @@
         /* each day box */
         .day-box { 
             border: 1px solid #ddd;
-            height: 120px;
+            min-height: 140px; /*changed*/
             width: calc(100% / 7 - 4px); /* forces each day to be exactly 1/7th of the width minus margin */
             margin: 2px;
             padding: 5px;
@@ -66,42 +88,46 @@
         .event-item {
             background: #0d47a1;
             color: white;
-            padding: 3px 6px;
+            padding: 4px 6px;
             font-size: 12px;
             border-radius: 4px;
             margin-top: 4px;
-            display: block;
+            display: flex;
+            flex-direction:column;
+            word-break: break-word;
+
+            align-items: flex-start;
+            max-width:100%;
+            word-wrap: break-word;
+            overflow-wrap:break-word;
         }
 
+        .event-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
         /*back button style*/
         .back-btn {
             margin-top: 20px;
+        }
+
+        .event-item .d-flex {
+            flex-shrink: 0;
         }
      </style>
 </head>
 
 <body>
-<div class = "container">
+<div class = "top-header">
+    <h1>UTRGVconnect</h1>
 
-    <!--white card for content-->
-    <div class = "card">
-
-        <!-- to have the top header like the main page -->
-        <div class="header">
-            <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
-
-            <div style = "display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
-
-                <!--updated home button -->
-                <form action = "{% url 'mainPage' %}"> <!--changed this to now go to the actual calendar-->
-                    <button type="submit" class="btn btn-primary" >Home</button>
-                 </form>
-
-                <!-- updated logout button -->
+    <div class = "top-right">
+                <!-- updated logout button location-->
                 <form method="post" action="{% url 'logout' %}" id="logout-form">
                     {% csrf_token %}
                     <a href="#" onclick="document.getElementById('logout-form').submit(); return false;"
-                        syle = "color: #0d47a1; text-decoration: underline; font-size: 16px; cursor: pointer;">
+                        style = "color: #0d47a1; text-decoration: underline; font-size: 16px; cursor: pointer;">
                          Logout
                     </a>
                 </form>
@@ -109,12 +135,30 @@
         </div>
     </div>
 
+
+<!--main content-->
+<div class = "container">
+    <div class = "card">
+
     <!-- page title -->
     <h2 class = "text-center mb-4">Events Calendar</h2>
 
     <div class = "d-flex justify-content-between align-items-center mb-4">
 
-        <div style = "width: 50px;"></div> 
+        <div class = "d-flex gap-2">
+            <!--home button location-->
+            <form action = "{% url 'mainPage' %}"> <!--changed this to now go to the actual calendar-->
+                <button type="submit" class="btn btn-primary" >Home</button>
+            </form>
+
+            <!--prev button-->
+            <a href = "{% url 'events_calendar_nav' prev_month_year prev_month_num %}"
+                class = "btn btn-outline-primary">
+                &laquo; Prev
+            </a>
+                       
+        </div>
+
 
         <h3 class = "text-center" style = "color: #051c3f; margin: 0;">     <!--displays the month name and year -->
             {{ month_name }} {{ year }}
@@ -156,7 +200,23 @@
 
                 {% for event in events %}
                     {% if event.day == day %}
-                        <div class="event-item">{{ event.title }} - {{ event.club.name }}</div>
+                        <div class="event-item"
+                            data-bs-toggle="tooltip"  
+                            
+                            data-bs-placement="bottom"
+
+                            title = "{{ event.description }}">  <!--the actual text that appears in the tooltip-->
+
+                            {{event.title}} ({{ event.time|time:"g:i A" }}) - {{event.club.name}} <!--modified-->
+
+                            <!--show edit/delete buttons if it is club account-->
+                            {% if user in event.club.leaders.all %} 
+                                <div class="mt-1 d-flex gap-1"> 
+                                    <a href="{% url 'edit_event' event.id %}" class="btn btn-sm btn-warning">Edit</a> 
+                                    <a href="{% url 'delete_event' event.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                </div>
+                            {% endif %}
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -164,5 +224,23 @@
     </div>
 
 </div>
+</div>
+
+{% bootstrap_javascript %} <!--this django tag loads bootstrap's javascript file that is needed for interactive features like tooltips-->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() { //waits until the whole page is loaded
+
+        //selects all elements that have data-bs-toggle="tooltip"
+        //tells bootstrap ;this sleent should have a tooltip
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+        //creates a tooltip object for each elemtn found above
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl); // bootstrap.Tooltip() is a built-in bootstrao class that activates the tooltip feature (hover)
+        });
+    });
+</script>
+
 </body>
 </html>

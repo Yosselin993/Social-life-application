@@ -34,6 +34,8 @@ class Event(models.Model): #defined an event model (like a template for an event
     day = models.IntegerField()
     month = models.IntegerField()
     year = models.IntegerField()
+
+    time = models.TimeField(default="12:00") # added this time field
     
     def __str__(self): #how the event shows up when events calendar
         return f"{self.title} ({self.club.name})"
