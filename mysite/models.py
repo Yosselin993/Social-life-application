@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django_summernote.fields import SummernoteTextField
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -17,3 +18,7 @@ class Student(models.Model):
         if self.user:
             return f"{self.user.username}'s Student Profile"
         return f"Student {self.id}"
+
+class Comment(models.Model):
+    # A text field that uses the Summernote editor for formatting
+    text = SummernoteTextField()

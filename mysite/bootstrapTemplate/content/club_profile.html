@@ -40,18 +40,18 @@
     }
      /*Used to diplay the circle design that will store the profile photo*/
     .club-photo-placeholder {
-    width: 200px;
-    height: 200px;
-    border: 2px solid #aaa;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-    background-color: #f7f7f7;
-    flex-shrink: 0;
+        width: 200px;
+        height: 200px;
+        border: 2px solid #aaa;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        background-color: #f7f7f7;
+        flex-shrink: 0;
     }
     /*Used to control the placement of the text within the main card*/
     .text-placement{
@@ -113,11 +113,17 @@
     }
      /* Styles the righgt side boxes */
     .right-column{
-    grid-column: 3;
-    display: flex;
-    flex-direction: column;
+        grid-column: 3;
+        display: flex;
+        flex-direction: column;
     }
+    .button-control{
+       display: flex;
+        justify-content: center;
+        gap: 15px;
+        align-items: center;
 
+    }
 </style>
 </head>
 
@@ -153,10 +159,23 @@
             </div><!--Announcement content ends-->
         </div><!--left column ends--> 
 
+        {% if request.user in club.leaders.all %} <!-- This whole section will only be displayed to leaders in the club-->
         <div class="central-column"> <!--every box will be displayed in the center of the screen-->
-            <div class="central-box"> <!--The centeral box was created to display buttons for club creaters -->
+            <div class="central-box button-control"> <!--The centeral box was created to display buttons for club creaters -->
+                <form action = "{% url 'form_page' club.id 'announcement' %}"> <!--Will take you to the webpage to create Announcement post -->
+                    <button type="submit" class="btn btn-primary" >Create Announcement</button>
+                </form>
+
+                <form action="{% url 'form_page' club.id 'post' %}"> <!--Will take you to the webpage to create a Post-->
+                    <button type="submit" class="btn btn-primary" >Create Post</button>
+                </form>
+
+                <form action="{% url 'form_page' club.id 'submission' %}"> <!--Will take you to the webpage to create a submission post-->
+                    <button type="submit" class="btn btn-primary" >Create submission Box</button>
+                </form>
             </div><!--centeral box content ends-->
         </div><!--central-column ends-->
+        {% endif %} <!-- This whole section end here-->
 
         <div class="right-column"><!--every box will be displayed on the right side of the screen-->
             <div class="submission-box"> <!--where submission boxes will be displayed-->
@@ -168,8 +187,6 @@
 
 
 </div>
-
-
 {% bootstrap_javascript %}
 </body>
 
