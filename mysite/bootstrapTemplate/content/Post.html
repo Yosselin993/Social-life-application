@@ -1,0 +1,72 @@
+{% load bootstrap5 %} 
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+<meta charset = "UTF-8">
+    <title>Club Setup</title>
+    {% bootstrap_css %}
+<style>
+    /*The main layout we have see over and over agian on our website*/
+    body {
+        background: linear-gradient(to right, #fff3e0, #ff9800); /* orange and white */
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        font-family: 'Arial', sans-serif;
+        margin: 0; 
+        padding: 0;
+    }
+    /*Used to display the heading information like the utrgv logo and logout*/
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+       margin-top: 1px;
+    }
+    /* This is the main card. There used to diplay the text editor*/
+     .card{
+        width: 90%; 
+        height: 80%;
+        max-width: 1290px;
+        padding: 40px 80px;  /* top/bottom = 20px, left/right = 80px */
+        background-color: white;
+        border-radius: 12px;
+        margin: 2px auto;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 40px;
+    }
+
+
+</style>
+</head>
+<body>
+<div class="container mt-2"> 
+    <div class="mb-4 header"> <!-- header content starts -->
+            <!--Changed the home button to be the utrgv logo-->
+            <a href="{% url 'mainPage' %}" style="color: #0d47a1; font-size: 30px; text-decoration: none;">UTRGVconnect</a>
+            <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
+            {% csrf_token %}
+            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
+            Logout</a>
+            </form>
+    </div> <!--header content ends-->
+
+     <div>
+        <form action="{% url 'club_profile' club_id %}"><!--This will render back to the 'club' the user is a leader to. So taking them back to their profile page-->
+        <button type="submit" class="btn btn-primary">Go Back</button>
+        </form>
+    </div>
+    <div class="mt-4 card"> <!--Displaying the main card box-->
+
+
+
+    </div><!--main card box ends -->
+
+
+</div>
+
+</body>
+</html>

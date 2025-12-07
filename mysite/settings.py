@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'clubs',
     'mysite.apps.SFappConfig',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [
