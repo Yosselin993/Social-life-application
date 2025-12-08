@@ -13,7 +13,7 @@
             <h2 class="mt-4" style="color: #0d47a1;">Complete Your Club Profile</h2>
             <p class="mb-4">This information will be displayed on the Browse All Clubs page.</p>
 
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% bootstrap_form form %} 
                 <button type="submit" class="btn btn-success mt-4">Save Club Details & Continue</button>

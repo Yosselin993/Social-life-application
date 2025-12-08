@@ -294,7 +294,32 @@
             </div> 
             <div class="visit-club-box"> <!--Where the visiting information starts-->
                 <div class="notification-placeholder">
-                    <p>Make sure to visit your clubs!</p>
+                    <p style="font-weight:600;">Your Favorite Clubs</p>
+                    {% if favorite_clubs and favorite_clubs.count > 0 %}
+                        <div style="margin-top:8px; display:flex; flex-direction:column; gap:12px; align-items:stretch; text-align:left;">
+                            {% for fclub in favorite_clubs %}
+                                <div class="card" style="padding:10px;">
+                                    <div style="display:flex; justify-content:space-between; gap:8px; align-items:flex-start;">
+                                        <div>
+                                            <h5 style="margin:0;"><a href="{% url 'club_profile' fclub.id %}">{{ fclub.name }}</a></h5>
+                                            {% if fclub.meeting_time %}
+                                                <div style="font-size:0.9em; color:#555;">{{ fclub.meeting_time }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div style="display:flex; gap:8px; align-items:center;">
+                                            <form method="post" action="{% url 'toggle_favorite' fclub.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Unfavorite</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p style="margin-top:8px;">You haven't favorited any clubs yet.</p>
+                        <a href="{% url 'browse_all' %}" class="btn btn-sm btn-primary" style="margin-top:8px;">Browse Clubs</a>
+                    {% endif %}
                 </div>
             </div> <!--Where the visiting information ends-->
         </div> 
@@ -308,9 +333,14 @@
                 <h5 class="modal-title">Complete Your Club Profile</h5>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'club_first_login' %}">
+                <form method="post" action="{% url 'club_first_login' %}" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% bootstrap_form form %}
+                    {% if club_form %}
+                        {% bootstrap_form club_form %}
+                    {% else %}
+                        {# Fallback: show the general form variable if present #}
+                        {% bootstrap_form form %}
+                    {% endif %}
                     <button type="submit" class="btn btn-success mt-2">Save & Continue</button>
                 </form>
             </div>

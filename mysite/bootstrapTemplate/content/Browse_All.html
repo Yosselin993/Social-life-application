@@ -107,17 +107,31 @@
             <div class="row club-cards">
                 {% for club in clubs %}
                 <div class="col-12 col-sm-6 col-md-4 mb-4">
-                  <a href="{% url 'club_profile' club.id %}" style="text-decoration:none; color:inherit; height: 100%;">
-                    <div class="card-club-version">
+                  <div class="card-club-version">
                         <div class="card-body">
-                            <h5 class="card-title">{{ club.name }}</h5>
+                            <h5 class="card-title"><a href="{% url 'club_profile' club.id %}" style="text-decoration:none; color:inherit;">{{ club.name }}</a></h5>
                             <p class="card-text">{{ club.description }}</p>
                             <p><strong>Meeting Time:</strong> {{ club.meeting_time }}</p>
                             <p><strong>Location:</strong> {{ club.location }}</p>
                             <p><strong>Tags:</strong> {{ club.descriptions }}</p>
+
+                            <div style="margin-top:12px;">
+                                {% if user.is_authenticated %}
+                                    <form method="post" action="{% url 'toggle_favorite' club.id %}">
+                                        {% csrf_token %}
+                                        {% if user in club.favorites.all %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Unfavorite</button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-sm btn-outline-success">Favorite</button>
+                                        {% endif %}
+                                    </form>
+                                {% else %}
+                                    <a href="{% url 'login' %}" class="btn btn-sm btn-outline-secondary">Login to favorite</a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                  </a></div>
+                  </div>
                 {% endfor %}
             </div>
             </div>

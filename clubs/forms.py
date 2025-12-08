@@ -6,7 +6,7 @@ class ClubForm(forms.ModelForm):
     # the form should use these Club model
     class Meta:
         model = Club
-        fields = ['name', 'description', 'meeting_time', 'location', 'leaders', 'descriptions']
+        fields = ['name', 'description', 'meeting_time', 'location', 'leaders', 'descriptions', 'photo', 'banner']
         # these are the model fields we want to show on the form
         widgets = { #added
             'descriptions': forms.TextInput(attrs={'placeholder': 'Enter tags separated by commas'}), 

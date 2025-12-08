@@ -123,6 +123,7 @@ def main_page(request):
         'is_club_leader': is_club_leader,
         'club_form': club_form,
         'club': club,
+        'favorite_clubs': request.user.favorite_clubs.all(),
         'display_name': display_name #added to display first/last name
     }
 
@@ -290,7 +291,7 @@ def club_first_login(request):
         return redirect('mainPage')
     
     if request.method == 'POST':
-        form = ClubForm(request.POST, instance = club)
+        form = ClubForm(request.POST, request.FILES, instance = club)
         if form.is_valid():
             club = form.save(commit=False)
             club.first_login_completed = True
@@ -308,9 +309,34 @@ def club_profile(request, club_id):
     # Get the club object from the database using the provided club_id
     club = Club.objects.get(id=club_id)
      # Render the club_profile.html and pass the club data into it
-    return render(request, 'content/club_profile.html',{
-        'club':club
-    })
+    context = {'club': club}
+    # If the current user is a leader, include an editable ClubForm instance
+    if request.user.is_authenticated and request.user in club.leaders.all():
+        context['club_form'] = ClubForm(instance=club)
+
+    return render(request, 'content/club_profile.html', context)
+
+
+@login_required
+def edit_club(request, club_id):
+    # Allow club leaders to update their club, including uploading/changing images
+    club = Club.objects.get(id=club_id)
+    # Only leaders can edit
+    if request.user not in club.leaders.all():
+        return redirect('club_profile', club_id=club.id)
+
+    if request.method == 'POST':
+        form = ClubForm(request.POST, request.FILES, instance=club)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Club updated successfully.')
+            return redirect('club_profile', club_id=club.id)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ClubForm(instance=club)
+
+    return render(request, 'content/club_profile.html', {'club': club, 'club_form': form})
 
 
 def form_page(request, club_id, form_type):
