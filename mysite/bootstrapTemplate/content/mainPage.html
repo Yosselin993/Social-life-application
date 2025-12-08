@@ -32,8 +32,8 @@
     body{
         background: linear-gradient(to right, #fff3e0, #ff9800); /* orange and white */
         min-height: 100vh;
-        display: flex;
-        justify-content: center;
+        /*display: flex;
+        justify-content: center;*/
         font-family: 'Arial', sans-serif;
         margin: 0; 
         padding: 0;
@@ -323,6 +323,20 @@
     myModal.show();
 </script>
 {% endif %}
+
+
+
+<!--this section is for the quiz (recommendation banner)-->
+<!-- Quiz banner with NO background -->
+<div class="text-center mt-5 mb-5" style="background: none; border: none; padding: 0;">
+    <h3 style="font-weight: bold;">Need recommendations?</h3>
+    <p style="font-size: 18px;">Take this quiz to find out what three clubs you should favorite!</p>
+
+    <a href="{% url 'quiz' %}" class="btn btn-primary btn-lg">
+        Take the Quiz
+    </a>
+</div>
+
 
 </body>
 </html>

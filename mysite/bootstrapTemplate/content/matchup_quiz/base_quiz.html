@@ -1,0 +1,29 @@
+{% load bootstrap5 %} <!--the base for quiz.html and quiz_results.html instead of using mysite/base-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Quiz{% endblock %}</title>
+    {% bootstrap_css %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f7;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+    {% bootstrap_javascript %}
+</body>
+</html>

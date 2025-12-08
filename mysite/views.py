@@ -14,9 +14,10 @@ from clubs.forms import ClubForm
 from django.http import HttpResponse
 from .forms import CommentForm
 from django.shortcuts import render, redirect
-from .forms import StudentForm
-from .models import Student
+from .forms import StudentForm #form for uploadin student photo
+from .models import Student #student model
 from .forms import CustomSignupForm #added to add a first and last name for students
+from .forms import QuizForm #added for quiz (quiz form)
 
 # this is a function that handles requests to the home page
 def home(request): 
@@ -81,15 +82,15 @@ def user_login(request):
 
 @login_required(login_url='login')
 def main_page(request):
-    club = None
-    club_form = None
-    is_club_leader = request.user.clubs_led.exists()
+    club = None #initalize variable
+    club_form = None #initalize variable
+    is_club_leader = request.user.clubs_led.exists() #check if user leads any club
 
     if is_club_leader:
-        club = request.user.clubs_led.first()
+        club = request.user.clubs_led.first() #get first club
         if not club.first_login_completed:
             from clubs.forms import ClubForm
-            club_form = ClubForm(instance=club)
+            club_form = ClubForm(instance=club) #pre-fill form with club info
 
     # Get or create a Student instance for the current user
     student, created = Student.objects.get_or_create(user=request.user)
@@ -99,7 +100,7 @@ def main_page(request):
     if request.user.clubs_led.exists():
         # User is a club leader, show the club name (assuming first club)
         club = request.user.clubs_led.first()
-        display_name = club.name
+        display_name = club.name #show club name
     else:
         # User is a student, show first + last name
         display_name = f"{request.user.first_name} {request.user.last_name}".strip()
@@ -151,7 +152,7 @@ def signup_user(request, role): #handles the actual signup form based on the rol
             if role == 'student':
                 new_user.first_name = form.cleaned_data.get('first_name', '')
                 new_user.last_name = form.cleaned_data.get('last_name', '')
-            new_user.save()
+            new_user.save() #save user to database
 
             if role == 'club':
                 # Create the Club object. It will have default/blank fields.
@@ -167,7 +168,7 @@ def signup_user(request, role): #handles the actual signup form based on the rol
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-            form = CustomSignupForm(role=role) #edited
+            form = CustomSignupForm(role=role) #get request, empty form
 
     return render(request, 'registration/signup_user.html', {'form': form, 'role': role}) #rend the signup page with the form and the chosen role
 
@@ -332,5 +333,61 @@ def form_page(request, club_id, form_type):
         "form_title": form_title, # Page title based on form type
         "form": CommentForm(),  #Display an empty form box
     })  
+
+@login_required
+def quiz_view(request):
+    if request.method == "POST": #check is the user submitted the quiz form
+        form = QuizForm(request.POST) #create a quizform instance with the submitted POST data
+        if form.is_valid(): #valides the form , check required fields, correct types (django checks each fields' constraints and builds a cleaned_data dictionary)
+            selected_interests = form.cleaned_data["interests"] #get selected interests (extract the list of interest selected)
+            selected_major = form.cleaned_data["major"] #get selected major (extracts the major selected by the user , could be none)
+
+            clubs = Club.objects.all() #get all the club objects from the database
+            scored_clubs = [] #initialize an empty list to store each club and its score
+
+            # Scoring:
+            # +2 if tag matches interest
+            # +1 if interest keyword appears in description
+            for club in clubs: #looping through each club to calculate its match score
+                score = 0 #score starts with 0 for this club
+                tags = club.tags.lower() if hasattr(club, "tags") and club.tags else "" #get tags
+                desc = club.description.lower() if club.description else "" #get description
+
+                for interest in selected_interests: #iterate over user's interest to calculate points
+                    if interest in tags: #if interest exactly matches a tag
+                        score += 2 #plus 2 points for strong match in tags
+                    if interest in desc: #if interest appears in the description text
+                        score += 1 #plus 1 point for partial match in description
+
+                # Score based on major
+                if selected_major:
+                    if selected_major in tags: #strong match in tags
+                        score += 3  #plus 3 points if major matches tags (Strong relevance)
+                    if selected_major in desc: #weak match in description
+                        score += 1  #plus 1 point if major appears in description
+
+                #score is an int representing how well this club matches user interests/major
+                scored_clubs.append((club, score)) #append a tuple: (club oject, calculated score)
+
+            # Sort by score (highest first), sort list of tuples by score
+            scored_clubs.sort(key=lambda x: x[1], reverse=True) #python sorts tuples by the second element (x[1]), reversr=true means descending order
+
+            # Take top 3 (ignores scores, just takes the club ojects)
+            top_three = [c[0] for c in scored_clubs[:3]] #slicing [:3] takes first three elements, list comprehension extracts only club objects
+
+            return render(
+                request,
+                "content/matchup_quiz/quiz_result.html", #template to show quiz resutls
+                {"clubs": top_three} #pass top three clubs to the template
+            )
+
+    else:
+        form = QuizForm() #empty form for GET request (django generates an html form with fields defined in quizform)
+
+    return render(
+        request, 
+        "content/matchup_quiz/quiz.html",
+        {"form": form}
+        )
 
 

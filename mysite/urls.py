@@ -46,4 +46,5 @@ urlpatterns = [
     path('club/<int:club_id>/', views.club_profile, name='club_profile'), # This URL shows the profile page for a specific club using its ID
     path('club/<int:club_id>/create/<str:form_type>/', views.form_page, name='form_page'), # This URL takes a club ID and a form type to determine which form to load
     path('summernote/', include('django_summernote.urls')), #Summernote editor which is used to display a text box.
+    path("quiz/", views.quiz_view, name = "quiz"), #url for quizzes
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
