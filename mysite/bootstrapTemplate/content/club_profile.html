@@ -169,6 +169,13 @@
             <div class="card-banner" style="background-image: url('{{ club.banner.url }}');"></div>
         {% endif %}
 
+        {% if request.user in club.leaders.all %}
+            <!-- Edit Club Modal Trigger (top-right, below banner) -->
+            <div style="display:flex; justify-content:flex-end; padding:8px 40px 0 40px;">
+                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editClubModal">Edit Club</button>
+            </div>
+        {% endif %}
+
         <div class="card-body-content">
             <div class="club-photo-placeholder" style="width:200px; height:200px;">
                 {% if club.photo %}
@@ -193,8 +200,8 @@
                         <a href="{% url 'login' %}" class="btn btn-sm btn-outline-secondary">Login to favorite</a>
                     {% endif %}
                 </p>
-                <p>Description: {{ club.description }}</p>
-                <p>Meeting Time: {{ club.meeting_time }}</p>
+                    <p>Description: {{ club.description }}</p>
+                    <p>Meeting Time: {{ club.meeting_time }}</p>
             </div>
         </div>
     </div> <!--where the main box ends-->
@@ -240,12 +247,6 @@
         </div><!--central-column ends-->
         {% endif %} <!-- This whole section end here-->
 
-        {% if request.user in club.leaders.all %}
-        <!-- Edit Club Modal Trigger -->
-        <div style="grid-column:2; margin-top:12px; display:flex; justify-content:center;">
-            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editClubModal">Edit Club</button>
-        </div>
-
         <!-- Edit Club Modal -->
         <div class="modal fade" id="editClubModal" tabindex="-1">
             <div class="modal-dialog">
@@ -271,7 +272,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
 
         <div class="right-column"><!--every box will be displayed on the right side of the screen-->
             <div class="submission-box"> <!--where submission boxes will be displayed-->
