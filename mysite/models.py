@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_summernote.fields import SummernoteTextField
+from clubs.models import Club #added for annoucements
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -22,3 +23,13 @@ class Student(models.Model):
 class Comment(models.Model):
     # A text field that uses the Summernote editor for formatting
     text = SummernoteTextField()
+
+#store annoucements, annoucement model linked to club
+class Announcement (models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='announcements')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']  # latest first

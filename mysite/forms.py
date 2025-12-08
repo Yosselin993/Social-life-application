@@ -4,6 +4,8 @@ from django import forms
 from .models import Student
 from django.contrib.auth.forms import UserCreationForm #added
 from django.contrib.auth.models import User #added
+from mysite.custom_clean import SafeSummernoteField
+from.models import Announcement
 
 class StudentForm(forms.ModelForm):
     class Meta:
@@ -20,6 +22,7 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'text': SummernoteWidget(),
         }
+
 
 class CustomSignupForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
@@ -88,3 +91,11 @@ class QuizForm(forms.Form): #django validates the selected values against intere
         required = False, #allows user to skip this field
         label = "Select your major"
     ) #django validates that the submitted value matches on of the allowed choices
+
+
+class AnnouncementForm(forms.ModelForm):
+    content = SafeSummernoteField()   # override the field to avoid bleach crash
+
+    class Meta:
+        model = Announcement
+        fields = ['content']
