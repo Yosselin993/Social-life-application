@@ -18,6 +18,9 @@ from .forms import StudentForm #form for uploadin student photo
 from .models import Student #student model
 from .forms import CustomSignupForm #added to add a first and last name for students
 from .forms import QuizForm #added for quiz (quiz form)
+from .models import Announcement #added
+from django.shortcuts import get_object_or_404
+from .forms import AnnouncementForm
 
 # this is a function that handles requests to the home page
 def home(request): 
@@ -300,38 +303,71 @@ def club_first_login(request):
 def club_profile(request, club_id):
     # Get the club object from the database using the provided club_id
     club = Club.objects.get(id=club_id)
+
+    announcements = club.announcements.all()
+
      # Render the club_profile.html and pass the club data into it
     return render(request, 'content/club_profile.html',{
-        'club':club
+        'club':club,
+        'announcements': announcements
     })
 
-
+@login_required
 def form_page(request, club_id, form_type):
-    # this is checking which type of form should be loaded based on the URL parameter
 
-      # If user is creating a post
-    if form_type == "post":
-        form_title = "Create Post"
-        template = "content/Post.html"
+    club = get_object_or_404(Club, id=club_id)
 
-    elif form_type == "announcement":
+    #default empty form
+    form = CommentForm()
+    template = ""
+    form_title = ""
+
+    if form_type == "announcement":
          # If user is creating an announcemen
         form_title = "Create Announcement"
         template = "content/Announcement.html"
+
+        if request.method == "POST":
+            form = AnnouncementForm(request.POST)
+            if form.is_valid():
+                Announcement.objects.create(
+                    club=club,
+                    author=request.user,
+                    content=form.cleaned_data['content']
+                )
+                messages.success(request, "Announcement posted successfully!")
+                return redirect('club_profile', club_id=club.id)
+            else:
+                messages.error(request, "Announcement cannot be empty.")
+
+    # this is checking which type of form should be loaded based on the URL parameter
+
+      # If user is creating a post
+    elif form_type == "post":
+        form_title = "Create Post"
+        template = "content/Post.html"
 
     elif form_type == "submission":
         # If user is creating a submission box
         form_title = "Create Submission Box"
         template = "content/submission_box.html"
-
+        #added POST handling
+        if request.method == "POST":
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                messages.success(request, "Submission box created successfully!")
+                return redirect('club_profile', club_id = club.id)
+            else:
+                messages.error(request, "Submission cannot be empty.")
     else:
          # If the form type doesn't match any valid option, return an error
         return HttpResponse("Invalid form type")
+    
     # Render the selected template and pass necessary context
     return render(request, template, {
         "club_id": club_id,
         "form_title": form_title, # Page title based on form type
-        "form": CommentForm(),  #Display an empty form box
+        "form": AnnouncementForm(),  #Display an empty form box
     })  
 
 @login_required

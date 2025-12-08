@@ -155,7 +155,22 @@
 
         <div class="left-column"> <!--every box will be displayed on left side of the screen-->
             <div class="Announcement-box"> <!--Announcement content starts-->
+                    <h4 style="text-align:center; margin-bottom: 10px;">Announcements</h4>
+                    
+                    {% for announcement in announcements %}
+                        <div class="announcement">
+                            <p class="announcement-date" style="color: #555; font-size:14px;">
+                                {{ announcement.created_at|date:"M j, Y h:i A" }}
+                            </p>
 
+                            <div class="announcement-content">
+                                {{ announcement.content|safe }}
+                        </div>
+            </div>
+
+                    {% empty %}
+                        <p>No announcements yet.</p>
+                    {% endfor %}
             </div><!--Announcement content ends-->
         </div><!--left column ends--> 
 
