@@ -247,6 +247,7 @@
         </div><!--central-column ends-->
         {% endif %} <!-- This whole section end here-->
 
+        {% if club_form %}
         <!-- Edit Club Modal -->
         <div class="modal fade" id="editClubModal" tabindex="-1">
             <div class="modal-dialog">
@@ -258,12 +259,7 @@
                     <div class="modal-body">
                         <form method="post" action="{% url 'edit_club' club.id %}" enctype="multipart/form-data">
                             {% csrf_token %}
-                            {% if club_form %}
-                                {% bootstrap_form club_form %}
-                            {% else %}
-                                {# create a ClubForm instance if not provided (should rarely happen) #}
-                                {% with form=club_form %}{% bootstrap_form form %}{% endwith %}
-                            {% endif %}
+                            {% bootstrap_form club_form %}
                             <div class="mt-2">
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
                             </div>
@@ -272,6 +268,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
         <div class="right-column"><!--every box will be displayed on the right side of the screen-->
             <div class="submission-box"> <!--where submission boxes will be displayed-->
