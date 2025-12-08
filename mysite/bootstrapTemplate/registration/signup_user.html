@@ -49,6 +49,22 @@
                     {% csrf_token %} <!-- Django security token to prevent cross-site attacks -->
                     <!-- username input field -->
                     <div class="mb-3">
+
+                        <!--added this for the custom signup page (first/last name)-->
+                        {% if form.first_name %}
+                        <div class="mb-3">
+                            <label for="id_first_name">First Name</label>
+                            {{ form.first_name }}
+                        </div>
+                        {% endif %}
+
+                        {% if form.last_name %}
+                        <div class="mb-3">
+                            <label for="id_last_name">Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+                        {% endif %}
+                        
                         <label for="id_username">Username</label>
                         {{ form.username }} <!-- now using form object so that it actually gets saved-->
 
