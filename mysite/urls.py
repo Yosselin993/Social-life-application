@@ -42,5 +42,8 @@ urlpatterns = [
     path('browse-all/', clubs_views.browse_all_clubs, name='browse_all'),  
     path('clubs/', include('clubs.urls')),
     path('club-setup/', views.club_first_login, name = 'club_first_login'),
-    path('club-profile/', views.club_profile, name='club_profile'),
+    path('club-profile/', views.club_profile, name='club_profile'),  # This URL shows the club profile page WITHOUT specifying a club ID
+    path('club/<int:club_id>/', views.club_profile, name='club_profile'), # This URL shows the profile page for a specific club using its ID
+    path('club/<int:club_id>/create/<str:form_type>/', views.form_page, name='form_page'), # This URL takes a club ID and a form type to determine which form to load
+    path('summernote/', include('django_summernote.urls')), #Summernote editor which is used to display a text box.
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

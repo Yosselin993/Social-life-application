@@ -11,8 +11,8 @@ from django.contrib.auth.forms import UserCreationForm #added
 from clubs.models import Club
 from clubs.models import Event
 from clubs.forms import ClubForm
-
-
+from django.http import HttpResponse
+from .forms import CommentForm
 from django.shortcuts import render, redirect
 from .forms import StudentForm
 from .models import Student
@@ -223,6 +223,11 @@ def events_calendar(request, year=None, month=None):
     # events loaded from database
     events = Event.objects.filter(month=month, year=year)
 
+    #calculate previous month
+    prev_date = display_date - relativedelta(months=1)
+    prev_month_year = prev_date.year
+    prev_month_num = prev_date.month
+
     return render(request, "content/events_calendar.html", {
         "year": year,
         "month": month,
@@ -238,7 +243,11 @@ def events_calendar(request, year=None, month=None):
             "prev_month_num": prev_month_num,
          "is_current_month": is_current_month,
          "user": request.user, #added
-         "is_club_leader": request.user.clubs_led.exists() #added
+         "is_club_leader": request.user.clubs_led.exists(), #added
+
+         #added for prev button
+         "prev_month_year": prev_month_year,
+         "prev_month_num": prev_month_num,
     })
 
 #def browse_all(request):
@@ -274,5 +283,41 @@ def club_first_login(request):
     return render(request, 'content/club_first_login.html', {'form': form})
 
 
-def club_profile(request):
-    return render(request, 'content/club_profile.html')
+def club_profile(request, club_id):
+    # Get the club object from the database using the provided club_id
+    club = Club.objects.get(id=club_id)
+     # Render the club_profile.html and pass the club data into it
+    return render(request, 'content/club_profile.html',{
+        'club':club
+    })
+
+
+def form_page(request, club_id, form_type):
+    # this is checking which type of form should be loaded based on the URL parameter
+
+      # If user is creating a post
+    if form_type == "post":
+        form_title = "Create Post"
+        template = "content/Post.html"
+
+    elif form_type == "announcement":
+         # If user is creating an announcemen
+        form_title = "Create Announcement"
+        template = "content/Announcement.html"
+
+    elif form_type == "submission":
+        # If user is creating a submission box
+        form_title = "Create Submission Box"
+        template = "content/submission_box.html"
+
+    else:
+         # If the form type doesn't match any valid option, return an error
+        return HttpResponse("Invalid form type")
+    # Render the selected template and pass necessary context
+    return render(request, template, {
+        "club_id": club_id,
+        "form_title": form_title, # Page title based on form type
+        "form": CommentForm(),  #Display an empty form box
+    })  
+
+
