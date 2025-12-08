@@ -16,6 +16,8 @@ from .forms import CommentForm
 from django.shortcuts import render, redirect
 from .forms import StudentForm
 from .models import Student
+from .forms import CustomSignupForm #added to add a first and last name for students
+
 # this is a function that handles requests to the home page
 def home(request): 
     return render(request, 'home.html') #render function to generate and return an HTML response
@@ -92,6 +94,16 @@ def main_page(request):
     # Get or create a Student instance for the current user
     student, created = Student.objects.get_or_create(user=request.user)
 
+    # Determine display name
+    display_name = ""
+    if request.user.clubs_led.exists():
+        # User is a club leader, show the club name (assuming first club)
+        club = request.user.clubs_led.first()
+        display_name = club.name
+    else:
+        # User is a student, show first + last name
+        display_name = f"{request.user.first_name} {request.user.last_name}".strip()
+
     # Handle photo upload
     if request.method == "POST":
         student_form = StudentForm(request.POST, request.FILES, instance=student)
@@ -110,6 +122,7 @@ def main_page(request):
         'is_club_leader': is_club_leader,
         'club_form': club_form,
         'club': club,
+        'display_name': display_name #added to display first/last name
     }
 
     return render(request, 'content/mainPage.html', context)
@@ -129,9 +142,16 @@ def signup_user(request, role): #handles the actual signup form based on the rol
         return redirect('signup_role')  # invalid role chosen
 
     if request.method == 'POST': #if the form was submitted (method is POST), process the form data
-        form = UserCreationForm(request.POST)
+        form = CustomSignupForm(request.POST, role=role) #modified the form variable
+
         if form.is_valid(): #check if the submitted form is valid (all fields filled and passwords match)
-            new_user = form.save() #save the new user to the database
+            new_user = form.save(commit=False) #save the new user to the database
+
+            #added so form has to save first/last name ONLY if student
+            if role == 'student':
+                new_user.first_name = form.cleaned_data.get('first_name', '')
+                new_user.last_name = form.cleaned_data.get('last_name', '')
+            new_user.save()
 
             if role == 'club':
                 # Create the Club object. It will have default/blank fields.
@@ -147,7 +167,7 @@ def signup_user(request, role): #handles the actual signup form based on the rol
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-            form = UserCreationForm()
+            form = CustomSignupForm(role=role) #edited
 
     return render(request, 'registration/signup_user.html', {'form': form, 'role': role}) #rend the signup page with the form and the chosen role
 
