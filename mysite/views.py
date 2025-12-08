@@ -223,7 +223,7 @@ def events_calendar(request, year=None, month=None):
     # events loaded from database
     events = Event.objects.filter(month=month, year=year)
 
-    return render(request, "content/events_calendar2.html", {
+    return render(request, "content/events_calendar.html", {
         "year": year,
         "month": month,
         "month_name": current_month_name, 
