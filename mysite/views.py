@@ -435,7 +435,7 @@ def form_page(request, club_id, form_type):
     return render(request, template, {
         "club_id": club_id,
         "form_title": form_title, # Page title based on form type
-        "form": form,  #Display an empty form box
+        "form": AnnouncementForm(),  #Display an empty form box
     })  
 
 @login_required
