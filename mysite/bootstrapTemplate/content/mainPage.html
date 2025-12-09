@@ -327,9 +327,16 @@
                                 {% endif %}
                             </div>
 
+                            <!--edited this section to take club to their profile from home-->
                             <div class="student-info" style="display:flex; flex-direction:column;">
-                                <span class="student-username" style="font-weight:600;">{{ display_name }}</span>
-                                <!--<span class="student-fullname" style="color:#666;">{{ student.user.get_full_name }}</span>-->
+                                {% if user.clubs_led.all %} <!--make the user's display name clickable only if they lead a club-->
+                                    <a href="{% url 'club_profile' user.clubs_led.first.id %}" 
+                                    style="font-weight:600; color: inherit; text-decoration: none;">
+                                        {{ display_name }}
+                                    </a>
+                                {% else %}
+                                    <span class="student-username" style="font-weight:600;">{{ display_name }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
