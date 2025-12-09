@@ -121,8 +121,12 @@ def main_page(request):
             messages.error(request, "Error uploading photo. Please try again.")
     else:
         student_form = StudentForm(instance=student)
-        favorite_clubs = request.user.favorite_clubs.all()
+        
+        favorite_clubs = request.user.favorite_clubs.all()  # QuerySet of favorite clubs
         posts = Post.objects.filter(club__in=favorite_clubs).select_related('club', 'author')
+        announcements = Announcement.objects.filter(club__in=favorite_clubs).select_related('club', 'author')
+        notifications = announcements.order_by('-created_at')[:5]  #last 5 announcements
+
 
     context = {
         'form': student_form,
@@ -133,6 +137,8 @@ def main_page(request):
         'favorite_clubs': request.user.favorite_clubs.all(),
         'display_name': display_name, #added to display first/last name
         'posts': posts,
+        'announcements': announcements, #add anouncements
+        'notifications': notifications,
     }
 
     return render(request, 'content/mainPage.html', context)

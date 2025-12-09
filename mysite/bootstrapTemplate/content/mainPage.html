@@ -138,7 +138,8 @@
     /*Creating a new 'card' that will store the notification content*/
     .notification-box{
         width: 3.5in;
-        height: 3.5in;
+        height: auto; /*allows height to adjust to the text (no overflow of text)*/
+        min-height: 2in; /*set a min height*/
         padding: 10px;
         margin-top: 10px;
         border-radius: 8px;
@@ -340,7 +341,23 @@
                 
                 <div class="notification-box"> <!-- This is where the noification content starts-->
                     <div class="notification-placeholder">
-                        <p>Notification</p>
+                        <p><strong>Notifications</strong></p>
+                        {% if notifications %} <!--check if there are any notfication to display-->
+                            <ul style="list-style: none; padding: 0; margin-top: 5px;">
+                                {% for n in notifications %} <!--looping through each notification in the notfications list-->
+                                    <li style="margin-bottom:10px;">
+                                        <a href="{% url 'club_profile' n.club.id %}" style="text-decoration: none; color: #0d47a1;"> <!--link to the club profile-->
+                                            <strong>{{ n.club.name }}</strong> <!--display name of club in bold-->
+                                        </a> posted an announcement: <!--stastic text indicating the action-->
+                                        <em>"{{ n.content|striptags|truncatechars:60 }}"</em> <!--show the notification content, removes the HTML tags-->
+                                        <br>
+                                        <small style="color: #555;">{{ n.created_at|timesince }} ago</small> <!--displays how long ago the notfication was created-->
+                                    </li>
+                                {% endfor %} <!--end loop over notfications-->
+                            </ul>
+                        {% else %} <!--if there are no notfications-->
+                            <p>No new announcements from your favorite clubs.</p>
+                        {% endif %} <!--end if notifications check-->
                     </div>
                 </div> <!--This is where the noification conten ends-->
                 
@@ -363,6 +380,7 @@
                       {% endif %}
                 </div>
 
+                
                 <div class="mt-4">
 
                     {% if posts %}
