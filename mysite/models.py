@@ -33,3 +33,24 @@ class Announcement (models.Model):
 
     class Meta:
         ordering = ['-created_at']  # latest first
+
+
+class Post(models.Model):
+    club = models.ForeignKey(
+        Club, 
+        on_delete=models.CASCADE, 
+        related_name='posts',
+        null=True,    
+        blank=True,
+    )
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    content = models.TextField()
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Post in {self.club.name} by {self.author.username}"
+    

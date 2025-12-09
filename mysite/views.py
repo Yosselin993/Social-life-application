@@ -21,6 +21,8 @@ from .forms import QuizForm #added for quiz (quiz form)
 from .models import Announcement #added
 from django.shortcuts import get_object_or_404
 from .forms import AnnouncementForm
+from .models import Post
+from .forms import PostForm
 
 # this is a function that handles requests to the home page
 def home(request): 
@@ -119,6 +121,8 @@ def main_page(request):
             messages.error(request, "Error uploading photo. Please try again.")
     else:
         student_form = StudentForm(instance=student)
+        favorite_clubs = request.user.favorite_clubs.all()
+        posts = Post.objects.filter(club__in=favorite_clubs).select_related('club', 'author')
 
     context = {
         'form': student_form,
@@ -127,7 +131,8 @@ def main_page(request):
         'club_form': club_form,
         'club': club,
         'favorite_clubs': request.user.favorite_clubs.all(),
-        'display_name': display_name #added to display first/last name
+        'display_name': display_name, #added to display first/last name
+        'posts': posts,
     }
 
     return render(request, 'content/mainPage.html', context)
@@ -313,12 +318,20 @@ def club_profile(request, club_id):
     club = Club.objects.get(id=club_id)
 
     announcements = club.announcements.all()
+    posts = club.posts.all()
 
      # Render the club_profile.html and pass the club data into it
-    context = {'club': club}
+    context = {
+        'club': club,
+        'announcements': announcements,
+        'posts': posts,
+        'can_post': False,
+
+    }
     # If the current user is a leader, include an editable ClubForm instance
     if request.user.is_authenticated and request.user in club.leaders.all():
         context['club_form'] = ClubForm(instance=club)
+        context['can_post'] = True
 
     return render(request, 'content/club_profile.html', context)
 
@@ -353,6 +366,11 @@ def form_page(request, club_id, form_type):
 
     club = get_object_or_404(Club, id=club_id)
 
+    if request.user not in club.leaders.all():
+        return HttpResponse("You are not allowed to create content for this club.")
+
+
+
     #default empty form
     form = CommentForm()
     template = ""
@@ -383,6 +401,20 @@ def form_page(request, club_id, form_type):
         form_title = "Create Post"
         template = "content/Post.html"
 
+        if request.method == "POST":
+            form = PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.club = club
+                post.author = request.user
+                post.save()
+                messages.success(request, "Post created successfully!")
+                return redirect('club_profile', club_id=club.id)
+            else:
+                messages.error(request, "Post cannot be empty.")
+        else:
+            form = PostForm()
+
     elif form_type == "submission":
         # If user is creating a submission box
         form_title = "Create Submission Box"
@@ -403,7 +435,7 @@ def form_page(request, club_id, form_type):
     return render(request, template, {
         "club_id": club_id,
         "form_title": form_title, # Page title based on form type
-        "form": AnnouncementForm(),  #Display an empty form box
+        "form": form,  #Display an empty form box
     })  
 
 @login_required

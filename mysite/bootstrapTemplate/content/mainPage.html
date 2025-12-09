@@ -330,6 +330,35 @@
                     {% else %}
                       {% endif %}
                 </div>
+
+                <div class="mt-4">
+
+                    {% if posts %}
+                    {% for post in posts %}
+                        <div class="card mb-3">
+                        <div class="card-header">
+                            <strong>{{ post.club.name }}</strong>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>{{ post.author.username }}</strong> • {{ post.created_at }}</p>
+                            <div>{{ post.content|safe }}</div>
+                            {% if post.image %}
+                            <img src="{{ post.image.url }}" style="max-width: 300px;" alt="Post image">
+                            {% endif %}
+                        </div>
+                        </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No posts yet from your favorite clubs.</p>
+                    {% endif %}
+
+                </div>
+
+
+
+
+
+
             </div> 
             <div class="visit-club-box"> <!--Where the visiting information starts-->
                 <div class="notification-placeholder">
