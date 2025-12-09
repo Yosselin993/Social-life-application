@@ -60,7 +60,7 @@
         </div> 
 
         <div class="mt-4 card"> <!--Displaying the main card box-->
-            <form method="POST" style="margin-left: 15%;"> <!--This will didsplay the text editor box that we install called django_summernote-->
+            <form method="POST" action="{% url 'form_page' club_id 'announcement' %}" style="margin-left: 15%;"> <!--This will didsplay the text editor box that we install called django_summernote-->
                 {% csrf_token %}
                 {{ form.media }}  <!-- loads toolbar/scripts -->
                 {{ form.as_p }}   <!-- renders the editor -->

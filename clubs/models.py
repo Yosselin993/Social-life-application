@@ -23,6 +23,13 @@ class Club(models.Model):
 
     first_login_completed = models.BooleanField(default = False) #tracks if the first login/setup for this club has been done by true or false
 
+    # Users who have favorited this club
+    favorites = models.ManyToManyField('auth.User', blank=True, related_name='favorite_clubs')
+    
+    # Optional club profile image and banner
+    photo = models.ImageField(upload_to='club_pics/', blank=True, null=True)
+    banner = models.ImageField(upload_to='club_banners/', blank=True, null=True)
+
     # How the club will be shown in Django admin or in print
     def __str__(self):
         return self.name

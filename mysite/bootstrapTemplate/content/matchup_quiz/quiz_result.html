@@ -1,0 +1,36 @@
+{% extends "content/matchup_quiz/base_quiz.html" %}
+
+{% block title %}Quiz Results{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mt-3">
+        <h2>Your Top 3 Recommended Clubs</h2>
+        <p class="text-muted">Based on your selected interests and major.</p>
+    </div>
+
+    {% if clubs %}
+        <div class="row justify-content-center mt-4">
+            {% for club in clubs %}
+                <div class="col-md-8 mb-3">
+                    <div class="card p-3 shadow">
+                        <h3>{{ club.name }}</h3>
+                        <p>{{ club.description }}</p>
+                        <!-- Corrected URL using Django's url tag -->
+                        <a href="{% url 'club_profile' club.id %}" class="btn btn-outline-primary mt-2 w-100">
+                            View Club
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center mt-4">No matching clubs found.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'quiz' %}" class="btn btn-secondary">Take the Quiz Again</a>
+        <a href="{% url 'mainPage' %}" class="btn btn-outline-secondary ms-2">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

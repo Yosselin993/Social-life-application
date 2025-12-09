@@ -8,6 +8,7 @@ urlpatterns = [
     path('add-event/', views.add_event, name='add_event'), #goes to the add_event html to add the new event
     #adding individul club profile pages
     path('club/<int:club_id>/', views.club_profile, name='club_profile'), 
+    path('favorite/<int:club_id>/', views.toggle_favorite, name='toggle_favorite'),
     #added the following to paths for an editing/deleting event for clubs
     path('edit-event/<int:event_id>/', views.edit_event, name='edit_event'),
     path('delete-event/<int:event_id>/', views.delete_event, name='delete_event'),

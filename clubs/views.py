@@ -13,6 +13,21 @@ from django.contrib.auth.decorators import login_required
 from .forms import EventForm 
 
 @login_required
+def toggle_favorite(request, club_id):
+    club = get_object_or_404(Club, id=club_id)
+
+    if request.method == 'POST':
+        if request.user in club.favorites.all():
+            club.favorites.remove(request.user)
+            messages.success(request, f"Removed {club.name} from favorites.")
+        else:
+            club.favorites.add(request.user)
+            messages.success(request, f"Added {club.name} to favorites.")
+
+    # Redirect back to where the request came from, or to the club profile
+    return redirect(request.META.get('HTTP_REFERER') or 'club_profile')
+
+@login_required
 def add_event(request):
     if not request.user.clubs_led.exists():  # only club leaders can add events
         return redirect('mainPage')

@@ -32,8 +32,8 @@
     body{
         background: linear-gradient(to right, #fff3e0, #ff9800); /* orange and white */
         min-height: 100vh;
-        display: flex;
-        justify-content: center;
+        /*display: flex;
+        justify-content: center;*/
         font-family: 'Arial', sans-serif;
         margin: 0; 
         padding: 0;
@@ -207,6 +207,39 @@
         position: absolute;
     }
 
+        .central-box {
+    width: 100%;
+    height: 1in;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* vertical alignment ✅ */
+    gap: 6px;                  /* clean spacing between items */
+    }
+
+    .central-box p {
+        margin: 0;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+
+
+    .central-box .btn {
+        font-size: 0.9rem;
+        padding: 6px 14px;
+        align-self: center;
+        margin-top: 6px;
+    }
+
+
+
+
 </style>
 </head>
 <body> 
@@ -262,8 +295,8 @@
                             </div>
 
                             <div class="student-info" style="display:flex; flex-direction:column;">
-                                <span class="student-username" style="font-weight:600;">{{ student.user.username }}</span>
-                                <span class="student-fullname" style="color:#666;">{{ student.user.get_full_name }}</span>
+                                <span class="student-username" style="font-weight:600;">{{ display_name }}</span>
+                                <!--<span class="student-fullname" style="color:#666;">{{ student.user.get_full_name }}</span>-->
                             </div>
                         </div>
 
@@ -281,6 +314,12 @@
                 
             </div> <!--information display in the left side of the page ends-->
             <div class="central-column">
+                <div class="central-box">
+                    <!--this section is for the quiz-->
+                    <p><strong> Need recommendations? </strong>Take this quiz, which club matches you!</p>
+                    <a href="{% url 'quiz' %}" class="btn btn-primary btn-lg">Take the Quiz </a>
+                </div>
+
                 <div class="search-results-container">
                   {% if results %}
                         <ul class="list-group">
@@ -294,7 +333,32 @@
             </div> 
             <div class="visit-club-box"> <!--Where the visiting information starts-->
                 <div class="notification-placeholder">
-                    <p>Make sure to visit your clubs!</p>
+                    <p style="font-weight:600;">Your Favorite Clubs</p>
+                    {% if favorite_clubs and favorite_clubs.count > 0 %}
+                        <div style="margin-top:8px; display:flex; flex-direction:column; gap:12px; align-items:stretch; text-align:left;">
+                            {% for fclub in favorite_clubs %}
+                                <div class="card" style="padding:10px;">
+                                    <div style="display:flex; justify-content:space-between; gap:8px; align-items:flex-start;">
+                                        <div>
+                                            <h5 style="margin:0;"><a href="{% url 'club_profile' fclub.id %}">{{ fclub.name }}</a></h5>
+                                            {% if fclub.meeting_time %}
+                                                <div style="font-size:0.9em; color:#555;">{{ fclub.meeting_time }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div style="display:flex; gap:8px; align-items:center;">
+                                            <form method="post" action="{% url 'toggle_favorite' fclub.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Unfavorite</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p style="margin-top:8px;">You haven't favorited any clubs yet.</p>
+                        <a href="{% url 'browse_all' %}" class="btn btn-sm btn-primary" style="margin-top:8px;">Browse Clubs</a>
+                    {% endif %}
                 </div>
             </div> <!--Where the visiting information ends-->
         </div> 
@@ -308,9 +372,14 @@
                 <h5 class="modal-title">Complete Your Club Profile</h5>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'club_first_login' %}">
+                <form method="post" action="{% url 'club_first_login' %}" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% bootstrap_form form %}
+                    {% if club_form %}
+                        {% bootstrap_form club_form %}
+                    {% else %}
+                        {# Fallback: show the general form variable if present #}
+                        {% bootstrap_form form %}
+                    {% endif %}
                     <button type="submit" class="btn btn-success mt-2">Save & Continue</button>
                 </form>
             </div>
@@ -323,6 +392,22 @@
     myModal.show();
 </script>
 {% endif %}
+
+
+
+<!--this section is for the quiz (recommendation banner)-->
+<!--quiz banner with not any background -->
+
+<!--
+<div class="text-center mt-5 mb-5" style="background: none; border: none; padding: 0;">
+    <h3 style="font-weight: bold;">Need recommendations?</h3>
+    <p style="font-size: 18px;">Take this quiz to find out what three clubs you should favorite!</p>
+
+    <a href="{% url 'quiz' %}" class="btn btn-primary btn-lg">
+        Take the Quiz
+    </a>
+</div>
+-->
 
 </body>
 </html>
