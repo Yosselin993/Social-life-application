@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm #added
 from django.contrib.auth.models import User #added
 from mysite.custom_clean import SafeSummernoteField
 from.models import Announcement
+from .models import Post 
 
 class StudentForm(forms.ModelForm):
     class Meta:
@@ -99,3 +100,11 @@ class AnnouncementForm(forms.ModelForm):
     class Meta:
         model = Announcement
         fields = ['content']
+
+class PostForm(forms.ModelForm):
+    # Use the same safe Summernote field you used for announcements
+    content = SafeSummernoteField()
+
+    class Meta:
+        model = Post
+        fields = ['content', 'image']

@@ -236,14 +236,40 @@
                     <button type="submit" class="btn btn-primary" >Create Announcement</button>
                 </form>
 
-                <form action="{% url 'form_page' club.id 'post' %}"> <!--Will take you to the webpage to create a Post-->
-                    <button type="submit" class="btn btn-primary" >Create Post</button>
-                </form>
+                {% if can_post %}
+                    <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary"> Create Post </a>
+                {% endif %}
 
                 <form action="{% url 'form_page' club.id 'submission' %}"> <!--Will take you to the webpage to create a submission post-->
                     <button type="submit" class="btn btn-primary" >Create submission Box</button>
                 </form>
             </div><!--centeral box content ends-->
+
+            <div class="mt-4" >
+                {% if can_post %}
+                   <!-- <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary">
+                        Create Post
+                    </a>
+                    {% endif %}
+                -->
+                    {% if posts %}
+                    {% for post in posts %}
+                        <div class="card mb-3">
+                        <div class="card-body">
+                            <p><strong>{{ post.author.username }}</strong> • {{ post.created_at }}</p>
+                            <div>{{ post.content|safe }}</div>
+                            {% if post.image %}
+                            <img src="{{ post.image.url }}" style="max-width: 300px;" alt="Post image">
+                            {% endif %}
+                        </div>
+                        </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No posts yet.</p>
+                {% endif %}
+            </div>
+
+
         </div><!--central-column ends-->
         {% endif %} <!-- This whole section end here-->
 
