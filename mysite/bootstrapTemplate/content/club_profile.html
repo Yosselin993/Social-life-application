@@ -257,16 +257,28 @@
                     <h4 style="text-align:center; margin-bottom: 10px;">Announcements</h4>
                     
                     <ul style="list-style-type: disc; padding-left: 20px; margin:0;">
+
                         {% for announcement in announcements %}
-                            <li style="margin-bottom: 8px;">
+                            <li style="margin-bottom: 8px; position: relative;">
+
                                 {{ announcement.content|safe }}
                                 <span style="color:#555; font-size:12px; margin-left:5px;">
                                     ({{ announcement.created_at|date:"m/d/Y g:iA" }})
                                 </span>
+
+                                {% if request.user in club.leaders.all %}
+                                    <a href="{% url 'delete_announcement' announcement.id %}"
+                                    style="color:red; text-decoration:none; margin-left:8px;"
+                                    title="Delete announcement">
+                                        🗑️
+                                    </a>
+                                {% endif %}
+
                             </li>
                         {% empty %}
                             <p>No announcements yet.</p>
                         {% endfor %}
+
             </div><!--Announcement content ends-->
         </div><!--left column ends--> 
 

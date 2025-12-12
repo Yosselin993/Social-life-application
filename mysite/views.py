@@ -528,3 +528,16 @@ def quiz_view(request):
         )
 
 
+@login_required
+def delete_announcement(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    club = announcement.club  # assuming Announcement has club = ForeignKey
+
+    # only club leaders can delete
+    if request.user not in club.leaders.all():
+        messages.error(request, "You are not allowed to delete this.")
+        return redirect('club_profile', club.id)
+
+    announcement.delete()
+    messages.success(request, "Announcement deleted.")
+    return redirect('club_profile', club.id)

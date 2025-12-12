@@ -398,11 +398,11 @@
 <body> 
 
 {% if messages %} <!--django messages framwork : shows temporary notifications (Success/errors)-->
-<div class="message-box">
     {% for message in messages %}
-        {{ message }} <!--render each message-->
+        {% if "event" not in message.tags %}
+            <div class="message-box">{{ message }}</div>
+        {% endif %}
     {% endfor %}
-</div>
 {% endif %}
 
 
