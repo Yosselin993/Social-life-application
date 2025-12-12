@@ -138,7 +138,8 @@
     /*Creating a new 'card' that will store the notification content*/
     .notification-box{
         width: 3.5in;
-        height: 3.5in;
+        height: auto; /*allows height to adjust to the text (no overflow of text)*/
+        min-height: 2in; /*set a min height*/
         padding: 10px;
         margin-top: 10px;
         border-radius: 8px;
@@ -237,12 +238,44 @@
         margin-top: 6px;
     }
 
-
+    .message-box {
+        position: fixed;       /* float on top of everything */
+        top: 20px;             /* distance from top */
+        left: 50%;             /* start from middle */
+        transform: translateX(-50%); /* center horizontally */
+        background-color: #28a7469c;
+        color: black;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-align: center;
+        z-index: 9999;         /* stay above other elements */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        max-width: 90%;        /* prevent overflowing on small screens */
+        white-space: nowrap;   /* keep on single line */
+    }
 
 
 </style>
 </head>
 <body> 
+
+<!--shows login successful-->
+{% if messages %}
+<div class="message-box">
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
+
+
+
+
+
     <div class="container mt-2">
              <!--only the seletor 'header' is used here but a class from bootstrap that controls to margins from the top-->
       <div class="mb-4 header"> <!-- header content starts -->
@@ -294,9 +327,16 @@
                                 {% endif %}
                             </div>
 
+                            <!--edited this section to take club to their profile from home-->
                             <div class="student-info" style="display:flex; flex-direction:column;">
-                                <span class="student-username" style="font-weight:600;">{{ display_name }}</span>
-                                <!--<span class="student-fullname" style="color:#666;">{{ student.user.get_full_name }}</span>-->
+                                {% if user.clubs_led.all %} <!--make the user's display name clickable only if they lead a club-->
+                                    <a href="{% url 'club_profile' user.clubs_led.first.id %}" 
+                                    style="font-weight:600; color: inherit; text-decoration: none;">
+                                        {{ display_name }}
+                                    </a>
+                                {% else %}
+                                    <span class="student-username" style="font-weight:600;">{{ display_name }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -308,7 +348,23 @@
                 
                 <div class="notification-box"> <!-- This is where the noification content starts-->
                     <div class="notification-placeholder">
-                        <p>Notification</p>
+                        <p><strong>Notifications</strong></p>
+                        {% if notifications %} <!--check if there are any notfication to display-->
+                            <ul style="list-style: none; padding: 0; margin-top: 5px;">
+                                {% for n in notifications %} <!--looping through each notification in the notfications list-->
+                                    <li style="margin-bottom:10px;">
+                                        <a href="{% url 'club_profile' n.club.id %}" style="text-decoration: none; color: #0d47a1;"> <!--link to the club profile-->
+                                            <strong>{{ n.club.name }}</strong> <!--display name of club in bold-->
+                                        </a> posted an announcement: <!--stastic text indicating the action-->
+                                        <em>"{{ n.content|striptags|truncatechars:60 }}"</em> <!--show the notification content, removes the HTML tags-->
+                                        <br>
+                                        <small style="color: #555;">{{ n.created_at|timesince }} ago</small> <!--displays how long ago the notfication was created-->
+                                    </li>
+                                {% endfor %} <!--end loop over notfications-->
+                            </ul>
+                        {% else %} <!--if there are no notfications-->
+                            <p>No new announcements from your favorite clubs.</p>
+                        {% endif %} <!--end if notifications check-->
                     </div>
                 </div> <!--This is where the noification conten ends-->
                 
@@ -331,6 +387,7 @@
                       {% endif %}
                 </div>
 
+                
                 <div class="mt-4">
 
                     {% if posts %}
