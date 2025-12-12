@@ -4,67 +4,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tell Us About Your Club</title>
+    <title>Create Your Club Profile</title>
+    <link rel="icon" type="image/png" href="/media/favicon.png">
     {% bootstrap_css %}
 
     <style>
         body {
-            background: linear-gradient(to right, #0d47a1, #1976d2);
-            color: white;
-            padding: 30px;
+            background: linear-gradient(135deg, #fff3e0, #ff9800);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
+
         .container {
             max-width: 700px;
-            background: white;
-            color: black;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+            background: #fff;
+            color: #333;
+            padding: 40px 50px;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            border-top: 5px solid #ff9800;
         }
-        h2 {
-            color: #0d47a1;
+
+        h2, h3 {
+            color: #ff9800;
             text-align: center;
-            font-weight: bold;
         }
+
+        h2 { font-weight: 700; margin-bottom: 5px; }
+        h3 { font-weight: 600; margin-bottom: 30px; }
+
         label {
             font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+            color: #ff9800;
         }
+
+        input, textarea, select {
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.5);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #a1550d, #ff9800);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #1976d2, #0d47a1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        hr { border: 0; border-top: 2px solid #1976d2; margin: 20px 0; }
+
+        .logo-link { text-decoration: none; }
+        .logo-link h2 { margin-bottom: 5px; }
     </style>
 </head>
 
 <body>
+    <div class="container">
+        <a href="{% url 'mainPage' %}" class="logo-link">
+            <h2>UTRGVconnect</h2>
+        </a>
 
-<div class="container">
+        <hr>
 
-    <a href="{% url 'mainPage' %}" style="text-decoration:none;">
-        <h2>UTRGVconnect</h2>
-    </a>
+        <h3>Create Your Club Profile</h3>
 
-    <hr>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    Please fix the errors below.
+                </div>
+            {% endif %}
 
-    <h3>Create Your Club Profile</h3>
+            <!-- Render all form fields from ClubForm -->
+            {% for field in form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <div class="mb-3">
-            <label>Club Name:</label>
-            <input type="text" name="club_name" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label>Club Description:</label>
-            <textarea name="club_description" class="form-control" rows="4" required></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label>Upload Logo:</label>
-            <input type="file" name="logo" class="form-control">
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100">Save Club Profile</button>
-    </form>
-</div>
-
+            <button type="submit" class="btn btn-primary w-100">Save Club Profile</button>
+        </form>
+    </div>
 </body>
 </html>

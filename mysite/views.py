@@ -23,6 +23,9 @@ from django.shortcuts import get_object_or_404
 from .forms import AnnouncementForm
 from .models import Post
 from .forms import PostForm
+from clubs.models import Event
+from .models import Event
+from datetime import date
 
 # this is a function that handles requests to the home page
 def home(request): 
@@ -328,6 +331,11 @@ def club_first_login(request):
             return redirect('mainPage')
     else:
         form = ClubForm(instance=club) #load the form with the exisiting club data
+
+    #define variables
+    today = date.today()
+    year = today.year
+    month = today.month
 
     # events loaded from database
     events = Event.objects.filter(date__year=year, date__month=month)

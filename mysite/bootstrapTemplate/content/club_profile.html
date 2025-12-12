@@ -4,6 +4,8 @@
 <head>
     <meta charset = "UTF-8">
     <title>Club Setup</title>
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+
     {% bootstrap_css %}
 <style>
         /*Displays the style of the body*/
@@ -251,23 +253,20 @@
     <div class="main-content-grid"> <!--putting the layout into a grid so its easier to display boxs-->
 
         <div class="left-column"> <!--every box will be displayed on left side of the screen-->
-            <div class="Announcement-box"> <!--Announcement content starts-->
+            <div class="Announcement-box">
                     <h4 style="text-align:center; margin-bottom: 10px;">Announcements</h4>
                     
-                    {% for announcement in announcements %}
-                        <div class="announcement">
-                            <p class="announcement-date" style="color: #555; font-size:14px;">
-                                {{ announcement.created_at|date:"M j, Y h:i A" }}
-                            </p>
-
-                            <div class="announcement-content">
+                    <ul style="list-style-type: disc; padding-left: 20px; margin:0;">
+                        {% for announcement in announcements %}
+                            <li style="margin-bottom: 8px;">
                                 {{ announcement.content|safe }}
-                        </div>
-            </div>
-
-                    {% empty %}
-                        <p>No announcements yet.</p>
-                    {% endfor %}
+                                <span style="color:#555; font-size:12px; margin-left:5px;">
+                                    ({{ announcement.created_at|date:"m/d/Y g:iA" }})
+                                </span>
+                            </li>
+                        {% empty %}
+                            <p>No announcements yet.</p>
+                        {% endfor %}
             </div><!--Announcement content ends-->
         </div><!--left column ends--> 
 
@@ -349,6 +348,22 @@
 
 </div>
 {% bootstrap_javascript %}
+
+<script>
+  // Wait 5 seconds then hide the messages
+  setTimeout(function() {
+    const messages = document.querySelector('.message-box'); // targets your message container
+    if (messages) {
+      // Smooth fade out
+      messages.style.transition = 'opacity 1s';
+      messages.style.opacity = '0';
+      // Remove element from DOM after fade
+      setTimeout(() => { messages.remove(); }, 1000);
+    }
+  }, 5000); // 5000ms = 5 seconds
+</script>
+
+
 </body>
 
 </html>

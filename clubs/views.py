@@ -1,6 +1,7 @@
 # clubs/views.py
 from django.shortcuts import render, redirect
-from .models import Club, Event
+from .models import Club
+from .models import Event
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages #used to display one-time notfications to users
 import datetime
@@ -52,10 +53,13 @@ def add_event(request):
 
 
 
-
+#define a view function that atkes a request and club_id
+#responsible for displaying a club's profile page
+#request is the HTTP request object django passes to all views
+#club id is a dynamic parameter (from the url) that tells us which club to display
 def club_profile(request, club_id):
-    club = get_object_or_404(Club, id=club_id)
-    return render(request, 'content/club_profile.html', {'club': club})
+    club = get_object_or_404(Club, id=club_id) #django shortcut that avoids manually have to check if the object exists
+    return render(request, 'content/club_profile.html', {'club': club}) #pass context data (dictionary that provides data to the tempplate)
 
 @login_required
 def edit_event(request, event_id):
