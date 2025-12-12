@@ -147,10 +147,52 @@
         align-items: center;
 
     }
+
+    /* Fix Bootstrap overriding our message style */
+    /* Top center message style */
+    .message-box {
+        position: fixed;       /* float on top of everything */
+        top: 20px;             /* distance from top */
+        left: 50%;             /* start from middle */
+        transform: translateX(-50%); /* center horizontally */
+        background-color: #28a7469c;
+        color: black;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-align: center;
+        z-index: 9999;         /* stay above other elements */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        max-width: 90%;        /* prevent overflowing on small screens */
+        white-space: nowrap;   /* keep on single line */
+    }
+
+
+    /*remove Bootstrap full-width styling */
+    .message-box.alert {
+        padding: 0;
+        margin: 0;
+        border: none;
+        width: fit-content;
+    }
+
 </style>
 </head>
 
 <body>
+
+<!--shows announcement posted-->
+{% if messages %}
+<div class="message-box">
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
+
 
 
 <div class="container mt-2"> 
