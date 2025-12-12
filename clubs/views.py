@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .models import Club, Event
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages #used to display one-time notfications to users
+import datetime
 
 def browse_all_clubs(request):
     clubs = Club.objects.all()  # get all clubs from database
@@ -29,21 +30,27 @@ def toggle_favorite(request, club_id):
 
 @login_required
 def add_event(request):
-    if not request.user.clubs_led.exists():  # only club leaders can add events
+    # Only club leaders can add events
+    if not request.user.clubs_led.exists():
+        messages.error(request, "You must be a club leader to create events.")
         return redirect('mainPage')
 
     if request.method == 'POST':
-        form = EventForm(request.POST)
+        form = EventForm(request.POST)  # use the form to handle date & time
         if form.is_valid():
             event = form.save(commit=False)
-            # Assign the event to the first club the user leads (you can enhance this later)
-            event.club = request.user.clubs_led.first()
+            event.club = request.user.clubs_led.first()  # assign the club
             event.save()
-            return redirect('events_calendar')
+            messages.success(request, "Event created successfully!")
+            return redirect('events_calendar_nav', year=event.date.year, month=event.date.month)
+        else:
+            messages.error(request, "Please correct the errors in the form.")
     else:
         form = EventForm()
-    
+
     return render(request, 'content/add_event.html', {'form': form})
+
+
 
 
 def club_profile(request, club_id):

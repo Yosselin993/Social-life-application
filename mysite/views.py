@@ -257,8 +257,12 @@ def events_calendar(request, year=None, month=None):
     blank_days = list(range(first_weekday)) #list for empty boxes
 
     # events loaded from database
-    events = Event.objects.filter(month=month, year=year)
+    events = Event.objects.filter(date__year=year, date__month=month)
 
+    #add a 'day' attribute so template can use event.day
+    for e in events: 
+        e.day = e.date.day
+        
     #calculate previous month
     prev_date = display_date - relativedelta(months=1)
     prev_month_year = prev_date.year
@@ -285,6 +289,15 @@ def events_calendar(request, year=None, month=None):
          "prev_month_year": prev_month_year,
          "prev_month_num": prev_month_num,
     })
+
+
+
+#added a view for events_detail
+@login_required
+def event_detail(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    return render(request, 'content/event_detail.html', {'event': event})
+
 
 #def browse_all(request):
     #return render(request, 'content/Browse_All.html')
@@ -315,6 +328,12 @@ def club_first_login(request):
             return redirect('mainPage')
     else:
         form = ClubForm(instance=club) #load the form with the exisiting club data
+
+    # events loaded from database
+    events = Event.objects.filter(date__year=year, date__month=month)
+    # add 'day' attribute for the template
+    for e in events:
+        e.day = e.date.day  # <-- add this so template can use event.day
 
     return render(request, 'content/club_first_login.html', {'form': form})
 

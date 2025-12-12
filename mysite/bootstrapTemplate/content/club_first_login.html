@@ -1,26 +1,70 @@
-{% load bootstrap5 %} 
+{% load bootstrap5 %}
+
 <!DOCTYPE html>
-<html lang = "en">
+<html lang="en">
 <head>
-    <meta charset = "UTF-8">
-    <title>Club Setup</title>
+    <meta charset="UTF-8">
+    <title>Tell Us About Your Club</title>
     {% bootstrap_css %}
-    </head>
+
+    <style>
+        body {
+            background: linear-gradient(to right, #0d47a1, #1976d2);
+            color: white;
+            padding: 30px;
+        }
+        .container {
+            max-width: 700px;
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+        h2 {
+            color: #0d47a1;
+            text-align: center;
+            font-weight: bold;
+        }
+        label {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
 <body>
-    <div class="container mt-2">
-        <div class="card card-placement">
-            
-            <h2 class="mt-4" style="color: #0d47a1;">Complete Your Club Profile</h2>
-            <p class="mb-4">This information will be displayed on the Browse All Clubs page.</p>
 
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_form form %} 
-                <button type="submit" class="btn btn-success mt-4">Save Club Details & Continue</button>
-            </form>
+<div class="container">
 
+    <a href="{% url 'mainPage' %}" style="text-decoration:none;">
+        <h2>UTRGVconnect</h2>
+    </a>
+
+    <hr>
+
+    <h3>Create Your Club Profile</h3>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label>Club Name:</label>
+            <input type="text" name="club_name" class="form-control" required>
         </div>
-    </div>
-    {% bootstrap_javascript %} 
+
+        <div class="mb-3">
+            <label>Club Description:</label>
+            <textarea name="club_description" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Upload Logo:</label>
+            <input type="file" name="logo" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Save Club Profile</button>
+    </form>
+</div>
+
 </body>
 </html>

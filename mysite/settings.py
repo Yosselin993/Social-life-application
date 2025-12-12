@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
+from pathlib import Path #modern way of using statics (preferred way) using media
 import os
 
 from dotenv import load_dotenv

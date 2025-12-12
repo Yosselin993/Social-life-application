@@ -13,12 +13,28 @@ class ClubForm(forms.ModelForm):
         }
 
 class EventForm(forms.ModelForm): #make a form that is connected to the Event model
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control'
+        })
+    )
+
+    time = forms.TimeField(
+        widget=forms.TimeInput(attrs={
+            'type': 'time',
+            'class': 'form-control'
+        })
+    )
+
+    location = forms.CharField(
+            widget=forms.TextInput(attrs={'class': 'form-control'})
+        )
+
     class Meta: 
         model = Event #this form will use the event model
-        fields = ['title', 'description', 'day', 'month', 'year', 'time']  #fields from omdel we want to show in the form
+        fields = ['title', 'description', 'date', 'time', 'location']  #fields from omdel we want to show in the form
         widgets = {
-            'time' : forms.TimeInput(attrs={
-                'type': 'time', #shows a time picket in modern browsers
-                'class': 'form-control'
-            }),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
         }

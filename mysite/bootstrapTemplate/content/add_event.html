@@ -4,66 +4,135 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Event - UTRGVconnect</title>
+    <title>Add An Event - UTRGVconnect</title>
     {% bootstrap_css %}  <!-- includes Bootstrap CSS -->
+
+    <!--added an updated style for the add an event form-->
+    <style>
+        body {
+            background: linear-gradient(to right, #fff3e0, #ff9800);
+            min-height: 100vh;
+        }
+        .event-card {
+            max-width: 650px;
+            margin: 40px auto;
+            border-radius: 16px;
+            padding: 30px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        h2 {
+            color: #0d47a1;
+            font-weight: 700;
+        }
+        label {
+            font-weight: 600;
+            color: #0d47a1;
+        }
+    </style>
+
+    <!-- jQuery (required for datepicker/timepicker) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap Datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- Bootstrap Timepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 </head>
 
 <body>
-<div class="container mt-5">
 
-    <div class="card p-4 shadow-sm">
-        <h2 class="mb-4 text-center" style="color: #0d47a1;">Add an Event</h2>
+<div class="container">
 
-        <!-- Form for adding an event -->
-        <form method="post">
-            {% csrf_token %}  <!-- required for Django forms -->
+    <!--UTRGVConnect logo takes you back to main page-->
+    <a href="{% url 'mainPage' %}" style="text-decoration:none;">
+        <h2>UTRGVconnect</h2>
+    </a>
 
-            <!-- Event Title -->
-            <div class="mb-3">
-                {{ form.title.label_tag }}
-                {{ form.title }}  <!-- Bootstrap class added in forms.py widget -->
-            </div>
+    <hr>
 
-            <!-- Event Description -->
-            <div class="mb-3">
-                {{ form.description.label_tag }}
-                {{ form.description }}
-            </div>
+    <h3>Add An Event </h3>
 
-            <!-- Event Day -->
-            <div class="mb-3">
-                {{ form.day.label_tag }}
-                {{ form.day }}
-            </div>
+    <!-- Form for adding an event -->
+    <form method="POST">
+        {% csrf_token %}  <!-- required for Django forms -->
 
-            <!-- Event Month -->
-            <div class="mb-3">
-                {{ form.month.label_tag }}
-                {{ form.month }}
-            </div>
-
-            <!-- Event Year -->
-            <div class="mb-3">
-                {{ form.year.label_tag }}
-                {{ form.year }}
-            </div>
-
-            <!-- Event Time -->
-            <div class="mb-3">
-                {{ form.time.label_tag }}
-                {{ form.time }}
-            </div>
-
-            <!-- Submit button -->
-            <button type="submit" class="btn btn-success w-100">Add Event</button>
-        </form>
-
-        <!-- Back button to events calendar -->
-        <div class="mt-3 text-center">
-            <a href="{% url 'events_calendar' %}" class="btn btn-outline-primary">Back to Calendar</a>
+        <!-- Event Title -->
+        <div class="mb-3">
+            <label for="title">Event Title: </label>
+            {{ form.title }} <!--django form field for the title-->
         </div>
+
+        <!-- Date Picker -->
+        <div class="mb-3">
+            <label for="date">Date:</label>
+            {{ form.date }} <!--django form field for date -->
+        </div>
+
+        <!-- Time Picker -->
+        <div class="mb-3">
+            <label for="time">Time:</label>
+            {{ form.time }} <!--django form field for time-->
+        </div>
+
+        <!-- Location -->
+        <div class="mb-3">
+            <label for="location">Location:</label>
+            {{ form.location }} 
+        </div>
+
+        <!-- Event Description -->
+        <div class="mb-3">
+            <label for="description">Description:</label>
+            {{ form.description }}
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary w-100">Create Event</button>
+    </form>
+
+    <!-- Back button to events calendar -->
+    <div class="mt-3 text-center">
+        <a href="{% url 'events_calendar' %}" class="btn btn-outline-primary">Back to Calendar</a>
     </div>
+
+    {% for day in days %}
+        <div class="day-box">
+            {{ day }}
+            {% for event in events %}
+            {% if event.day == day %}
+                <div class="event">{{ event.title }}</div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+
 </div>
+
+<!-- JS to activate pickers -->
+<script>
+$(document).ready(function() {
+    // activates the datepicker for the date input
+    $('#date').datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    // activates the timepicker for the time input
+    $('#time').timepicker({
+        timeFormat: 'h:mm p',
+        interval: 15,
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+});
+</script>
 
 {% bootstrap_javascript %}  <!-- includes Bootstrap JS for interactivity -->
 </body>

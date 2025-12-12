@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 class Club(models.Model):
     #The name of the club with max 100 char
@@ -38,12 +39,12 @@ class Event(models.Model): #defined an event model (like a template for an event
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     club = models.ForeignKey('Club', on_delete=models.CASCADE, related_name='events') #link this event to a club; if club deleted then event is deleted too
-    day = models.IntegerField()
-    month = models.IntegerField()
-    year = models.IntegerField()
-
-    time = models.TimeField(default="12:00") # added this time field
     
+    date = models.DateField(default=datetime.date.today) #modified
+    time =models.TimeField(default="12:00") #modified
+    
+    location = models.CharField(max_length=200, blank=True)
+
     def __str__(self): #how the event shows up when events calendar
         return f"{self.title} ({self.club.name})"
     

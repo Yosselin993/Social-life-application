@@ -107,5 +107,22 @@
     </div>
 </div>
 
+
+<script>
+  // Wait 5 seconds then hide the messages
+  setTimeout(function() {
+    const messages = document.querySelector('.messages');
+    if (messages) {
+      // Smooth fade out
+      messages.style.transition = 'opacity 1s';
+      messages.style.opacity = '0';
+      // Remove element from DOM after fade
+      setTimeout(() => { messages.remove(); }, 1000);
+    }
+  }, 5000); // 5000ms = 5 seconds
+</script>
+
+
+
 </body>
 </html>
