@@ -1,9 +1,11 @@
 {% load bootstrap5 %} <!--;pads django's bootstrap template tags-->
+{% load static %}
 <!DOCTYPE html>
 <html lang = "en">
 <head>
     <meta charset = "UTF-8">
      <title>Browse All</title>
+     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
      {% bootstrap_css %} <!--inserts bootstrap5 css-->
 
 <style>
@@ -109,6 +111,15 @@
                 <div class="col-12 col-sm-6 col-md-4 mb-4">
                   <div class="card-club-version">
                         <div class="card-body">
+                            {% if club.photo %}
+                                <div style="text-align:center; margin-bottom:15px;">
+                                    <img src="{{ club.photo.url }}" alt="{{ club.name }} photo" style="width:120px; height:120px; object-fit:cover; border-radius:50%; border:2px solid #aaa;">
+                                </div>
+                            {% else %}
+                                <div style="text-align:center; margin-bottom:15px;">
+                                    <div style="width:120px; height:120px; border:2px solid #aaa; border-radius:50%; display:flex; align-items:center; justify-content:center; background-color:#f7f7f7; margin:0 auto;">No Photo</div>
+                                </div>
+                            {% endif %}
                             <h5 class="card-title"><a href="{% url 'club_profile' club.id %}" style="text-decoration:none; color:inherit;">{{ club.name }}</a></h5>
                             <p class="card-text">{{ club.description }}</p>
                             <p><strong>Meeting Time:</strong> {{ club.meeting_time }}</p>

@@ -1,5 +1,6 @@
 <!-- this loads Bootstrap 5 -->
 {% load bootstrap5 %}
+{% load static %}
 <!-- Declaring the document type as HTML5--->
 <!DOCTYPE html>
 <!-- sets the HTML document language to English -->
@@ -12,6 +13,7 @@
     <!-- title is the text that will appear in the browser tab -->
      <!-- let child templates override the title if needed-->
     <title>{% block title %}Home{% endblock %}</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     {% bootstrap_css %} <!-- loads Bootstrap CSS -->
 
     <style>

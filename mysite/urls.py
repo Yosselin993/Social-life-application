@@ -48,4 +48,4 @@ urlpatterns = [
     path('club/<int:club_id>/edit/', views.edit_club, name='edit_club'), # Edit club (leaders only)
     path('summernote/', include('django_summernote.urls')), #Summernote editor which is used to display a text box.
     path("quiz/", views.quiz_view, name = "quiz"), #url for quizzes
-]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
