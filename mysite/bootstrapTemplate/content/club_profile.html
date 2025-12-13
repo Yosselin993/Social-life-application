@@ -293,8 +293,8 @@
 
         {% if request.user in club.leaders.all %} <!-- This whole section will only be displayed to leaders in the club-->
         <div class="central-column"> <!--every box will be displayed in the center of the screen-->
-            <div class="central-box button-control"> <!--The centeral box was created to display buttons for club creaters -->
-                <form action = "{% url 'form_page' club.id 'announcement' %}"> <!--Will take you to the webpage to create Announcement post -->
+          <!-- <div class="central-box button-control"> -->  <!--The centeral box was created to display buttons for club creaters -->
+              <!-- <form action = "{% url 'form_page' club.id 'announcement' %}"> Will take you to the webpage to create Announcement post
                     <button type="submit" class="btn btn-primary" >Create Announcement</button>
                 </form>
 
@@ -302,18 +302,18 @@
                     <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary"> Create Post </a>
                 {% endif %}
 
-                <form action="{% url 'form_page' club.id 'submission' %}"> <!--Will take you to the webpage to create a submission post-->
+                <form action="{% url 'form_page' club.id 'submission' %}"> Will take you to the webpage to create a submission post
                     <button type="submit" class="btn btn-primary" >Create submission Box</button>
                 </form>
-            </div><!--centeral box content ends-->
+            </div> --> <!--centeral box content ends-->
 
             <div class="mt-4" >
                 {% if can_post %}
                    <!-- <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary">
                         Create Post
-                    </a>
+                    </a> -->
                     {% endif %}
-                -->
+                
                     {% if posts %}
                     {% for post in posts %}
                         <div class="card mb-3">
@@ -331,6 +331,8 @@
                 {% endif %}
             </div>
         </div>
+        {% endif %}
+
         <div class="right-column">
             {% if request.user in club.leaders.all %} 
                 <div class="club-leader-controls button-control">
