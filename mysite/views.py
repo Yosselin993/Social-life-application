@@ -21,6 +21,11 @@ from .forms import QuizForm #added for quiz (quiz form)
 from .models import Announcement #added
 from django.shortcuts import get_object_or_404
 from .forms import AnnouncementForm
+from .models import Post
+from .forms import PostForm
+from clubs.models import Event
+from .models import Event
+from datetime import date
 
 # this is a function that handles requests to the home page
 def home(request): 
@@ -119,6 +124,12 @@ def main_page(request):
             messages.error(request, "Error uploading photo. Please try again.")
     else:
         student_form = StudentForm(instance=student)
+        
+        favorite_clubs = request.user.favorite_clubs.all()  # QuerySet of favorite clubs
+        posts = Post.objects.filter(club__in=favorite_clubs).select_related('club', 'author')
+        announcements = Announcement.objects.filter(club__in=favorite_clubs).select_related('club', 'author')
+        notifications = announcements.order_by('-created_at')[:5]  #last 5 announcements
+
 
     context = {
         'form': student_form,
@@ -127,7 +138,10 @@ def main_page(request):
         'club_form': club_form,
         'club': club,
         'favorite_clubs': request.user.favorite_clubs.all(),
-        'display_name': display_name #added to display first/last name
+        'display_name': display_name, #added to display first/last name
+        'posts': posts,
+        'announcements': announcements, #add anouncements
+        'notifications': notifications,
     }
 
     return render(request, 'content/mainPage.html', context)
@@ -246,8 +260,12 @@ def events_calendar(request, year=None, month=None):
     blank_days = list(range(first_weekday)) #list for empty boxes
 
     # events loaded from database
-    events = Event.objects.filter(month=month, year=year)
+    events = Event.objects.filter(date__year=year, date__month=month)
 
+    #add a 'day' attribute so template can use event.day
+    for e in events: 
+        e.day = e.date.day
+        
     #calculate previous month
     prev_date = display_date - relativedelta(months=1)
     prev_month_year = prev_date.year
@@ -274,6 +292,15 @@ def events_calendar(request, year=None, month=None):
          "prev_month_year": prev_month_year,
          "prev_month_num": prev_month_num,
     })
+
+
+
+#added a view for events_detail
+@login_required
+def event_detail(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    return render(request, 'content/event_detail.html', {'event': event})
+
 
 #def browse_all(request):
     #return render(request, 'content/Browse_All.html')
@@ -305,6 +332,17 @@ def club_first_login(request):
     else:
         form = ClubForm(instance=club) #load the form with the exisiting club data
 
+    #define variables
+    today = date.today()
+    year = today.year
+    month = today.month
+
+    # events loaded from database
+    events = Event.objects.filter(date__year=year, date__month=month)
+    # add 'day' attribute for the template
+    for e in events:
+        e.day = e.date.day  # <-- add this so template can use event.day
+
     return render(request, 'content/club_first_login.html', {'form': form})
 
 
@@ -313,12 +351,20 @@ def club_profile(request, club_id):
     club = Club.objects.get(id=club_id)
 
     announcements = club.announcements.all()
+    posts = club.posts.all()
 
      # Render the club_profile.html and pass the club data into it
-    context = {'club': club}
+    context = {
+        'club': club,
+        'announcements': announcements,
+        'posts': posts,
+        'can_post': False,
+
+    }
     # If the current user is a leader, include an editable ClubForm instance
     if request.user.is_authenticated and request.user in club.leaders.all():
         context['club_form'] = ClubForm(instance=club)
+        context['can_post'] = True
 
     return render(request, 'content/club_profile.html', context)
 
@@ -353,6 +399,11 @@ def form_page(request, club_id, form_type):
 
     club = get_object_or_404(Club, id=club_id)
 
+    if request.user not in club.leaders.all():
+        return HttpResponse("You are not allowed to create content for this club.")
+
+
+
     #default empty form
     form = CommentForm()
     template = ""
@@ -382,6 +433,20 @@ def form_page(request, club_id, form_type):
     elif form_type == "post":
         form_title = "Create Post"
         template = "content/Post.html"
+
+        if request.method == "POST":
+            form = PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.club = club
+                post.author = request.user
+                post.save()
+                messages.success(request, "Post created successfully!")
+                return redirect('club_profile', club_id=club.id)
+            else:
+                messages.error(request, "Post cannot be empty.")
+        else:
+            form = PostForm()
 
     elif form_type == "submission":
         # If user is creating a submission box
@@ -463,3 +528,16 @@ def quiz_view(request):
         )
 
 
+@login_required
+def delete_announcement(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    club = announcement.club  # assuming Announcement has club = ForeignKey
+
+    # only club leaders can delete
+    if request.user not in club.leaders.all():
+        messages.error(request, "You are not allowed to delete this.")
+        return redirect('club_profile', club.id)
+
+    announcement.delete()
+    messages.success(request, "Announcement deleted.")
+    return redirect('club_profile', club.id)

@@ -1,8 +1,10 @@
 # clubs/views.py
 from django.shortcuts import render, redirect
-from .models import Club, Event
+from .models import Club
+from .models import Event
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages #used to display one-time notfications to users
+import datetime
 
 def browse_all_clubs(request):
     clubs = Club.objects.all()  # get all clubs from database
@@ -29,26 +31,35 @@ def toggle_favorite(request, club_id):
 
 @login_required
 def add_event(request):
-    if not request.user.clubs_led.exists():  # only club leaders can add events
+    # Only club leaders can add events
+    if not request.user.clubs_led.exists():
+        messages.error(request, "You must be a club leader to create events.")
         return redirect('mainPage')
 
     if request.method == 'POST':
-        form = EventForm(request.POST)
+        form = EventForm(request.POST)  # use the form to handle date & time
         if form.is_valid():
             event = form.save(commit=False)
-            # Assign the event to the first club the user leads (you can enhance this later)
-            event.club = request.user.clubs_led.first()
+            event.club = request.user.clubs_led.first()  # assign the club
             event.save()
-            return redirect('events_calendar')
+            messages.success(request, "Event created successfully.", extra_tags="event")
+            return redirect('events_calendar_nav', year=event.date.year, month=event.date.month)
+        else:
+            messages.error(request, "Please correct the errors in the form.")
     else:
         form = EventForm()
-    
+
     return render(request, 'content/add_event.html', {'form': form})
 
 
+
+#define a view function that atkes a request and club_id
+#responsible for displaying a club's profile page
+#request is the HTTP request object django passes to all views
+#club id is a dynamic parameter (from the url) that tells us which club to display
 def club_profile(request, club_id):
-    club = get_object_or_404(Club, id=club_id)
-    return render(request, 'content/club_profile.html', {'club': club})
+    club = get_object_or_404(Club, id=club_id) #django shortcut that avoids manually have to check if the object exists
+    return render(request, 'content/club_profile.html', {'club': club}) #pass context data (dictionary that provides data to the tempplate)
 
 @login_required
 def edit_event(request, event_id):
@@ -62,7 +73,7 @@ def edit_event(request, event_id):
         form = EventForm(request.POST, instance = event) #onnect submitted data to the form, using the existing event instance
         if form.is_valid():
             form.save() #save changes to the event
-            messages.success(request, "Event updated successfully.")
+            messages.success(request, "Event updated successfully.", extra_tags="event")
             return redirect('events_calendar') #go back to calendar
     else:
         form = EventForm(instance=event) #if the request is GET, display the form pre-filled with event data
@@ -73,13 +84,12 @@ def edit_event(request, event_id):
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
 
-    if request.user not in event.club.leaders.all():
-        messages.error(request, "You cannot delete this event.")
-        return redirect('events_calendar')
-    
-    if request.method == 'POST':
-        event.delete() #if confirmed, delete the event
-        messages.success(request, "Event deleted successfully.")
-        return redirect('events_calendar')
+    if request.method == "POST":
+        event.delete()
+        messages.success(request, "Event deleted successfully.", extra_tags="event")
+        return redirect("events_calendar")
 
-    return render(request, 'content/confirm_delete.html', {'event':event})
+    return redirect("events_calendar")
+
+
+

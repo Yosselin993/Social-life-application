@@ -1,28 +1,121 @@
 {% load bootstrap5 %}
-{% load static %}
+
 <!DOCTYPE html>
-<html lang = "en">
+<html lang="en">
 <head>
-    <meta charset = "UTF-8">
-    <title>Club Setup</title>
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <meta charset="UTF-8">
+    <title>Create Your Club Profile</title>
+    <link rel="icon" type="image/png" href="/media/favicon.png">
     {% bootstrap_css %}
-    </head>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff3e0, #ff9800);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            background: #fff;
+            color: #333;
+            padding: 40px 50px;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            border-top: 5px solid #ff9800;
+        }
+
+        h2, h3 {
+            color: #ff9800;
+            text-align: center;
+        }
+
+        h2 { font-weight: 700; margin-bottom: 5px; }
+        h3 { font-weight: 600; margin-bottom: 30px; }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+            color: #ff9800;
+        }
+
+        input, textarea, select {
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.5);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #a1550d, #ff9800);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #1976d2, #0d47a1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        hr { border: 0; border-top: 2px solid #1976d2; margin: 20px 0; }
+
+        .logo-link { text-decoration: none; }
+        .logo-link h2 { margin-bottom: 5px; }
+    </style>
+</head>
+
 <body>
-    <div class="container mt-2">
-        <div class="card card-placement">
+    <div class="container">
+        <a href="{% url 'mainPage' %}" class="logo-link">
+            <h2>UTRGVconnect</h2>
+        </a>
+
+        <hr>
+
+        <h3>Create Your Club Profile</h3>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
             
-            <h2 class="mt-4" style="color: #0d47a1;">Complete Your Club Profile</h2>
-            <p class="mb-4">This information will be displayed on the Browse All Clubs page.</p>
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    Please fix the errors below.
+                </div>
+            {% endif %}
 
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_form form %} 
-                <button type="submit" class="btn btn-success mt-4">Save Club Details & Continue</button>
-            </form>
+            <!-- Render all form fields from ClubForm -->
+            {% for field in form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
 
-        </div>
+            <button type="submit" class="btn btn-primary w-100">Save Club Profile</button>
+        </form>
     </div>
-    {% bootstrap_javascript %} 
 </body>
 </html>

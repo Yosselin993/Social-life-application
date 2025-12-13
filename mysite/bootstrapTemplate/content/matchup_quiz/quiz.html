@@ -3,24 +3,73 @@
 {% block title %}Club Quiz{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="text-center mt-3">
-        <h2>Club Recommendation Quiz</h2>
-        <p class="text-muted">Select your interests and your major to get personalized recommendations!</p>
-    </div>
+<!-- Container styled like Add Event form -->
+<div class="event-card">
+    
+    <!-- Logo / header -->
+    <a href="{% url 'mainPage' %}" style="text-decoration:none;">
+        <h2>UTRGVconnect</h2>
+    </a>
 
-    <form method="post" class="mt-4">
+    <hr>
+
+    <!-- Quiz header -->
+    <h3 class="mb-4">Club Recommendation Quiz</h3>
+    <p class="text-muted mb-4">
+        Select your interests and your major to get personalized recommendations!
+    </p>
+
+    <!-- Quiz form -->
+    <form method="post">
         {% csrf_token %}
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary w-100 mt-3">Get My Recommendations</button>
-            </div>
+
+        <!-- Loop through all form fields -->
+        {% for field in form %}
+        <div class="mb-3">
+            <!-- Label styled like Add Event form -->
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            
+            <!-- Input / select / checkbox / radio rendered by Django -->
+            {{ field }}
+
+            <!-- Optional help text for the field -->
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+
+            <!-- Display validation errors -->
+            {% for error in field.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
         </div>
+        {% endfor %}
+
+        <!-- Submit button styled like Add Event form -->
+        <button type="submit" class="btn btn-primary w-100">
+            Get My Recommendations
+        </button>
     </form>
 
-    <div class="text-center mt-4">
-        <a href="{% url 'mainPage' %}" class="btn btn-outline-secondary">Back to Home</a>
+    <!-- Back button to main page, same style as Add Event -->
+    <div class="mt-3 text-center">
+        <a href="{% url 'mainPage' %}" class="btn btn-outline-primary">Back to Home</a>
     </div>
 </div>
+
+<!--
+    To add more questions:
+    1. Update your Django form in forms.py with a new field, e.g.:
+
+        favorite_color = forms.ChoiceField(
+            choices=[('red','Red'),('blue','Blue'),('green','Green')],
+            label="What's your favorite color?",
+            widget=forms.RadioSelect
+        )
+
+    2. The template will automatically render it because of the loop over form fields.
+-->
+
+
+
+
 {% endblock %}

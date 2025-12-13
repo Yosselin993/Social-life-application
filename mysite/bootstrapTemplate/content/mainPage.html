@@ -1,22 +1,20 @@
-<!-- this loads Bootstrap 5 -->
 {% load bootstrap5 %}
 {% load static %}
 <!-- Declaring the document type as HTML5--->
 <!DOCTYPE html>
-<!-- sets the HTML document language to English -->
+
 <html lang="en">
-<!-- This is the head section -->
+
 <head>
-    <!-- This sets the character encoding for the document this even includes emojis-->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    <!-- title is the text that will appear in the browser tab -->
-     <!-- let child templates override the title if needed-->
+    
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+
     <title>{% block title %}Home{% endblock %}</title>
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-    {% bootstrap_css %} <!-- loads Bootstrap CSS -->
-
-    <style>
+    {% bootstrap_css %} <style>
     /* I define my classes here */
     .box { /* this is my container for the inside of the login box*/
         width: 500px;
@@ -42,7 +40,7 @@
     }
     .card{
         width: 90%; 
-        max-width: 1290px;
+        max-width: 1290px; /* This max-width will now be controlled by its parent */
         padding: 40px 80px;  /* top/bottom = 20px, left/right = 80px */
         background-color: white;
         border-radius: 12px;
@@ -50,7 +48,9 @@
         /*border: 1px solid #88808026; */
         margin: 2px auto;
         box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+        width: 100%; /* Make the card take full width of its new container */
     }
+
     /*Used for "UTRGVconnect" header and logout button*/
     .header {
         display: flex;
@@ -90,6 +90,16 @@
         margin-left: auto;
         margin-right: auto;
     }
+/* NEW CLASS: This container will enforce the grid's structure for elements that need to span the whole width. */
+    .full-grid-width-container {
+        display: grid;
+        grid-template-columns: 3.5in 1fr 3.5in;
+        gap: 20px;
+        align-items: start;
+        width: 100%; /* takes up the full width of the main .container */
+        margin-bottom: 1rem; /* same as mb-3 */
+    }
+
     /*layout container*/
     /* Creates a 3-column grid layout with side columns fixed at 3.5in and a flexible center column */
     .main-content-grid{
@@ -140,15 +150,51 @@
     /*Creating a new 'card' that will store the notification content*/
     .notification-box{
         width: 3.5in;
-        height: 3.5in;
+        height: auto; /*allows height to adjust to the text (no overflow of text)*/
+        min-height: 2in; /*set a min height*/
         padding: 10px;
         margin-top: 10px;
         border-radius: 8px;
         background-color: white;
-        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+        border-left: 5px solid #0d47a1;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.15);
     }
+
+        /* NEW: Style the heading inside the notification box */
+    .notification-box .box-title {
+        color: #0d47a1; /* UTRGV Blue for the title */
+        font-size: 1.2rem;
+        margin-top: 0;
+        margin-bottom: 8px; /* Space below the title */
+        font-weight: 700;
+    }
+
+    /* Adjustments for list items within the notification box for better separation */
+    .notification-box ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 5px;
+        border-top: 1px solid #d0e7ff; /* separator line */
+        padding-top: 8px;
+    }
+
+    .notification-box li {
+        margin-bottom: 12px !important;
+        padding-bottom: 8px;
+        border-bottom: 1px dashed #e0e0e0; /* subtle dash between notifications */
+    }
+
+    .notification-box li:last-child {
+        border-bottom: none; /* No dash after the last item */
+        margin-bottom: 0 !important;
+        padding-bottom: 0;
+    }
+
+
+
+
     /*Creating a new 'card' that will store the different clubs the user is a member of, content.*/
-    .visit-club-box{
+   /* .visit-club-box{
         width: 3.5in;
         height: 5in;
         padding: 10px;
@@ -160,6 +206,40 @@
         margin-top: 5px;
 
     }
+        */
+    .visit-club-box{
+        width: 3.5in;
+        height: auto; /* Allow height to adjust to content */
+        min-height: 5in; /* Keep a minimum height if desired */
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 8px;
+        background-color: white;
+        /* NEW STYLES: Adopted from .notification-box for visual consistency */
+        border-left: 5px solid #0d47a1; /* UTRGV Blue left border */
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.15); /* Subtle shadow */
+        /* Existing grid and margin alignment */
+        grid-column: 3;
+        margin-top: 5px; 
+    }
+
+    .visit-club-box .box-title {
+        color: #0d47a1; /* UTRGV Blue for the title */
+        font-size: 1.2rem;
+        margin-top: 0;
+        margin-bottom: 8px; /* Space below the title */
+        font-weight: 700;
+    }
+
+    /* Adjusted styles for the favorite club cards within the box */
+    .visit-club-box .card {
+        border: 1px solid #d0e7ff; /* Light border for inner cards */
+        box-shadow: none; /* Remove shadow from inner card to simplify */
+    }
+
+
+
+
     /*style's the color of thw words, center the words within the 'card', and how far down it is from the top of the 'card'*/
     /*Used for both notification-box and visit-club-box*/
     .notification-placeholder{
@@ -172,7 +252,7 @@
    /* .search-container { */
        /* float: right; *//* Floats the search form to the right */
        /* margin-left: 20px; *//* Optional: Add some spacing */
-  /*  } */
+  /* } */
     
    /* .search-results-container { */
         /* If you want results to also be on the right, you can float them too,
@@ -209,26 +289,143 @@
         position: absolute;
     }
 
+    .central-box {
+    width: 100%;
+    height: 1in;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* vertical alignment ✅ */
+    gap: 6px;                  /* clean spacing between items */
+    }
+    
+    /* MODIFICATION for .central-box to fit the left column */
+    .left-column .central-box {
+        width: 3.5in; /* Match the fixed width of the column */
+        height: auto; 
+        margin-top: 10px;
+        margin-bottom: 5px; /* Added margin for separation */
+    }
+
+
+    .central-box p {
+        margin: 0;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+
+    .central-box .btn {
+        font-size: 0.9rem;
+        padding: 6px 14px;
+        align-self: center;
+        margin-top: 6px;
+    }
+
+    .message-box {
+        position: fixed;       /* float on top of everything */
+        top: 20px;             /* distance from top */
+        left: 50%;             /* start from middle */
+        transform: translateX(-50%); /* center horizontally */
+        background-color: #28a7469c;
+        color: black;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-align: center;
+        z-index: 9999;         /* stay above other elements */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        max-width: 90%;        /* prevent overflowing on small screens */
+        white-space: nowrap;   /* keep on single line */
+    }
+
+.post-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.25);
+
+    /* ⬇️ THIS controls the card width */
+    width: 100%;
+    max-width: 550px;      /* Figma width */
+    margin: 0 auto 20px;   /* centers card */
+
+    height: 480px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+/* Top caption */
+.post-caption {
+    padding: 16px;
+    font-size: 1rem;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;             /* fixed height */
+}
+
+/* Middle image area (fills remaining space) */
+.post-image-wrapper {
+    flex: 1;
+    background-color: #e0e0e0;
+}
+
+.post-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Bottom likes/comments */
+.post-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    flex-shrink: 0;             /* fixed height */
+}
+
+
+
+
 </style>
 </head>
 <body> 
-    <div class="container mt-2">
-             <!--only the seletor 'header' is used here but a class from bootstrap that controls to margins from the top-->
-      <div class="mb-4 header"> <!-- header content starts -->
-            <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
-            <!--<p>Hi, {{ user.username }}! :)</p> -->
-            <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
-            {% csrf_token %}
-            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
-            Logout</a>
-            </form>
-        </div> <!-- header content ends-->
 
-        <div class="mb-2"> <!--class from bootstrap that controls to margins from the top-->
-            <div class="card"> <!--Seletor class "card" is called, everthing displayed within card starts here"-->
+{% if messages %} <!--django messages framwork : shows temporary notifications (Success/errors)-->
+    {% for message in messages %}
+        {% if "event" not in message.tags %}
+            <div class="message-box">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+
+    <div class="container mt-2"> <!--bootstrap container, adds responsive spacing and margin top-->
+             <div class="mb-4 header"> <h1 style="color: #0d47a1; font-size: 30px;">UTRGVconnect</h1>
+            
+                <!--logout form-->
+                <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
+                    {% csrf_token %}
+                    <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
+                    Logout</a>
+                </form>
+            </div> 
+            
+            <div class="full-grid-width-container"> <!--custom grid container for full width context-->
+            <div class="card" style="grid-column: 1 / -1;"> 
+                <!--search form-->
                 <form method="GET" action="{% url 'search' %}" class="search-form-group">
                     <button type="submit" class="btn btn-primary">Search</button>
                     <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
+                    <!--input field with bootstrap styling, pre-fills search term if present-->
                 </form>
             </div> 
         </div> <!-- search card ends here-->
@@ -238,21 +435,20 @@
                 <button type="submit" class="btn btn-primary" >Event Calendar</button>
             </form>
 
-            <form action = "{% url 'browse_all' %}"> <!--changed this to now go to the actual calendar-->
+            <!--browser all club buttons-->
+            <form action = "{% url 'browse_all' %}"> 
                 <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
             </form>
         </div>
 
         <div class="main-content-grid">
-            
-            <div class="left-column"> <!--information display in the left side of the page starts-->
-                 <!-- this is where the tag information will start-->
-                <div class="student-tag">
-                    <form method="POST" enctype="multipart/form-data" id="photoForm">
+
+            <!--left column-->
+            <div class="left-column"> <div class="student-tag">
+                    <form method="POST" enctype="multipart/form-data" id="photoForm"> <!--form to upload student profile photo-->
                         {% csrf_token %}
 
-                            <!-- Clickable box -->
-                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="display:flex; align-items:center; gap:12px;">
                             <div class="student-photo-placeholder" id="photoBox">
                                 {% if student.photo %}
                                     <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
@@ -263,26 +459,44 @@
                                 {% endif %}
                             </div>
 
+                            <!--link to the first club the user leads-->
                             <div class="student-info" style="display:flex; flex-direction:column;">
-                                <span class="student-username" style="font-weight:600;">{{ display_name }}</span>
-                                <!--<span class="student-fullname" style="color:#666;">{{ student.user.get_full_name }}</span>-->
+                                {% if user.clubs_led.all %} <a href="{% url 'club_profile' user.clubs_led.first.id %}" 
+                                    style="font-weight:600; color: inherit; text-decoration: none;">
+                                        {{ display_name }}
+                                    </a>
+                                {% else %}
+                                    <span class="student-username" style="font-weight:600;">{{ display_name }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
-                        <!-- Hidden file input -->
+                        <!--hideen file input for photo upload-->
                         <input type="file" id="photoUpload" name="photo" accept="image/*" style="display:none;">
                     </form>
 
-                </div> <!-- this is where the tag information will end-->
+                </div> 
                 
-                <div class="notification-box"> <!-- This is where the noification content starts-->
-                    <div class="notification-placeholder">
-                        <p>Notification</p>
-                    </div>
-                </div> <!--This is where the noification conten ends-->
-                
-            </div> <!--information display in the left side of the page ends-->
-            <div class="central-column">
+                <!--central box for quiz-->
+                <div class="central-box">
+                    <h4 class="box-title" style="color: #0d47a1; text-align: center;"><strong>Find Your Clubs</strong></h4>
+                        <p style="margin-bottom: 8px; color: #555; font-size: 0.95rem;">Take this quick quiz to get personalized recommendations!</p>
+                        <a href="{% url 'quiz' %}" class="btn btn-primary btn-lg">Take the Quiz </a>
+                </div>
+
+                <!--notifcatin box-->
+                <div class="notification-box"> <div class="notification-placeholder">
+                        <h4 class="box-title">Notifications</h4>
+                        {% if notifications %} <ul style="list-style: none; padding: 0; margin-top: 5px;">
+                                {% for n in notifications %} <li style="margin-bottom:10px;">
+                                        <a href="{% url 'club_profile' n.club.id %}" style="text-decoration: none; color: #0d47a1;"> <strong>{{ n.club.name }}</strong> </a> posted an announcement: <em>"{{ n.content|striptags|truncatechars:60 }}"</em> <br>
+                                        <small style="color: #555;">{{ n.created_at|timesince }} ago</small> </li>
+                                {% endfor %} </ul>
+                        {% else %} <p>No new announcements from your favorite clubs.</p>
+                        {% endif %} </div>
+                </div> </div> <div class="central-column">
+
+                <!--central column-->
                 <div class="search-results-container">
                   {% if results %}
                         <ul class="list-group">
@@ -293,10 +507,45 @@
                     {% else %}
                       {% endif %}
                 </div>
+
+                
+                <div class="mt-4">
+
+                    {% if posts %}
+                    {% for post in posts %}
+                        <div class="post-card">
+
+                            <!-- Caption -->
+                            <div class="post-caption">
+                                {{ post.content|safe }} <!--allows HTML in post-->
+                            </div>
+
+                            <!-- Photo -->
+                            {% if post.image %}
+                            <div class="post-image-wrapper">
+                                <img src="{{ post.image.url }}" class="post-image" alt="Post image">
+                            </div>
+                            {% endif %}
+
+                            <!-- Likes & Comments -->
+                            <div class="post-footer">
+                                <span>❤️ {{ post.likes.count }} likes</span>
+                                <span>💬 {{ post.comments.count }} comments</span>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+
+                    {% else %}
+                    <p>No posts yet from your favorite clubs.</p>
+                    {% endif %}
+
+                </div>
             </div> 
-            <div class="visit-club-box"> <!--Where the visiting information starts-->
-                <div class="notification-placeholder">
-                    <p style="font-weight:600;">Your Favorite Clubs</p>
+
+            <!--right column: favorite clubs -->
+            <div class="visit-club-box"> <div class="notification-placeholder">
+                    <p class="box-title">Your Favorite Clubs</p>
                     {% if favorite_clubs and favorite_clubs.count > 0 %}
                         <div style="margin-top:8px; display:flex; flex-direction:column; gap:12px; align-items:stretch; text-align:left;">
                             {% for fclub in favorite_clubs %}
@@ -323,10 +572,11 @@
                         <a href="{% url 'browse_all' %}" class="btn btn-sm btn-primary" style="margin-top:8px;">Browse Clubs</a>
                     {% endif %}
                 </div>
-            </div> <!--Where the visiting information ends-->
-        </div> 
+            </div> </div> 
     </div> {% bootstrap_javascript %}
 
+
+    <!--modal for the first time club login-->
     {% if user.clubs_led.first and not user.clubs_led.first.first_login_completed %}
     <div class="modal fade" id="clubFirstLoginModal" tabindex="-1">
         <div class="modal-dialog">
@@ -351,6 +601,7 @@
 </div>
 
 <script>
+    //shows the modal automatically if first login is not completed
     var myModal = new bootstrap.Modal(document.getElementById('clubFirstLoginModal'));
     myModal.show();
 </script>
@@ -360,6 +611,8 @@
 
 <!--this section is for the quiz (recommendation banner)-->
 <!--quiz banner with not any background -->
+
+<!--
 <div class="text-center mt-5 mb-5" style="background: none; border: none; padding: 0;">
     <h3 style="font-weight: bold;">Need recommendations?</h3>
     <p style="font-size: 18px;">Take this quiz to find out what three clubs you should favorite!</p>
@@ -368,6 +621,23 @@
         Take the Quiz
     </a>
 </div>
+-->
+
+<!--message fade out JS code-->
+<script>
+  // Wait 5 seconds then hide the messages
+  setTimeout(function() {
+    const messages = document.querySelector('.message-box'); // target the correct container
+    if (messages) {
+      // Smooth fade out
+      messages.style.transition = 'opacity 1s';
+      messages.style.opacity = '0';
+      // Remove element from DOM after fade
+      setTimeout(() => { messages.remove(); }, 1000);
+    }
+  }, 5000); // 5000ms = 5 seconds
+</script>
+
 
 
 </body>
@@ -397,5 +667,3 @@ photoUpload.addEventListener("change", (event) => {
     }
 });
 </script>
-
-

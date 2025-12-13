@@ -24,6 +24,7 @@ from clubs import views as clubs_views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'), # When someone visits the home page ('/'), call the home view and name this URL 'home'
@@ -48,4 +49,7 @@ urlpatterns = [
     path('club/<int:club_id>/edit/', views.edit_club, name='edit_club'), # Edit club (leaders only)
     path('summernote/', include('django_summernote.urls')), #Summernote editor which is used to display a text box.
     path("quiz/", views.quiz_view, name = "quiz"), #url for quizzes
-]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('event/<int:event_id>/', views.event_detail, name='event_detail'), #url for event_details
+    path("event/<int:event_id>/delete/", clubs_views.delete_event, name="delete_event"),
+    path('announcement/delete/<int:announcement_id>/', views.delete_announcement, name='delete_announcement'),
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

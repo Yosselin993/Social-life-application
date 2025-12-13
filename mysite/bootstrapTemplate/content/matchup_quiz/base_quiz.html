@@ -5,25 +5,49 @@
     <meta charset="UTF-8">
     <title>{% block title %}Quiz{% endblock %}</title>
     {% bootstrap_css %}
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f7f7f7;
-        }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to right, #fff3e0, #ff9800); /* same as add_event */
+        min-height: 100vh;
+    }
+
+    .event-card, .container {
+        max-width: 650px; /* same as add_event card */
+        margin: 40px auto;
+        border-radius: 16px;
+        padding: 30px;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    h2, h3, label {
+        color: #0d47a1;
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #ff9800, #ffb74d); /* orange gradient */
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #ffb74d, #ff9800);
+    }
+
+    .btn-outline-primary {
+        border-radius: 50px;
+    }
     </style>
+
 </head>
 <body>
     {% block content %}{% endblock %}
     {% bootstrap_javascript %}
 </body>
 </html>
+

@@ -4,7 +4,11 @@
 <head>
 <meta charset = "UTF-8">
     <title>Club Setup</title>
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+
     {% bootstrap_css %}
+    {{ form.media }}  {# needed for Summernote / SafeSummernoteField #}
+
 <style>
     /*The main layout we have see over and over agian on our website*/
     body {
@@ -61,10 +65,13 @@
     </div>
 
     <div class="mt-4 card"> <!--Displaying the main card box-->
-        
+        <h1>{{ form_title }}</h1>
 
-
-        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary mt-2">Post</button>
+        </form>
     </div><!--main card box ends -->
 
 

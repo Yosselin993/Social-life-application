@@ -5,7 +5,8 @@
 <head>
     <meta charset = "UTF-8">
     <title>Club Setup</title>
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+
     {% bootstrap_css %}
 <style>
         /*Displays the style of the body*/
@@ -149,10 +150,52 @@
         align-items: center;
 
     }
+
+    /* Fix Bootstrap overriding our message style */
+    /* Top center message style */
+    .message-box {
+        position: fixed;       /* float on top of everything */
+        top: 20px;             /* distance from top */
+        left: 50%;             /* start from middle */
+        transform: translateX(-50%); /* center horizontally */
+        background-color: #28a7469c;
+        color: black;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-align: center;
+        z-index: 9999;         /* stay above other elements */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        max-width: 90%;        /* prevent overflowing on small screens */
+        white-space: nowrap;   /* keep on single line */
+    }
+
+
+    /*remove Bootstrap full-width styling */
+    .message-box.alert {
+        padding: 0;
+        margin: 0;
+        border: none;
+        width: fit-content;
+    }
+
 </style>
 </head>
 
 <body>
+
+<!--shows announcement posted-->
+{% if messages %}
+<div class="message-box">
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
+
 
 
 <div class="container mt-2"> 
@@ -211,23 +254,32 @@
     <div class="main-content-grid"> <!--putting the layout into a grid so its easier to display boxs-->
 
         <div class="left-column"> <!--every box will be displayed on left side of the screen-->
-            <div class="Announcement-box"> <!--Announcement content starts-->
+            <div class="Announcement-box">
                     <h4 style="text-align:center; margin-bottom: 10px;">Announcements</h4>
                     
-                    {% for announcement in announcements %}
-                        <div class="announcement">
-                            <p class="announcement-date" style="color: #555; font-size:14px;">
-                                {{ announcement.created_at|date:"M j, Y h:i A" }}
-                            </p>
+                    <ul style="list-style-type: disc; padding-left: 20px; margin:0;">
 
-                            <div class="announcement-content">
+                        {% for announcement in announcements %}
+                            <li style="margin-bottom: 8px; position: relative;">
+
                                 {{ announcement.content|safe }}
-                        </div>
-            </div>
+                                <span style="color:#555; font-size:12px; margin-left:5px;">
+                                    ({{ announcement.created_at|date:"m/d/Y g:iA" }})
+                                </span>
 
-                    {% empty %}
-                        <p>No announcements yet.</p>
-                    {% endfor %}
+                                {% if request.user in club.leaders.all %}
+                                    <a href="{% url 'delete_announcement' announcement.id %}"
+                                    style="color:red; text-decoration:none; margin-left:8px;"
+                                    title="Delete announcement">
+                                        🗑️
+                                    </a>
+                                {% endif %}
+
+                            </li>
+                        {% empty %}
+                            <p>No announcements yet.</p>
+                        {% endfor %}
+
             </div><!--Announcement content ends-->
         </div><!--left column ends--> 
 
@@ -238,14 +290,40 @@
                     <button type="submit" class="btn btn-primary" >Create Announcement</button>
                 </form>
 
-                <form action="{% url 'form_page' club.id 'post' %}"> <!--Will take you to the webpage to create a Post-->
-                    <button type="submit" class="btn btn-primary" >Create Post</button>
-                </form>
+                {% if can_post %}
+                    <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary"> Create Post </a>
+                {% endif %}
 
                 <form action="{% url 'form_page' club.id 'submission' %}"> <!--Will take you to the webpage to create a submission post-->
                     <button type="submit" class="btn btn-primary" >Create submission Box</button>
                 </form>
             </div><!--centeral box content ends-->
+
+            <div class="mt-4" >
+                {% if can_post %}
+                   <!-- <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary">
+                        Create Post
+                    </a>
+                    {% endif %}
+                -->
+                    {% if posts %}
+                    {% for post in posts %}
+                        <div class="card mb-3">
+                        <div class="card-body">
+                            <p><strong>{{ post.author.username }}</strong> • {{ post.created_at }}</p>
+                            <div>{{ post.content|safe }}</div>
+                            {% if post.image %}
+                            <img src="{{ post.image.url }}" style="max-width: 300px;" alt="Post image">
+                            {% endif %}
+                        </div>
+                        </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No posts yet.</p>
+                {% endif %}
+            </div>
+
+
         </div><!--central-column ends-->
         {% endif %} <!-- This whole section end here-->
 
@@ -283,6 +361,22 @@
 
 </div>
 {% bootstrap_javascript %}
+
+<script>
+  // Wait 5 seconds then hide the messages
+  setTimeout(function() {
+    const messages = document.querySelector('.message-box'); // targets your message container
+    if (messages) {
+      // Smooth fade out
+      messages.style.transition = 'opacity 1s';
+      messages.style.opacity = '0';
+      // Remove element from DOM after fade
+      setTimeout(() => { messages.remove(); }, 1000);
+    }
+  }, 5000); // 5000ms = 5 seconds
+</script>
+
+
 </body>
 
 </html>
