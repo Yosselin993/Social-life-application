@@ -28,8 +28,9 @@
     }
     /*main card used to display profile photos and club information*/
     .card{
-        width: 90%; 
+        width: 100%; 
         max-width: 1290px;
+        height: 32%;
         padding: 0;  /* padding moved to inner content */
         background-color: white;
         border-radius: 12px;
@@ -58,7 +59,7 @@
     /* Banner area styled to be the top background */
     .card-banner{
         width: 100%;
-        height: 180px;
+        height: 190px;
         background-size: cover;
         background-position: center;
         flex-shrink: 0;
@@ -67,7 +68,7 @@
     .card-body-content{
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: center;
         gap: 20px;
         width: 100%;
         padding: 20px 40px 40px 40px; /* inner padding for content */
@@ -84,6 +85,7 @@
         flex-grow: 1;
         text-align: left;
         font-size: smaller;
+        margin-top: -20px;
     }
      /*Used to store the Announcement information post*/
     .Announcement-box{
@@ -95,27 +97,27 @@
         background-color: white;
         box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
     }
-     /*Used to store the submissio box information post*/
+     /*Used to store the submission box information post*/
     .submission-box{
-        width: 3.5in;
-        height: 3.5in;
-        padding: 9px;
-        margin-top: 10px;
-        border-radius: 8px;
-        background-color: white;
-        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
-    }
-
-    /*Used for buttons only displayed to club creaters*/
-    .central-box {
-        width: 100%;
-        height: 1in;
+        width: 100%; /* Now uses the full width of the right column */
+        height: auto; /* Adjusted to fit content better */
+        min-height: 1in;
         padding: 15px;
         margin-top: 10px;
         border-radius: 8px;
         background-color: white;
         box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+    }
+    
+    /* Used for buttons only displayed to club creaters - NEW CONTAINER */
+    .club-leader-controls {
+        width: 100%;
+        padding: 15px;
         margin-top: 10px;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+        margin-bottom: 20px; /* Space below the controls box */
     }
 
     /* Creates a 3-column grid layout with side columns fixed at 3.5in and a flexible center column */
@@ -125,6 +127,8 @@
         gap: 20px;
         align-items: start;
         width: 100%;
+        max-width: 1290px;   
+        margin: 0 auto;
     }
     /* Styles the left side boxes*/
     .left-column{
@@ -137,6 +141,15 @@
     .central-column{
         grid-column: 2;
     }
+    .club-leader-controls {
+        width: 100%;
+        padding: 15px;
+        margin-top: 10px;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
+        margin-bottom: 20px; /* Space below the controls box */
+    }
      /* Styles the righgt side boxes */
     .right-column{
         grid-column: 3;
@@ -145,10 +158,13 @@
     }
     .button-control{
        display: flex;
-        justify-content: center;
+        flex-direction: column; /* Stack buttons vertically for better fit in the fixed width column */
         gap: 15px;
-        align-items: center;
+        align-items: stretch; /* Make buttons full width of the container */
 
+    }
+    .button-control .btn {
+        width: 100%; 
     }
 
     /* Fix Bootstrap overriding our message style */
@@ -184,7 +200,6 @@
 
 <body>
 
-<!--shows announcement posted-->
 {% if messages %}
 <div class="message-box">
     {% for message in messages %}
@@ -199,23 +214,20 @@
 
 
 <div class="container mt-2"> 
-    <div class="mb-4 header"> <!-- header content starts -->
-            <!--Changed the home button to be the utrgv logo-->
+    <div class="mb-4 header"> 
             <a href="{% url 'mainPage' %}" style="color: #0d47a1; font-size: 30px; text-decoration: none;">UTRGVconnect</a>
             <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
             {% csrf_token %}
-            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
-            Logout</a>
+            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">Logout</a>
             </form>
-    </div> <!--header content ends-->
+    </div> 
+        <div class="card"> {% if club.banner %}
+            <div class="card-banner" style="background-image: url('{{ club.banner.url }}');">
 
-    <div class="card"> <!--main box that will display profiles and club information-->
-        {% if club.banner %}
-            <div class="card-banner" style="background-image: url('{{ club.banner.url }}');"></div>
+            </div>
         {% endif %}
 
         {% if request.user in club.leaders.all %}
-            <!-- Edit Club Modal Trigger (top-right, below banner) -->
             <div style="display:flex; justify-content:flex-end; padding:8px 40px 0 40px;">
                 <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editClubModal">Edit Club</button>
             </div>
@@ -230,7 +242,7 @@
                 {% endif %}
             </div>
 
-            <div class="text-placement" style="margin-top: 10px;">
+            <div class="text-placement">
                 <p style="display:flex; align-items:center; gap:12px;"><strong>{{ club.name }}</strong>
                     {% if user.is_authenticated %}
                         <form method="post" action="{% url 'toggle_favorite' club.id %}" style="display:inline; margin:0;">
@@ -249,12 +261,10 @@
                     <p>Meeting Time: {{ club.meeting_time }}</p>
             </div>
         </div>
-    </div> <!--where the main box ends-->
-
-    <div class="main-content-grid"> <!--putting the layout into a grid so its easier to display boxs-->
-
-        <div class="left-column"> <!--every box will be displayed on left side of the screen-->
-            <div class="Announcement-box">
+    </div> 
+    <div class="main-content-grid">
+        <div class="left-column"> 
+        <div class="Announcement-box">
                     <h4 style="text-align:center; margin-bottom: 10px;">Announcements</h4>
                     
                     <ul style="list-style-type: disc; padding-left: 20px; margin:0;">
@@ -318,45 +328,46 @@
                         </div>
                         </div>
                     {% endfor %}
-                    {% else %}
+                {% else %}
                     <p>No posts yet.</p>
                 {% endif %}
             </div>
+        </div>
+        <div class="right-column">
+            {% if request.user in club.leaders.all %} 
+                <div class="club-leader-controls button-control">
+                <form action = "{% url 'form_page' club.id 'announcement' %}"> 
+                    <button type="submit" class="btn btn-primary" >Create Announcement</button>
+                </form>
 
+                {% if can_post %}
+                    <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary"> Create Post </a>
+                {% endif %}
+                </div>{% endif %}
 
-        </div><!--central-column ends-->
-        {% endif %} <!-- This whole section end here-->
-
-        {% if club_form %}
-        <!-- Edit Club Modal -->
-        <div class="modal fade" id="editClubModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Club</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="post" action="{% url 'edit_club' club.id %}" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {% bootstrap_form club_form %}
-                            <div class="mt-2">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
+             </div> 
+        </div> 
+                {% if club_form %}
+    <div class="modal fade" id="editClubModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Club</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'edit_club' club.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_form club_form %}
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        {% endif %}
-
-        <div class="right-column"><!--every box will be displayed on the right side of the screen-->
-            <div class="submission-box"> <!--where submission boxes will be displayed-->
-            </div> <!--submission boxes content ends-->
-        </div> <!--right-column ends-->
-
-
-    </div> <!--main-content-grid ends-->
+    </div>
+    {% endif %}
 
 
 </div>
