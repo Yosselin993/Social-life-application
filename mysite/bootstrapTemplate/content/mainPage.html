@@ -1,5 +1,6 @@
 {% load bootstrap5 %}
-
+{% load static %}
+<!-- Declaring the document type as HTML5--->
 <!DOCTYPE html>
 
 <html lang="en">
@@ -12,6 +13,7 @@
     <link rel="icon" type="image/png" href="/media/favicon.png">
 
     <title>{% block title %}Home{% endblock %}</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     {% bootstrap_css %} <style>
     /* I define my classes here */
     .box { /* this is my container for the inside of the login box*/
@@ -426,9 +428,11 @@
                     <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
                     <!--input field with bootstrap styling, pre-fills search term if present-->
                 </form>
-            <div class="button-container">
-                <!--event calendar button-->
-            <form action = "{% url 'events_calendar' %}"> 
+            </div> 
+        </div> <!-- search card ends here-->
+
+        <div class="mb-2 d-flex gap-3 justify-content-center">
+            <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar--> 
                 <button type="submit" class="btn btn-primary" >Event Calendar</button>
             </form>
 
@@ -436,10 +440,8 @@
             <form action = "{% url 'browse_all' %}"> 
                 <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
             </form>
-            </div>
+        </div>
 
-            </div> 
-        </div> 
         <div class="main-content-grid">
 
             <!--left column-->
