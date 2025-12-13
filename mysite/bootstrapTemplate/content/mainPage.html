@@ -230,7 +230,10 @@
                     <button type="submit" class="btn btn-primary">Search</button>
                     <input type="search" class="form-control" placeholder="Search..." name="search_query" value="{{ request.GET.search_query|default:'' }}">
                 </form>
-            <div class="button-container">
+            </div> 
+        </div> <!-- search card ends here-->
+
+        <div class="mb-2 d-flex gap-3 justify-content-center">
             <form action = "{% url 'events_calendar' %}"> <!--changed this to now go to the actual calendar--> 
                 <button type="submit" class="btn btn-primary" >Event Calendar</button>
             </form>
@@ -238,10 +241,7 @@
             <form action = "{% url 'browse_all' %}"> <!--changed this to now go to the actual calendar-->
                 <button type="submit" class="btn btn-primary" >Browse All Clubs</button>
             </form>
-            </div>
-
-            </div> 
-        </div> <!-- card content ends here-->
+        </div>
 
         <div class="main-content-grid">
             
