@@ -8,46 +8,42 @@
     <link rel="icon" type="image/png" href="/media/favicon.png">
 
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-        }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            transition: transform 0.3s;
-        }
-        .container:hover {
-            transform: translateY(-5px);
-        }
-        h2 {
-            font-weight: 600;
-        }
-        .card {
-            border-radius: 12px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        .btn-primary {
-            background: linear-gradient(90deg, #6a11cb, #2575fc);
-            border: none;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(90deg, #2575fc, #6a11cb);
-        }
-        .btn-outline-primary {
-            border-radius: 50px;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to right, #fff3e0, #ff9800); /* same as add_event */
+        min-height: 100vh;
+    }
+
+    .event-card, .container {
+        max-width: 650px; /* same as add_event card */
+        margin: 40px auto;
+        border-radius: 16px;
+        padding: 30px;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    h2, h3, label {
+        color: #0d47a1;
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #ff9800, #ffb74d); /* orange gradient */
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #ffb74d, #ff9800);
+    }
+
+    .btn-outline-primary {
+        border-radius: 50px;
+    }
     </style>
+
 </head>
 <body>
     {% block content %}{% endblock %}

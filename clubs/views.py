@@ -42,7 +42,7 @@ def add_event(request):
             event = form.save(commit=False)
             event.club = request.user.clubs_led.first()  # assign the club
             event.save()
-            messages.success(request, "Event created successfully!")
+            messages.success(request, "Event created successfully.", extra_tags="event")
             return redirect('events_calendar_nav', year=event.date.year, month=event.date.month)
         else:
             messages.error(request, "Please correct the errors in the form.")
@@ -73,7 +73,7 @@ def edit_event(request, event_id):
         form = EventForm(request.POST, instance = event) #onnect submitted data to the form, using the existing event instance
         if form.is_valid():
             form.save() #save changes to the event
-            messages.success(request, "Event updated successfully.")
+            messages.success(request, "Event updated successfully.", extra_tags="event")
             return redirect('events_calendar') #go back to calendar
     else:
         form = EventForm(instance=event) #if the request is GET, display the form pre-filled with event data
@@ -84,13 +84,12 @@ def edit_event(request, event_id):
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
 
-    if request.user not in event.club.leaders.all():
-        messages.error(request, "You cannot delete this event.")
-        return redirect('events_calendar')
-    
-    if request.method == 'POST':
-        event.delete() #if confirmed, delete the event
-        messages.success(request, "Event deleted successfully.")
-        return redirect('events_calendar')
+    if request.method == "POST":
+        event.delete()
+        messages.success(request, "Event deleted successfully.", extra_tags="event")
+        return redirect("events_calendar")
 
-    return render(request, 'content/confirm_delete.html', {'event':event})
+    return redirect("events_calendar")
+
+
+
