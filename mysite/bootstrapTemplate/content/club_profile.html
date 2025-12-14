@@ -355,33 +355,34 @@
             </div><!--Announcement content ends-->
         </div><!--left column ends--> 
 
-        {% if request.user in club.leaders.all %} <!-- This whole section will only be displayed to leaders in the club-->
-        <!-- Central column: leader controls and posts -->
+        <!-- Central column: posts visible to everyone; leader controls remain conditional -->
         <div class="central-column"> <!--every box will be displayed in the center of the screen-->
-          <!-- <div class="central-box button-control"> -->  <!--The centeral box was created to display buttons for club creaters -->
-              <!-- <form action = "{% url 'form_page' club.id 'announcement' %}"> Will take you to the webpage to create Announcement post
-                    <button type="submit" class="btn btn-primary" >Create Announcement</button>
-                </form>
+            {% if request.user in club.leaders.all %}
+            <!-- Leader-only controls (kept commented if not used) -->
+            <!-- <div class="central-box button-control"> -->  <!--The central box was created to display buttons for club creators -->
+                <!-- <form action = "{% url 'form_page' club.id 'announcement' %}"> Will take you to the webpage to create Announcement post
+                        <button type="submit" class="btn btn-primary" >Create Announcement</button>
+                    </form>
 
-                {% if can_post %}
-                    <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary"> Create Post </a>
-                {% endif %}
+                    {% if can_post %}
+                        <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary"> Create Post </a>
+                    {% endif %}
 
-                <form action="{% url 'form_page' club.id 'submission' %}"> Will take you to the webpage to create a submission post
-                    <button type="submit" class="btn btn-primary" >Create submission Box</button>
-                </form>
-            </div> --> <!--centeral box content ends-->
+                    <form action="{% url 'form_page' club.id 'submission' %}"> Will take you to the webpage to create a submission post
+                        <button type="submit" class="btn btn-primary" >Create submission Box</button>
+                    </form>
+                </div> --> <!--centeral box content ends-->
 
-            <div class="mt-4" >
-                {% if can_post %}
-                    <!-- ...existing code... -->
-                {% endif %}
-                
-                {# Removed duplicate simple posts list to prevent double rendering #}
-                {# The styled posts section below is the single source of truth #}
-            </div>
+                <div class="mt-4" >
+                    {% if can_post %}
+                        <!-- ...existing code... -->
+                    {% endif %}
+                    {# Removed duplicate simple posts list to prevent double rendering #}
+                    {# The styled posts section below is the single source of truth #}
+                </div>
+            {% endif %}
 
-            <!-- Styled posts list -->
+            <!-- Styled posts list (visible to all users) -->
             <div class="mt-4">
                 {% if posts %}
                     {% for post in posts %}
@@ -496,7 +497,6 @@
                 {% endif %}
             </div>
         </div> <!-- end of .central-column -->
-        {% endif %} <!-- close leaders-only block -->
 
         <!-- Right column: leader shortcuts -->
         <div class="right-column">
