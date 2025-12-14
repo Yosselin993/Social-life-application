@@ -52,4 +52,5 @@ urlpatterns = [
     path('event/<int:event_id>/', views.event_detail, name='event_detail'), #url for event_details
     path("event/<int:event_id>/delete/", clubs_views.delete_event, name="delete_event"),
     path('announcement/delete/<int:announcement_id>/', views.delete_announcement, name='delete_announcement'),
+    path('post/<int:post_id>/delete/', views.delete_post, name='delete_post'),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

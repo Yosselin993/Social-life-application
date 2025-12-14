@@ -30,7 +30,7 @@
     .card{
         width: 100%; 
         max-width: 1290px;
-        height: 40%;
+        height: 30%;
         padding: 0;  /* padding moved to inner content */
         background-color: white;
         border-radius: 12px;
@@ -195,6 +195,67 @@
         width: fit-content;
     }
 
+    .post-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.25);
+
+    /* ⬇️ THIS controls the card width */
+    width: 100%;
+    max-width: 550px;      /* Figma width */
+    margin: 0 auto 20px;   /* centers card */
+
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+/* Top caption */
+.post-caption {
+    padding: 16px;
+    font-size: 1rem;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;             /* fixed height */
+}
+
+/* Middle image area (fills remaining space) */
+.post-image-wrapper {
+    flex: 0 0 auto;
+    max-height: 400px;
+    overflow: hidden;
+    background-color: #e0e0e0;
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 400px;
+}
+
+
+/* Bottom likes/comments */
+.post-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #eee;
+    display: flex;             /* place like and comment next to each other */
+    justify-content: flex-start; /* align items side by side, no wide spacing */
+    align-items: center;
+    gap: 12px;                 /* space between like and comment */
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    background: #fff;
+}
+
+
+
+
+
 </style>
 </head>
 
@@ -208,12 +269,9 @@
 </div>
 {% endif %}
 
-
-
-
-
-
+<!-- Main container begins -->
 <div class="container mt-2"> 
+    <!-- Header row with site link and logout -->
     <div class="mb-4 header"> 
             <a href="{% url 'mainPage' %}" style="color: #0d47a1; font-size: 30px; text-decoration: none;">UTRGVconnect</a>
             <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
@@ -228,11 +286,13 @@
         {% endif %}
 
         {% if request.user in club.leaders.all %}
+            <!-- Edit Club button (leaders only) -->
             <div style="display:flex; justify-content:flex-end; padding:8px 40px 0 40px;">
                 <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editClubModal">Edit Club</button>
             </div>
         {% endif %}
 
+        <!-- Club header section: photo and basic info -->
         <div class="card-body-content">
             <div class="club-photo-placeholder" style="width:200px; height:200px;">
                 {% if club.photo %}
@@ -262,8 +322,10 @@
             </div>
         </div>
     </div> 
+    <!-- Three-column main content grid -->
     <div class="main-content-grid">
         <div class="left-column"> 
+        <!-- Announcements panel -->
         <div class="Announcement-box">
                     <h4 style="text-align:center; margin-bottom: 10px;">Announcements</h4>
                     
@@ -289,12 +351,12 @@
                         {% empty %}
                             <p>No announcements yet.</p>
                         {% endfor %}
-<!--<<<<<<<<< Temporary merge branch 1 -->
 
             </div><!--Announcement content ends-->
         </div><!--left column ends--> 
 
         {% if request.user in club.leaders.all %} <!-- This whole section will only be displayed to leaders in the club-->
+        <!-- Central column: leader controls and posts -->
         <div class="central-column"> <!--every box will be displayed in the center of the screen-->
           <!-- <div class="central-box button-control"> -->  <!--The centeral box was created to display buttons for club creaters -->
               <!-- <form action = "{% url 'form_page' club.id 'announcement' %}"> Will take you to the webpage to create Announcement post
@@ -312,21 +374,54 @@
 
             <div class="mt-4" >
                 {% if can_post %}
-                   <!-- <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary">
-                        Create Post
-                    </a> -->
-                    {% endif %}
+                    <!-- ...existing code... -->
+                {% endif %}
                 
-                    {% if posts %}
+                {# Removed duplicate simple posts list to prevent double rendering #}
+                {# The styled posts section below is the single source of truth #}
+            </div>
+
+            <!-- Styled posts list -->
+            <div class="mt-4">
+                {% if posts %}
                     {% for post in posts %}
-                        <div class="card mb-3">
-                        <div class="card-body">
-                            <p><strong>{{ post.author.username }}</strong> • {{ post.created_at }}</p>
-                            <div>{{ post.content|safe }}</div>
+                        <div class="post-card">
+                            <!--Delete button was add to the post-->
+                            <div style="margin-top: 2%; margin-left: 2%;">
+                            {% if request.user in club.leaders.all %}
+                                    <a href="{% url 'delete_post' post.id %}"
+                                       class="btn btn-sm btn-outline-danger"
+                                       title="Delete post"
+                                       style="margin-left:auto;">
+                                        Delete
+                                    </a>
+                             {% endif %}
+                            </div>
+
+
+                            <!-- Caption -->
+                            <div class="post-caption">
+                                {{ post.content|safe }}
+                            </div>
+                            <!-- Photo -->
                             {% if post.image %}
-                            <img src="{{ post.image.url }}" style="max-width: 300px;" alt="Post image">
+                            <div class="post-image-wrapper">
+                                <img src="{{ post.image.url }}" class="post-image" alt="Post image">
+                            </div>
                             {% endif %}
-                        </div>
+                            <!-- Likes & Comments -->
+                            <div class="post-footer">
+                                <span>❤️ {{ post.likes.count }} likes</span>
+                                <span>💬 {{ post.comments.count }} comments</span>
+                              <!-- {% if request.user in club.leaders.all %}
+                                    <a href="{% url 'delete_post' post.id %}"
+                                       class="btn btn-sm btn-outline-danger"
+                                       title="Delete post"
+                                       style="margin-left:auto;">
+                                        Delete
+                                    </a>
+                                {% endif %} -->
+                            </div>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -336,6 +431,7 @@
         </div>
         {% endif %}
 
+        <!-- Right column: leader shortcuts -->
         <div class="right-column">
             {% if request.user in club.leaders.all %} 
                 <div class="club-leader-controls button-control">
@@ -351,6 +447,7 @@
              </div> 
         </div> 
                 {% if club_form %}
+    <!-- Edit Club modal -->
     <div class="modal fade" id="editClubModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">

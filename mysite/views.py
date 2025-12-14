@@ -426,6 +426,8 @@ def form_page(request, club_id, form_type):
                 return redirect('club_profile', club_id=club.id)
             else:
                 messages.error(request, "Announcement cannot be empty.")
+        else:
+            form = AnnouncementForm()
 
     # this is checking which type of form should be loaded based on the URL parameter
 
@@ -467,8 +469,8 @@ def form_page(request, club_id, form_type):
     # Render the selected template and pass necessary context
     return render(request, template, {
         "club_id": club_id,
-        "form_title": form_title, # Page title based on form type
-        "form": AnnouncementForm(),  #Display an empty form box
+        "form_title": form_title,
+        "form": form,  # pass the actual form for the selected form type
     })  
 
 @login_required
@@ -541,3 +543,21 @@ def delete_announcement(request, announcement_id):
     announcement.delete()
     messages.success(request, "Announcement deleted.")
     return redirect('club_profile', club.id)
+
+@login_required
+def delete_post(request, post_id):
+    # Fetch the post by id or return 404 if not found
+    post = get_object_or_404(Post, id=post_id)
+    club = post.club  # The club the post belongs to
+
+    # Authorization: Only club leaders are allowed to delete posts
+    if request.user not in club.leaders.all():
+        messages.error(request, "You are not allowed to delete this post.")
+        # Redirect back to the club profile if the user lacks permission
+        return redirect('club_profile', club_id=club.id)
+
+    # Delete the post and confirm via a success message
+    post.delete()
+    messages.success(request, "Post deleted.")
+    # Always return to the club profile page after deletion
+    return redirect('club_profile', club_id=club.id)

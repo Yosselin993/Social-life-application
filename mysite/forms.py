@@ -102,8 +102,12 @@ class AnnouncementForm(forms.ModelForm):
         fields = ['content']
 
 class PostForm(forms.ModelForm):
-    # Use the same safe Summernote field you used for announcements
-    content = SafeSummernoteField()
+    # Use a plain textarea for caption to avoid image uploads in the editor
+    content = forms.CharField(label="Caption", widget=forms.Textarea(attrs={
+        'rows': 4,
+        'placeholder': 'Write a caption...'
+    }))
+    image = forms.ImageField(required=False, label="Image")
 
     class Meta:
         model = Post
