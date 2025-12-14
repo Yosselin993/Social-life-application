@@ -8,7 +8,7 @@ class Club(models.Model):
     # They can give a longer description of what the club is about
     description = models.TextField(blank=True)
     # Giving the user the options to display when the club meets
-    meeting_time = models.CharField(max_length=100, blank=True)
+    meeting_time = models.TimeField(blank=True, null=True)
     #Where the clubs meet
     location = models.CharField(max_length=100, blank=True)
     

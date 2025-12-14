@@ -97,8 +97,14 @@ def main_page(request):
     club_form = None #initalize variable
     is_club_leader = request.user.clubs_led.exists() #check if user leads any club
 
+    club_photo = None #added
+
     if is_club_leader:
         club = request.user.clubs_led.first() #get first club
+
+        if club.photo:
+            club_photo = club.photo.url  # <-- this comes from club_first_login upload
+
         if not club.first_login_completed:
             from clubs.forms import ClubForm
             club_form = ClubForm(instance=club) #pre-fill form with club info
@@ -148,6 +154,7 @@ def main_page(request):
         'announcements': announcements, #add anouncements
         'notifications': notifications,
         'post_comment_forms': post_comment_forms,
+        'club_photo': club_photo #added
     }
 
     return render(request, 'content/mainPage.html', context)
