@@ -30,7 +30,7 @@
     .card{
         width: 100%; 
         max-width: 1290px;
-        height: 30%;
+        height: auto;
         padding: 0;  /* padding moved to inner content */
         background-color: white;
         border-radius: 12px;
@@ -351,7 +351,7 @@
                         {% empty %}
                             <p>No announcements yet.</p>
                         {% endfor %}
-
+                    </ul>
             </div><!--Announcement content ends-->
         </div><!--left column ends--> 
 
@@ -386,8 +386,11 @@
                 {% if posts %}
                     {% for post in posts %}
                         <div class="post-card">
-                            <!--Delete button was add to the post-->
                             <div style="margin-top: 2%; margin-left: 2%;">
+                                 <a href="{% url 'club_profile' post.club.id %}" style="color:#0d47a1; font-weight:600; text-decoration:none;">
+                                    {{ post.club.name }}
+                                </a>
+                                <span style="color:#555; font-size:0.85rem;">{{ post.created_at|date:"m/d/Y" }}</span>
                             {% if request.user in club.leaders.all %}
                                     <a href="{% url 'delete_post' post.id %}"
                                        class="btn btn-sm btn-outline-danger"
@@ -411,41 +414,105 @@
                             {% endif %}
                             <!-- Likes & Comments -->
                             <div class="post-footer">
-                                <span>❤️ {{ post.likes.count }} likes</span>
-                                <span>💬 {{ post.comments.count }} comments</span>
-                              <!-- {% if request.user in club.leaders.all %}
-                                    <a href="{% url 'delete_post' post.id %}"
-                                       class="btn btn-sm btn-outline-danger"
-                                       title="Delete post"
-                                       style="margin-left:auto;">
-                                        Delete
-                                    </a>
-                                {% endif %} -->
+                                <form method="post" action="{% url 'toggle_like' post.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-link" style="text-decoration:none; padding:0;">
+                                        {% if request.user in post.likes.all %}❤️{% else %}🤍{% endif %}
+                                    </button>
+                                </form>
+                                <span>{{ post.likes.count }} likes</span>
+                                <!-- Comments trigger button opens modal -->
+                                <button type="button" class="btn btn-sm btn-link" style="text-decoration:none; padding:0;" data-bs-toggle="modal" data-bs-target="#commentsModal{{ post.id }}">
+                                    💬 {{ post.comments.count }} comments
+                                </button>
                             </div>
+                        </div>
+
+                        <!-- Comments Modal for this post -->
+                        <div class="modal fade" id="commentsModal{{ post.id }}" tabindex="-1" aria-labelledby="commentsModalLabel{{ post.id }}" aria-hidden="true">
+                          <!-- Modal dialog with scrollable content -->
+                          <div class="modal-dialog modal-dialog-scrollable">
+                            <!-- Modal content wrapper -->
+                            <div class="modal-content">
+                              <!-- Modal header with title and close button -->
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="commentsModalLabel{{ post.id }}">Comments</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <!-- Modal body holds comments list and the add-comment form -->
+                              <div class="modal-body">
+                                {% if post.comments.all %}
+                                  <!-- List of existing comments -->
+                                  <ul class="list-group">
+                                    {% for comment in post.comments.all %}
+                                      <!-- Single comment item -->
+                                      <li class="list-group-item">
+                                        <!-- Layout: author/timestamp on left, delete on right -->
+                                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                                          <!-- Comment author and text -->
+                                          <div>
+                                            <strong>{{ comment.author.username }}</strong>
+                                            <small style="color:#777;">· {{ comment.created_at|timesince }} ago</small>
+                                            <div style="margin-top:4px;">{{ comment.text }}</div>
+                                          </div>
+                                          <!-- Delete button shown to author or club leaders -->
+                                          {% if request.user == comment.author %}
+                                            <form method="post" action="{% url 'delete_post_comment' comment.id %}">
+                                              {% csrf_token %}
+                                              <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                          {% elif post.club and request.user in post.club.leaders.all %}
+                                            <form method="post" action="{% url 'delete_post_comment' comment.id %}">
+                                              {% csrf_token %}
+                                              <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                          {% endif %}
+                                        </div>
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                {% else %}
+                                  <!-- Message when there are no comments yet -->
+                                  <p>No comments yet.</p>
+                                {% endif %}
+
+                                <!-- Add comment form -->
+                                <form method="post" action="{% url 'add_post_comment' post.id %}" class="mt-3">
+                                  {% csrf_token %}
+                                  <!-- Comment textarea -->
+                                  <div class="mb-2">
+                                    <textarea name="text" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+                                  </div>
+                                  <!-- Submit comment button -->
+                                  <button type="submit" class="btn btn-primary btn-sm">Add Comment</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                     {% endfor %}
                 {% else %}
                     <p>No posts yet.</p>
                 {% endif %}
             </div>
-        </div>
-        {% endif %}
+        </div> <!-- end of .central-column -->
+        {% endif %} <!-- close leaders-only block -->
 
         <!-- Right column: leader shortcuts -->
         <div class="right-column">
-            {% if request.user in club.leaders.all %} 
+            {% if request.user in club.leaders.all %}
                 <div class="club-leader-controls button-control">
-                <form action = "{% url 'form_page' club.id 'announcement' %}"> 
-                    <button type="submit" class="btn btn-primary" >Create Announcement</button>
-                </form>
+                    <form action = "{% url 'form_page' club.id 'announcement' %}"> 
+                        <button type="submit" class="btn btn-primary" >Create Announcement</button>
+                    </form>
 
-                {% if can_post %}
-                    <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary"> Create Post </a>
-                {% endif %}
-                </div>{% endif %}
-
-             </div> 
-        </div> 
+                    {% if can_post %}
+                        <a href="{% url 'form_page' club.id 'post' %}" class="btn btn-primary"> Create Post </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div> <!-- end of .main-content-grid -->
                 {% if club_form %}
     <!-- Edit Club modal -->
     <div class="modal fade" id="editClubModal" tabindex="-1">

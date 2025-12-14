@@ -7,6 +7,8 @@ from django.contrib.auth.models import User #added
 from mysite.custom_clean import SafeSummernoteField
 from.models import Announcement
 from .models import Post 
+# NEW import for post comments
+from .models import PostComment
 
 class StudentForm(forms.ModelForm):
     class Meta:
@@ -104,11 +106,21 @@ class AnnouncementForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     # Use a plain textarea for caption to avoid image uploads in the editor
     content = forms.CharField(label="Caption", widget=forms.Textarea(attrs={
-        'rows': 4,
-        'placeholder': 'Write a caption...'
+        'rows': 4,                     # set textarea height to 4 rows
+        'placeholder': 'Write a caption...'  # hint text shown inside the field
     }))
-    image = forms.ImageField(required=False, label="Image")
+    image = forms.ImageField(required=False, label="Image")  # optional image upload field
 
     class Meta:
-        model = Post
-        fields = ['content', 'image']
+        model = Post                  # bind this form to the Post model
+        fields = ['content', 'image'] # include only caption and image fields
+
+
+class PostCommentForm(forms.ModelForm):
+    text = forms.CharField(label="Comment", widget=forms.Textarea(attrs={
+        'rows': 2,                     # smaller textarea for short comments
+        'placeholder': 'Write a comment...'  # hint text for comment input
+    }))
+    class Meta:
+        model = PostComment           # bind this form to the PostComment model
+        fields = ['text']             # only a single text field for comments
