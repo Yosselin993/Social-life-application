@@ -318,7 +318,28 @@
                     {% endif %}
                 </p>
                     <p>Description: {{ club.description }}</p>
-                    <p>Meeting Time: {{ club.meeting_time }}</p>
+                    
+                    <!--UPDATED 12HR FORMAT FOR MEETING TIME-->
+                    {% if club.meeting_time %}
+                        {% with hour=club.meeting_time|slice:":2" minute=club.meeting_time|slice:"3:5" %}
+                            {% if hour|add:0 > 12 %}
+                                {% with display_hour=hour|add:-12 %}
+                                    <p>Meeting Time: {{ display_hour }}:{{ minute }} PM</p>
+                                {% endwith %}
+                            {% elif hour|add:0 == 12 %}
+                                <p>Meeting Time: 12:{{ minute }} PM</p>
+                            {% elif hour|add:0 == 0 %}
+                                <p>Meeting Time: 12:{{ minute }} AM</p>
+                            {% else %}
+                                <p>Meeting Time: {{ hour }}:{{ minute }} AM</p>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <p>Meeting Time: N/A</p>
+                    {% endif %}
+
+
+
             </div>
         </div>
     </div> 

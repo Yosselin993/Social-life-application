@@ -453,15 +453,23 @@
                         {% csrf_token %}
 
                             <div style="display:flex; align-items:center; gap:12px;">
+                            
                             <div class="student-photo-placeholder" id="photoBox">
-                                {% if student.photo %}
-                                    <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
-                                    <span id="placeholderText" style="display:none;">Click to upload</span>
-                                {% else %}
-                                    <img id="studentPhoto" src="" alt="Student photo" style="display:none;">
-                                    <span id="placeholderText">Click to upload</span>
-                                {% endif %}
-                            </div>
+                            {% if club_photo %}
+                                <!-- Display the club photo from club_first_login -->
+                                <img id="studentPhoto" src="{{ club_photo }}" alt="Club photo">
+                                <span id="placeholderText" style="display:none;">Click to upload</span>
+                            {% elif student.photo %}
+                                <!-- Display student photo if not a club leader -->
+                                <img id="studentPhoto" src="{{ student.photo.url }}" alt="Student photo">
+                                <span id="placeholderText" style="display:none;">Click to upload</span>
+                            {% else %}
+                                <!-- Default placeholder -->
+                                <img id="studentPhoto" src="" alt="Student photo" style="display:none;">
+                                <span id="placeholderText">Click to upload</span>
+                            {% endif %}
+                        </div>
+
 
                             <!--link to the first club the user leads-->
                             <div class="student-info" style="display:flex; flex-direction:column;">
