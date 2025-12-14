@@ -519,6 +519,12 @@
                     {% for post in posts %}
                         <div class="post-card">
 
+                            <div style="margin-top: 2%; margin-left: 2%; display:flex; gap:8px; align-items:center;">
+                                <a href="{% url 'club_profile' post.club.id %}" style="color:#0d47a1; font-weight:600; text-decoration:none;">
+                                    {{ post.club.name }}
+                                </a>
+                                <span style="color:#555; font-size:0.85rem;">{{ post.created_at|date:"m/d/Y" }}</span>
+                            </div>
                             <!-- Caption -->
                             <div class="post-caption">
                                 {{ post.content|safe }} <!--allows HTML in post-->
@@ -533,7 +539,13 @@
 
                             <!-- Likes & Comments -->
                             <div class="post-footer">
-                                <span>❤️ {{ post.likes.count }} likes</span>
+                                <form method="post" action="{% url 'toggle_like' post.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-link" style="text-decoration:none; padding:0;">
+                                        {% if request.user in post.likes.all %}❤️{% else %}🤍{% endif %}
+                                    </button>
+                                </form>
+                                <span>{{ post.likes.count }} likes</span>
                                 <span>💬 {{ post.comments.count }} comments</span>
                             </div>
 
@@ -642,11 +654,6 @@
   }, 5000); // 5000ms = 5 seconds
 </script>
 
-
-
-</body>
-</html>
-
 <script>
 const photoBox = document.getElementById("photoBox");
 const photoUpload = document.getElementById("photoUpload");
@@ -670,4 +677,13 @@ photoUpload.addEventListener("change", (event) => {
         photoForm.submit();
     }
 });
+
+function toggleComments(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+}
 </script>
+
+</body>
+</html>

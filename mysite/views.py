@@ -26,6 +26,7 @@ from .forms import PostForm
 from clubs.models import Event
 from .models import Event
 from datetime import date
+from django.views.decorators.http import require_POST
 
 # this is a function that handles requests to the home page
 def home(request): 
@@ -561,3 +562,16 @@ def delete_post(request, post_id):
     messages.success(request, "Post deleted.")
     # Always return to the club profile page after deletion
     return redirect('club_profile', club_id=club.id)
+
+@login_required
+@require_POST
+def toggle_like(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    user = request.user
+    if user in post.likes.all():
+        post.likes.remove(user)
+        liked = False
+    else:
+        post.likes.add(user)
+        liked = True
+    return redirect(request.META.get('HTTP_REFERER', 'mainPage'))

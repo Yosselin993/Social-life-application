@@ -30,7 +30,7 @@
     .card{
         width: 100%; 
         max-width: 1290px;
-        height: 30%;
+        height: auto;
         padding: 0;  /* padding moved to inner content */
         background-color: white;
         border-radius: 12px;
@@ -411,16 +411,14 @@
                             {% endif %}
                             <!-- Likes & Comments -->
                             <div class="post-footer">
-                                <span>❤️ {{ post.likes.count }} likes</span>
+                                <form method="post" action="{% url 'toggle_like' post.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-link" style="text-decoration:none; padding:0;">
+                                        {% if request.user in post.likes.all %}❤️{% else %}🤍{% endif %}
+                                    </button>
+                                </form>
+                                <span>{{ post.likes.count }} likes</span>
                                 <span>💬 {{ post.comments.count }} comments</span>
-                              <!-- {% if request.user in club.leaders.all %}
-                                    <a href="{% url 'delete_post' post.id %}"
-                                       class="btn btn-sm btn-outline-danger"
-                                       title="Delete post"
-                                       style="margin-left:auto;">
-                                        Delete
-                                    </a>
-                                {% endif %} -->
                             </div>
                         </div>
                     {% endfor %}
