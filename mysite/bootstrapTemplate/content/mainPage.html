@@ -546,9 +546,75 @@
                                     </button>
                                 </form>
                                 <span>{{ post.likes.count }} likes</span>
-                                <span>💬 {{ post.comments.count }} comments</span>
-                            </div>
 
+                                <!-- Comments trigger button opens modal -->
+                                <button type="button" class="btn btn-sm btn-link" style="text-decoration:none; padding:0;" data-bs-toggle="modal" data-bs-target="#commentsModal{{ post.id }}">
+                                    💬 {{ post.comments.count }} comments
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Comments Modal for this post -->
+                        <div class="modal fade" id="commentsModal{{ post.id }}" tabindex="-1" aria-labelledby="commentsModalLabel{{ post.id }}" aria-hidden="true">
+                            <!-- Scrollable modal dialog -->
+                          <div class="modal-dialog modal-dialog-scrollable">
+                            <!-- Modal content container -->
+                            <div class="modal-content">
+                              <!-- Header: title + close button -->
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="commentsModalLabel{{ post.id }}">Comments</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <!-- Body: comments list and add-comment form -->
+                              <div class="modal-body">
+                                {% if post.comments.all %}
+                                  <!-- Existing comments list -->
+                                  <ul class="list-group">
+                                    {% for comment in post.comments.all %}
+                                      <!-- Single comment item -->
+                                      <li class="list-group-item">
+                                        <!-- Left: author + timestamp + text; Right: delete (if allowed) -->
+                                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                                          <!-- Author and comment text -->
+                                          <div>
+                                            <strong>{{ comment.author.username }}</strong>
+                                            <small style="color:#777;">· {{ comment.created_at|timesince }} ago</small>
+                                            <div style="margin-top:4px;">{{ comment.text }}</div>
+                                          </div>
+                                          <!-- Delete visible to author or club leaders -->
+                                          {% if request.user == comment.author %}
+                                            <form method="post" action="{% url 'delete_post_comment' comment.id %}">
+                                              {% csrf_token %}
+                                              <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                          {% elif post.club and request.user in post.club.leaders.all %}
+                                            <form method="post" action="{% url 'delete_post_comment' comment.id %}">
+                                              {% csrf_token %}
+                                              <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                          {% endif %}
+                                        </div>
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                {% else %}
+                                  <!-- Message when no comments exist -->
+                                  <p>No comments yet.</p>
+                                {% endif %}
+
+                                <!-- Add comment form -->
+                                <form method="post" action="{% url 'add_post_comment' post.id %}" class="mt-3">
+                                  {% csrf_token %}
+                                  <!-- Textarea for new comment -->
+                                  <div class="mb-2">
+                                    <textarea name="text" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+                                  </div>
+                                  <!-- Submit button for new comment -->
+                                  <button type="submit" class="btn btn-primary btn-sm">Add Comment</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                     {% endfor %}
 
@@ -678,9 +744,13 @@ photoUpload.addEventListener("change", (event) => {
     }
 });
 
+// Function to toggle comments visibility
 function toggleComments(id) {
+    // Get the element by the provided id
     const el = document.getElementById(id);
+    // If the element does not exist, exit early
     if (!el) return;
+    // Toggle display between 'none' (hidden) and 'block' (visible)
     el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
 }
 </script>

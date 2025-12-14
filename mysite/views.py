@@ -27,6 +27,8 @@ from clubs.models import Event
 from .models import Event
 from datetime import date
 from django.views.decorators.http import require_POST
+from .models import PostComment
+from .forms import PostCommentForm
 
 # this is a function that handles requests to the home page
 def home(request): 
@@ -131,6 +133,8 @@ def main_page(request):
         announcements = Announcement.objects.filter(club__in=favorite_clubs).select_related('club', 'author')
         notifications = announcements.order_by('-created_at')[:5]  #last 5 announcements
 
+        # Prepare a comment form per post
+        post_comment_forms = {p.id: PostCommentForm() for p in posts}
 
     context = {
         'form': student_form,
@@ -143,6 +147,7 @@ def main_page(request):
         'posts': posts,
         'announcements': announcements, #add anouncements
         'notifications': notifications,
+        'post_comment_forms': post_comment_forms,
     }
 
     return render(request, 'content/mainPage.html', context)
@@ -566,12 +571,58 @@ def delete_post(request, post_id):
 @login_required
 @require_POST
 def toggle_like(request, post_id):
+    # Get the post by id or 404 if not found
     post = get_object_or_404(Post, id=post_id)
+    # Current authenticated user
     user = request.user
+    # If user already liked, remove like
     if user in post.likes.all():
         post.likes.remove(user)
         liked = False
     else:
+        # Otherwise add like
         post.likes.add(user)
         liked = True
+    # Redirect back to the page the request came from, fallback to mainPage
+    return redirect(request.META.get('HTTP_REFERER', 'mainPage'))
+
+@login_required
+@require_POST
+def add_post_comment(request, post_id):
+    # Get the post being commented on
+    post = get_object_or_404(Post, id=post_id)
+    # Bind the submitted data to the comment form
+    form = PostCommentForm(request.POST)
+    # Validate form input
+    if form.is_valid():
+        # Create the comment linked to the post and current user
+        PostComment.objects.create(
+            post=post,
+            author=request.user,
+            text=form.cleaned_data['text']
+        )
+        # Show success feedback
+        messages.success(request, 'Comment added.')
+    else:
+        # Show error feedback if invalid
+        messages.error(request, 'Please enter a valid comment.')
+    # Redirect back to the referring page
+    return redirect(request.META.get('HTTP_REFERER', 'mainPage'))
+
+@login_required
+@require_POST
+def delete_post_comment(request, comment_id):
+    # Get the comment to delete, or 404 if it doesn't exist
+    comment = get_object_or_404(PostComment, id=comment_id)
+    # Permission: author or leaders of the post's club can delete
+    allowed = (request.user == comment.author) or (comment.post.club and request.user in comment.post.club.leaders.all())
+    # If not allowed, show error and go back
+    if not allowed:
+        messages.error(request, 'You are not allowed to delete this comment.')
+        return redirect(request.META.get('HTTP_REFERER', 'mainPage'))
+    # Perform the deletion
+    comment.delete()
+    # Show success feedback
+    messages.success(request, 'Comment deleted.')
+    # Redirect back to the referring page
     return redirect(request.META.get('HTTP_REFERER', 'mainPage'))
