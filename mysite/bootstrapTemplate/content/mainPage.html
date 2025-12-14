@@ -345,7 +345,7 @@
         white-space: nowrap;   /* keep on single line */
     }
 
-.post-card {
+    .post-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.25);
@@ -356,10 +356,10 @@
     margin: 0 auto 20px;   /* centers card */
 
     height: 480px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
 
 
 /* Top caption */
@@ -371,30 +371,33 @@
 }
 
 /* Middle image area (fills remaining space) */
-.post-image-wrapper {
+    .post-image-wrapper {
     flex: 1;
-    background-color: #e0e0e0;
-}
+        background-color: #e0e0e0;
+        /* Ensure image stays within the wrapper and never overlaps footer */
+        overflow: hidden;           /* clip any excess */
+        min-height: 0;              /* allow flex child to shrink properly */
+        position: relative;
+        max-height: 320px;          /* cap image area like club_profile */
+    }
 
-.post-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    .post-image {
+        display: block;             /* remove inline gaps */
+        width: 100%;
+        height: 100%;
+        object-fit: cover;          /* fill area, crop overflow so footer stays visible */
+    }
 
 
 /* Bottom likes/comments */
-.post-footer {
-    padding: 12px 16px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    flex-shrink: 0;             /* fixed height */
-}
-
-
-
+    .post-footer {
+        position: relative;
+        z-index: 1;
+        background: #fff;
+        flex-shrink: 0;          /* keep footer visible */
+        border-top: 1px solid #eee; /* visual separation like club_profile */
+        padding: 10px 16px;         /* spacing for likes/comments */
+    }
 
 </style>
 </head>
@@ -509,7 +512,7 @@
                       {% endif %}
                 </div>
 
-                
+    
                 <div class="mt-1">
 
                     {% if posts %}

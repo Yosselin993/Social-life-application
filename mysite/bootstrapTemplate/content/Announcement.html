@@ -1,80 +1,63 @@
-{% load bootstrap5 %} 
-<!DOCTYPE html>
-<html lang = "en">
-<head>
-<meta charset = "UTF-8">
-    <title>Club Setup</title>
-    {% bootstrap_css %}
-    
-    <link rel="icon" type="image/png" href="/media/favicon.png">
+{% extends "content/matchup_quiz/base_quiz.html" %}
 
+{% block title %}Create Announcement{% endblock %}
+
+{% block content %}
 <style>
-    /*The main layout we have see over and over agian on our website*/
-    body {
-        background: linear-gradient(to right, #fff3e0, #ff9800); /* orange and white */
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        font-family: 'Arial', sans-serif;
-        margin: 0; 
-        padding: 0;
-    }
-    /*Used to display the heading information like the utrgv logo and logout*/
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-       margin-top: 1px;
-    }
-    /* This is the main card. There used to diplay the text editor*/
-    .card{
-        width: 90%; 
-        height: 80%;
-        max-width: 1290px;
-        padding: 40px 80px;  /* top/bottom = 20px, left/right = 80px */
-        background-color: white;
-        border-radius: 12px;
-        margin: 2px auto;
-        box-shadow: 0 2px 8px hsla(226, 53%, 65%, 0.383);
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 40px;
-    }
-
+/* Make the announcement card larger so the editor fits comfortably */
+.event-card {
+  max-width: 900px;   /* wider card */
+  min-height: 600px;  /* taller card */
+  padding: 40px;      /* more inner spacing */
+}
+/* Ensure Summernote editor fits the card width and looks consistent */
+.event-card .note-editor {
+  width: 100% !important;
+}
+.event-card .note-editor .note-editable {
+  min-height: 280px; /* larger typing area */
+}
+/* In case Summernote renders inside a textarea wrapper */
+.event-card .django-summernote-widget, 
+.event-card .django-summernote-editor, 
+.event-card .summernote { 
+  width: 100% !important; 
+}
 </style>
-</head>
-<body>
-<div class="container mt-2"> 
-        <div class="mb-4 header"> <!-- header content starts -->
-                <!--Changed the home button to be the utrgv logo-->
-                <a href="{% url 'mainPage' %}" style="color: #0d47a1; font-size: 30px; text-decoration: none;">UTRGVconnect</a>
-                <form method="post" action="{% url 'logout' %}" class="me-2" id="logout-form">
-                {% csrf_token %}
-                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="logout-link">
-                Logout</a>
-                </form>
-        </div> <!--header content ends-->
 
-        <div> 
-            <form action="{% url 'club_profile' club_id %}"> <!--This will render back to the 'club' the user is a leader to. So taking them back to their profile page-->
-            <button type="submit" class="btn btn-primary">Go Back</button> 
-            </form>
-        </div> 
+<div class="event-card">
+    <!-- Header/logo linking back to the main page -->
+    <a href="{% url 'mainPage' %}" style="text-decoration:none;">
+        <h2>UTRGVconnect</h2>
+    </a>
 
-        <div class="mt-4 card"> <!--Displaying the main card box-->
-            <form method="POST" action="{% url 'form_page' club_id 'announcement' %}" style="margin-left: 15%;"> <!--This will didsplay the text editor box that we install called django_summernote-->
-                {% csrf_token %}
-                {{ form.media }}  <!-- loads toolbar/scripts -->
-                {{ form.as_p }}   <!-- renders the editor -->
-                
-                <button type="submit" class="btn btn-primary mt-3">Submit</button> <!--This submit button will be used to display Announcement in certain boxs-->
-            </form> <!--django_summernote ends here-->
-        </div> <!--main card box ends -->
+    <hr>
 
+    <!-- Page title and short description -->
+    <h3 class="mb-4">Create an Announcement</h3>
+    <p class="text-muted mb-4">Share important updates with your club members.</p>
 
+    <!-- Announcement form begins -->
+    <form method="post" action="{% url 'form_page' club_id 'announcement' %}">
+        {% csrf_token %}
+        {{ form.media }}  <!-- Summernote scripts/styles -->
+
+        <!-- Summernote editor field -->
+        <div class="mb-3">
+            <label for="id_content" class="form-label">Announcement</label>
+            {{ form.content }}
+            {% for error in form.content.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+
+    <!-- Back button to club profile -->
+    <div class="mt-3 text-center">
+        <a href="{% url 'club_profile' club_id %}" class="btn btn-outline-primary">Back to Club</a>
+    </div>
 </div>
-
-
-</body>
-</html>
+{% endblock %}
